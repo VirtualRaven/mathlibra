@@ -7,12 +7,23 @@ template<typename mathType> struct variableToken;
 namespace mathNode
 {
 
-	
+    struct nodeOops : public exception
+    {
+        nodeOops(std::string inf)
+        {
+            info = inf;
+        }
+
+        const char* what()
+        {
+            return "math node Exception";
+        }
+    };
 
 	struct mathExpressionNode : public nodeDataInterface
 	{
-		
-		
+
+
 		mathExpressionNode()
 		{
 			type=UNKNOWN;
@@ -21,7 +32,7 @@ namespace mathNode
 		{
 			wrapperNode = context;
 		}
-		
+
 		void destroy() //Here goes nothing, fingers crossed
 		{
 			std::cerr << "Delete signal received, self destruct!\n";
@@ -40,7 +51,7 @@ namespace mathNode
 		mathType value;
 		mathExpressionNode_val()
 		{
-			this->type=mathNodeType::VALUE;
+			this->type=tokenType::VALUE;
 		}
 		mathExpressionNode_val(mathType val)
 		{
@@ -51,18 +62,44 @@ namespace mathNode
 		{
 			return value;
 		}
-		
+
 
 	};
 
-	
+template<typename mathType> struct mathExpressionNode_opr;
+
+template<typename mathType>
+	struct mathExpressionNode_variable : public mathExpressionNode
+	{
+
+	private:
+		memory<mathType>* mem;
+		friend mathExpressionNode_opr<mathType>;
+	public:
+		std::string name;
+
+
+		mathExpressionNode_variable(std::string var, memory<mathType>* mem)
+		{
+			name = var;
+			this->mem = mem;
+			this->type = tokenType::VARIABLE;
+		}
+		mathType eval()
+		{
+			return mem->get(name);
+		}
+
+
+	};
+
 
 
 	template<typename mathType>
 	struct mathExpressionNode_opr : public mathExpressionNode
 	{
 		mathType (*operation)(mathType,mathType);
-		
+
 		typedef mathType (*operatorPtr)(mathType,mathType);
 		typedef mathType (*assigmentPtr)(variableToken<mathType>, mathType);
 		assigmentPtr assign;
@@ -71,7 +108,7 @@ namespace mathNode
 		{
 			this->type=OPERATOR;
 			operation = nullptr;
-			assign = nullptr; 
+			assign = nullptr;
 			assignB = false;
 		}
 
@@ -95,7 +132,7 @@ namespace mathNode
 		{
 			if(this->wrapperNode->sub1() == nullptr || this->wrapperNode->sub2() == nullptr)
 			{
-				throw interpreterOops("Panic: syntax tree has unexpected null pointer");
+				throw nodeOops("Panic: syntax tree has unexpected null pointer");
 			}
 			if (assignB)
 			{
@@ -114,33 +151,9 @@ namespace mathNode
 				return this->operation(arg1, arg2);
 			}
 		}
-       
-	};
-
-	template<typename mathType>
-	struct mathExpressionNode_variable : public mathExpressionNode
-	{
-
-	private:
-		memory<mathType>* mem;
-		friend mathExpressionNode_opr<mathType>;
-	public:
-		std::string name;
-
-
-		mathExpressionNode_variable(std::string var, memory<mathType>* mem)
-		{
-			name = var;
-			this->mem = mem;
-			this->type = tokenType::VARIABLE;
-		}
-		mathType eval()
-		{
-			return mem->get(name);
-		}
-		
 
 	};
+
 
 	template<typename mathType>
 	struct mathExpressionNode_func : public mathExpressionNode

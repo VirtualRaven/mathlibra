@@ -28,7 +28,7 @@ bool menu(memory<double>& mem)
 	if (input == "1")
 	{
 		std::vector<std::string> vars = mem.allVars();
-		for (int i = 0; i < vars.size(); i++)
+		for (unsigned int i = 0; i < vars.size(); i++)
 		{
 			std::cout <<"Variable "<<i+1 << ": " << vars[i] << " = " << mem.get(vars[i]) << "\n";
 		}
@@ -45,7 +45,7 @@ bool menu(memory<double>& mem)
 		return false;
 	}
 	else if (input == "3")
-	{	
+	{
 		return true;
 	}
 	else
@@ -57,7 +57,7 @@ bool menu(memory<double>& mem)
 int main()
 {
 	std::cout << "Calculator backend test\nLukas Rahmn 2014\n";
-	
+
 	interpreter<double> inter;
 	std::string expression = "";
 	memory<double> mem;
