@@ -9,10 +9,6 @@
 #include "build.h"
 #include "functions.h"
 
-namespace enums
-{
-	enum fixed_chars{ NEGATIVE_SIGN = 1, UNKNOWN = 0 };
-};
 struct interpreterOops : public exception
 {
 	interpreterOops(std::string inf)
@@ -24,7 +20,7 @@ struct interpreterOops : public exception
 	{
 		return "interpreter Exception";
 	}
-	
+
 };
 
 
@@ -40,11 +36,11 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 
 		}
 		else if (token->type == OPERATOR)
-		{ 
+		{
 			return true;
 		}
 		else return false;
-			
+
 	}
 	else return true;
 };
@@ -106,9 +102,9 @@ public:
 			}
 			else
 			{
-			  
+
                 built=true;
-              
+
                 #ifdef DEBUG
                     this->root.integrityTest();
                 #endif
@@ -129,14 +125,14 @@ class interpreter
 	char * expression;
 	short expressionLength;
 	short startOperatorPos; //contains the index in the tokens array where the starting operator is located
-	operators::allOperators<mathType> operators;
+	operators::allOperators operators;
 
 	friend buildTree<mathType>;
 	std::vector<baseToken*> tokens;
 
 	rootNode root;
 	math_func::function_interface<double> current_functions;
-	memory<mathType> *mem;
+	memory *mem;
 	bool rootEmpty;
 	void emptyRoot()
 	{
@@ -195,20 +191,20 @@ class interpreter
 		expression = new char[lenght];
 	}
 
-	bool lexicalAnalys() 
+	bool lexicalAnalys()
 	{
 		this->destroyTokens();
 		short extraOperatorWheight =0;
 		this->startOperatorPos = 0;
 		short lowestWheight = 9999;
-		std::stack<parenthesesToken<mathType> *> parStack;
+		std::stack<parenthesesToken *> parStack;
 		for(int i = 0; i< expressionLength; i++)
 		{
 			if(expression[i] == '(')
 			{
 
-				tokens.push_back(new parenthesesToken<mathType>(i,i));
-				parStack.push( (parenthesesToken<mathType>*)tokens.back() );
+				tokens.push_back(new parenthesesToken(i,i));
+				parStack.push( (parenthesesToken*)tokens.back() );
 				extraOperatorWheight+=4;
 			}
 			else if(expression[i] == ')')
@@ -220,10 +216,10 @@ class interpreter
 				}
 				else
 				{
-					parenthesesToken<mathType>* tmp = parStack.top();
+					parenthesesToken* tmp = parStack.top();
 					parStack.pop();
 					tmp->opposit=i;
-					parenthesesToken<mathType> * tmp2 = new parenthesesToken<mathType>(i,i);
+					parenthesesToken * tmp2 = new parenthesesToken(i,i);
 					tmp2->opposit = tmp->startPos;
 					tokens.push_back(tmp2);
 					extraOperatorWheight-=4;
@@ -232,7 +228,7 @@ class interpreter
 			}
 			else if(isdigit(expression[i]))
 			{
-				valueToken<mathType> * tmp = new valueToken<mathType>(i,0);
+				valueToken * tmp = new valueToken(i,0);
 				short valueLength=0;
 				for(int i2 =i+1; i2 < expressionLength; i2++)
 				{
@@ -245,7 +241,7 @@ class interpreter
 						if(i2+1 < expressionLength && !isdigit(expression[i2+1]) )
 						{
 							std::cerr << "Syntax error: expected exponent after e \n";
-							return false;  
+							return false;
 						}
 
 					}
@@ -265,7 +261,7 @@ class interpreter
 			}
 			else if (expression[i] == '-' && PNegativeDigit<mathType>(tokens, &expression,i) &&i + 1 < expressionLength && isdigit(expression[i+1]) )
 			{
-				valueToken<mathType> * tmp = new valueToken<mathType>(i, 0);
+				valueToken * tmp = new valueToken(i, 0);
 				short valueLength = 0;
 				for (int i2 = i + 1; i2 < expressionLength; i2++)
 				{
@@ -299,7 +295,7 @@ class interpreter
 
 			else if(operators.inArray(expression[i]))
 			{
-				operatorToken<mathType>* tmp = new operatorToken<mathType>(operators.getCurrent());
+				operatorToken* tmp = new operatorToken(operators.getCurrent());
 				tmp->startPos=i;
 				tmp->endPos=i;
 				tmp->baseWheight +=extraOperatorWheight;
@@ -310,7 +306,7 @@ class interpreter
 				}
 				if (tmp->operChar == '=')
 				{
-					
+
 					if (tokens.back()->type != tokenType::VARIABLE)
 					{
 						std::cerr << "Syntax error: Assigment operator requirers an variable on left hand side\n";
@@ -322,8 +318,8 @@ class interpreter
 			}
 			else if (isalpha(expression[i]) )
 			{
-				
-					
+
+
 					short valueLength = 0;
 					short endPos = 0;
 					short startPos = i;
@@ -340,20 +336,20 @@ class interpreter
 					}
 					endPos = i + valueLength;
 					name = std::string(expression, startPos, valueLength + 1);
-					
+
 					i += valueLength;
 					if (current_functions.isloaded(name) == true)
 					{
-						tokens.push_back(new funcToken<mathType>(startPos, endPos, current_functions.get(name)));
-					}	
+						tokens.push_back(new funcToken(startPos, endPos, current_functions.get(name)));
+					}
 					else if (mem != nullptr)
 					{
-						variableToken<mathType> * tmp = new variableToken<mathType>(startPos, endPos, mem);
+						variableToken * tmp = new variableToken(startPos, endPos, mem);
 						tmp->variableName = name;
 						tokens.push_back(tmp);
 					}
 					else
-					{	
+					{
 						std::cerr << "Found variable in string but no memory unit is assigned to the interpeter\n";
 						return false;
 					}
@@ -395,7 +391,7 @@ class interpreter
             else
             {
 				std::cerr << "Failed to build tree\n";
-				return false; 
+				return false;
             }
 		}
 		else
@@ -410,9 +406,9 @@ class interpreter
 
 
 public:
-	/*Warning the interpeter does not copy the memory object. 
+	/*Warning the interpeter does not copy the memory object.
 	Therefore must the pointer remain valid throug the lifetime of the interpreter object*/
-	void setMemory(memory<mathType>* mem)
+	void setMemory(memory* mem)
 	{
 		this->mem = mem;
 	}
@@ -420,8 +416,8 @@ public:
 	{
 		//Add syntax checking
 		//std::cerr << "-[Interptating: " << this->expression << "\n";
-	
-		
+
+
 		if (!lexicalAnalys())
 		{
 			return false;
@@ -436,7 +432,7 @@ public:
 				case PARENTHESES:
 				{
 					std::cerr << "parantheses token]\n";
-					parenthesesToken<mathType>* tmp = static_cast<parenthesesToken<mathType>*>( this->tokens[i]);
+					parenthesesToken<mathType>* tmp = static_cast<parenthesesToken*>( this->tokens[i]);
 					std::cerr <<"-[Opposit token found at "  << tmp->opposit << "]\n\n";
 					break;
 				}
@@ -448,7 +444,7 @@ public:
 				case VALUE:
 				{
 					std::cerr << "value token]\n";
-					valueToken<mathType>* tmp = static_cast<valueToken<mathType>*>(this->tokens[i]);
+					valueToken* tmp = static_cast<valueToken*>(this->tokens[i]);
 					std::cerr << "-[Value:" << tmp->value << "]\n\n";
 					break;
 				}
@@ -460,7 +456,7 @@ public:
 				case OPERATOR:
 				{
 					std::cerr << "operator token]\n";
-					operatorToken<mathType> * tmp = static_cast<operatorToken<mathType>*>(this->tokens[i]);
+					operatorToken * tmp = static_cast<operatorToken*>(this->tokens[i]);
 					std::cerr << "-[operator sign: "<< tmp->operChar << " wheight: " << tmp->baseWheight<< "]\n\n";
 					break;
 				}
@@ -477,8 +473,8 @@ public:
 		*/
 		// if 0 == this->startOperatorPos we need a way to figure out where to begin if no operators exists, e.g expression sqrt(3)
 
-		 
-		
+
+
 		if (!this->buildSyntaxTree())
 		{
 			this->destroyTokens(); //Remove all tokens

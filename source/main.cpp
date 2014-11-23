@@ -20,7 +20,7 @@ std::vector< math_func::function<double>> std_math_trig_func = {
 	math_func::function<double>("atan", static_cast<double(*)(double)>(atan))
 };
 
-bool menu(memory<double>& mem)
+bool menu(memory& mem)
 {
 	std::cout << "PRINT VARIABLES [1]\nEMPTY VARIABLE TABLE[2]\nEXIT [3]\nMenu> ";
 	std::string input;
@@ -60,7 +60,7 @@ int main()
 
 	interpreter<double> inter;
 	std::string expression = "";
-	memory<double> mem;
+	memory mem;
 
 	mem.set("PI", 3.14,true,true);
 

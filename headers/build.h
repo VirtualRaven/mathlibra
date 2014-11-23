@@ -35,9 +35,9 @@ struct buildVector
 		for (int i = lowLimit; i < hiLimit; i++)
 		{
 
-			if (vecLocal[i]->type == OPERATOR && static_cast<operatorToken<mathType>*>(vecLocal[i])->baseWheight <= lowWheight)  //Check for next least important operator
+			if (vecLocal[i]->type == OPERATOR && static_cast<operatorToken*>(vecLocal[i])->baseWheight <= lowWheight)  //Check for next least important operator
 			{
-				lowWheight = static_cast<operatorToken<mathType>*>(vecLocal[i])->baseWheight;
+				lowWheight = static_cast<operatorToken*>(vecLocal[i])->baseWheight;
 				nextOperation = i;
 				lenght++;
 			}
@@ -89,7 +89,7 @@ bool buildSubNodes(mathNode::mathExpressionNode * target, buildVector<mathType> 
 		return true;
 			break;
 	case OPERATOR:
-		return _operator_build(static_cast<mathNode::mathExpressionNode_opr<mathType>*>(target), vec);
+		return _operator_build(static_cast<mathNode::mathExpressionNode_opr*>(target), vec);
 			break;
 	case VALUE:
 		return true;
@@ -106,7 +106,7 @@ bool buildSubNodes(mathNode::mathExpressionNode * target, buildVector<mathType> 
 
 
 template<typename mathType>
-bool _operator_build(mathNode::mathExpressionNode_opr<mathType> * tgt, buildVector<mathType> vec)
+bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector<mathType> vec)
 		{
 
 			std::vector<baseToken*> vecLocal = *vec.vecPtr;
@@ -158,7 +158,7 @@ bool _operator_build(mathNode::mathExpressionNode_opr<mathType> * tgt, buildVect
 				std::cerr << "Can't create sub node!\n";
 				return false;
 			}
-		
+
 			node1.vecOffset=result;
 
 			node2.lowLimit = vec.vecOffset + 1;
