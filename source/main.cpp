@@ -5,7 +5,7 @@
 #include "functions.h"
 
 /* TODO
-	Add function inpterpeting and execution PARTIALI IMPLEMENTED
+	Add function inpterpeting and execution DONE
 	Add varible interpeting and memmory system. DONE
 	Add syntax checking and error reporting
 	Add polyargument functions
@@ -90,7 +90,7 @@ int main()
 	functions.load(std_math_num_func);
 	inter.setFunction(&functions);
 
-	//err_redirect err; //remove cerr stream
+	err_redirect err; //remove cerr stream
 
 	bool exit = false;
 	do

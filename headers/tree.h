@@ -88,6 +88,7 @@ public:
 	void operator=(const rootNode& sourceNode);
 };
 
+void display_tree(rootNode tree);
 
 
 #endif

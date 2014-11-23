@@ -1,4 +1,5 @@
 #include "tree.h"
+#include <vector>
 
 const char* TreeStructOops::what()
 {
@@ -213,3 +214,42 @@ void rootNode::operator=(const rootNode& sourceNode)
 	_copy(sourceNode);
 
 }
+
+struct PtrPair
+{
+	node * x;
+	node *y;
+	PtrPair(node * x, node *y)
+	{
+		this->x = x;
+		this->y = y;
+	}
+};
+/*
+void display_tree(rootNode tree)
+{
+	typedef std::vector<PtrPair> levelVec;
+	std::vector<levelVec> treeVec;
+	levelVec level1Vec;
+	level1Vec.push_back(PtrPair(tree.sub1(), tree.sub2()));
+	treeVec.push_back(level1Vec);
+	
+	do
+	{
+		levelVec currentVec = treeVec.back();
+		levelVec nextVec;
+		for (int i = 0; i < currentVec.size(); i++)
+		{
+			
+			PtrPair xy(currentVec[i].x->sub1,currentVec[i].y->sub2);
+			if (currentVec[i].x)
+			{
+
+			}
+			nextVec.push_back(xy);
+		}
+		treeVec.push_back(nextVec);
+	}
+
+
+}*/

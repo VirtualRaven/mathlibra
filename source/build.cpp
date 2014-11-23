@@ -69,7 +69,7 @@
 				}
 			}
 		}
-		//Implement function checking
+		
 
 		//Find error if program comes here
 		std::cerr << "-[ Unknown error ]\n";
