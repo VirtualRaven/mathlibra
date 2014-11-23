@@ -64,7 +64,7 @@
 	{
 		std::vector<std::string> re;
 
-		for (int i = 0; i < mem.size(); i++)
+		for (unsigned int i = 0; i < mem.size(); i++)
 		{
 			re.push_back(mem[i].name);
 		}

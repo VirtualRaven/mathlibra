@@ -10,24 +10,11 @@ protected:
 	std::string info;
 
 public:
-	
-	exception(std::string inf)
-	{
-		info = inf;
-	}
-	exception()
-	{
-		info = "";
-	}
-	
-	virtual const char * what()
-	{
-		return "";
-	}
-	 std::string desc()
-	{
-		 return info;
-	}
+
+	exception(std::string inf);
+	exception();
+	virtual const char * what();
+    std::string desc();
 
 };
 #endif //EXCEPTION_H_INCLUDED

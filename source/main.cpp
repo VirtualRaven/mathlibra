@@ -11,13 +11,13 @@
     Verify that exception system does not intoduce memmory leaks
 
 */
-std::vector< math_func::function<double>> std_math_trig_func = {
-	math_func::function<double>("sin", static_cast<double(*)(double)>(sin)),
-	math_func::function<double>("cos", static_cast<double(*)(double)>(cos)),
-	math_func::function<double>("tan", static_cast<double(*)(double)>(tan)),
-	math_func::function<double>("asin", static_cast<double(*)(double)>(asin)),
-	math_func::function<double>("acos", static_cast<double(*)(double)>(acos)),
-	math_func::function<double>("atan", static_cast<double(*)(double)>(atan))
+std::vector< math_func::function> std_math_trig_func = {
+	math_func::function("sin", static_cast<double(*)(double)>(sin)),
+	math_func::function("cos", static_cast<double(*)(double)>(cos)),
+	math_func::function("tan", static_cast<double(*)(double)>(tan)),
+	math_func::function("asin", static_cast<double(*)(double)>(asin)),
+	math_func::function("acos", static_cast<double(*)(double)>(acos)),
+	math_func::function("atan", static_cast<double(*)(double)>(atan))
 };
 
 bool menu(memory& mem)
@@ -58,7 +58,7 @@ int main()
 {
 	std::cout << "Calculator backend test\nLukas Rahmn 2014\n";
 
-	interpreter<double> inter;
+	interpreter inter;
 	std::string expression = "";
 	memory mem;
 
