@@ -53,8 +53,9 @@ class interpreter
 	std::vector<baseToken*> tokens;
 
 	rootNode root;
-	math_func::function_interface current_functions;
+	math_func::function_interface* current_functions;
 	memory *mem;
+
 	bool rootEmpty;
 
 	void emptyRoot();
@@ -71,6 +72,7 @@ public:
 	/*Warning the interpeter does not copy the memory object.
 	Therefore must the pointer remain valid throug the lifetime of the interpreter object*/
 	void setMemory(memory* mem);
+	void setFunction(math_func::function_interface* functions);
 	bool interpret();
 	number_type exec();
 	void set(const char * expression, short lenght);

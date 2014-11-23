@@ -20,7 +20,7 @@
 	short buildVector::calculateNextOperation(short lowLimit, short hiLimit)
 	{
 		short lowWheight = 9999;
-		short nextOperation = -2;
+		short nextOperation = -2; 
 		short lenght = 0;
 		short values = 0;
 		std::vector<baseToken*> vecLocal = *vecPtr;
@@ -33,6 +33,12 @@
 				nextOperation = i;
 				lenght++;
 			}
+			else if (vecLocal[i]->type == FUNCTION && static_cast<funcToken*>(vecLocal[i])->baseWheight <= lowWheight)  //Check for next least important operator
+			{
+				lowWheight = static_cast<funcToken*>(vecLocal[i])->baseWheight;
+				nextOperation = i;
+				lenght++;
+			}
 			else if (vecLocal[i]->type != PARENTHESES && vecLocal[i]->type != UNKNOWN)
 			{
 				if (vecLocal[i]->type == VALUE || vecLocal[i]->type == VARIABLE)
@@ -41,6 +47,7 @@
 				}
 				lenght++;
 			}
+		
 			//Debug function remove later
 			else if (vecLocal[i]->type == UNKNOWN)
 			{
@@ -158,6 +165,66 @@ bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)
 			return true;
 		}
 
+bool _function_build(mathNode::mathExpressionNode_func * tgt, buildVector vec)
+{
+
+	std::vector<baseToken*> vecLocal = *vec.vecPtr;
+	
+
+	
+	if (vec.vecOffset >= vecLocal.size() - 1)
+	{
+		std::cerr << "Syntax error: Expected value or exression after function\n";
+
+	}
+	else if (vecLocal[vec.vecOffset + 1]->type != tokenType::PARENTHESES) //Won't work if user writes any formating token before the operator
+	{
+		std::cerr << "Excpected parentheses after function name";
+		return false;
+	}
+	for (int i = vec.lowLimit; i < vec.vecOffset; i++)
+	{
+		if (vecLocal[i]->type != PARENTHESES)
+		{
+			std::cerr << "Vital token on lefhand side of function in build vector!\n";
+			return false;
+		}
+	}
+	buildVector node1(vec.vecOffset + 1, vec.hiLimit, 0, vec.vecPtr);
+	
+	//Create first sub branche
+
+	short result = node1.calculateNextOperation(node1.lowLimit, node1.hiLimit);
+	if (result < 0)
+	{
+		return false;
+	}
+
+	mathNode::mathExpressionNode* mathNode1;
+	if (vecLocal[result]->hasNode())
+	{
+		mathNode1 = vecLocal[result]->node();
+	}
+	else
+	{
+		std::cerr << "Can't create sub node!\n";
+		return false;
+	}
+
+	node1.vecOffset = result;
+
+	
+
+
+	nodeDataInterface_wrapper_access(tgt)->createSubNodes(mathNode1,nullptr);
+	if (!buildSubNodes(mathNode1, node1))
+	{
+		return false;
+	}
+
+	return true;
+}
+
 
 
 
@@ -174,7 +241,10 @@ bool buildSubNodes(mathNode::mathExpressionNode * target, buildVector vec)
 			break;
 	case VALUE:
 		return true;
-
+		break;
+	case FUNCTION:
+		return _function_build(static_cast<mathNode::mathExpressionNode_func*>(target), vec);
+		break;
 	default:
 	{
 			   std::cerr << "Can't build subnodes, unsopported type\n";

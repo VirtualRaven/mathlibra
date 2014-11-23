@@ -69,11 +69,11 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 			{
 				throw interpreterOops("Panic: Tokens subscript operator out of bounds");
 			}
-			mathNode::mathExpressionNode* topNode = parentInterpreter->tokens[parentInterpreter->startOperatorPos]->node();
+			mathNode::mathExpressionNode* topNode = parentInterpreter->tokens[parentInterpreter->startOperatorPos]->node(); //Create the top node out of the starting token
 
-			this->root.set(topNode);
-			buildVector build(0, parentInterpreter->tokens.size(), parentInterpreter->startOperatorPos,&parentInterpreter->tokens);
-			if (!buildSubNodes(static_cast<mathNode::mathExpressionNode*>(root.data),build))
+			this->root.set(topNode); // Put the node into the root of the tree
+			buildVector build(0, parentInterpreter->tokens.size(), parentInterpreter->startOperatorPos,&parentInterpreter->tokens); //Fill the build vector
+			if (!buildSubNodes(static_cast<mathNode::mathExpressionNode*>(root.data),build)) //Build the sub node acording to the build vector
 			{
 				std::cerr << "-[ Failed to build syntax tree ]\n";
 				root.deleteSubNodes();
@@ -304,9 +304,16 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 					name = std::string(expression, startPos, valueLength + 1);
 
 					i += valueLength;
-					if (current_functions.isloaded(name) == true)
+					if (current_functions != nullptr && current_functions->isloaded(name) == true)
 					{
-						tokens.push_back(new funcToken(startPos, endPos, current_functions.get(name)));
+						funcToken *tmp = new funcToken(startPos, endPos, current_functions->get(name));
+						tmp->baseWheight += extraOperatorWheight;
+						if (tmp->baseWheight <= lowestWheight) // <= for left association && < for right association
+						{
+							lowestWheight = tmp->baseWheight;
+							this->startOperatorPos = tokens.size();
+						}
+						tokens.push_back(tmp);
 					}
 					else if (mem != nullptr)
 					{
@@ -362,6 +369,22 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 		}
 		else
 		{
+			if (this->tokens[this->startOperatorPos]->type == FUNCTION)
+			{
+				if (buildObject.buildEntry1())
+				{
+					emptyRoot();
+					this->root = buildObject.getTree();
+					rootEmpty = false;
+					return true;
+
+				}
+				else
+				{
+					std::cerr << "Failed to build tree\n";
+					return false;
+				}
+			}
 			std::cerr << "Can't find start point\n";
 				return false;
 		}
@@ -385,7 +408,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 		{
 			return false;
 		}
-		/*
+#ifdef DEBUG
 		for(unsigned int i = 0; i < this->tokens.size(); i++)
 		{
 			std::cerr <<"-[Token> start: "<< this->tokens[i]->startPos<<" end: " << this->tokens[i]->endPos << " ]\n";
@@ -395,7 +418,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 				case PARENTHESES:
 				{
 					std::cerr << "parantheses token]\n";
-					parenthesesToken<number_type>* tmp = static_cast<parenthesesToken*>( this->tokens[i]);
+					parenthesesToken* tmp = static_cast<parenthesesToken*>( this->tokens[i]);
 					std::cerr <<"-[Opposit token found at "  << tmp->opposit << "]\n\n";
 					break;
 				}
@@ -431,9 +454,9 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 			default:
 				break;
 			}
-			std::cerr << "\n-[Start pos: " << this->startOperatorPos << " ]\n";
+			
 		}
-		*/
+#endif //DEBUG
 		// if 0 == this->startOperatorPos we need a way to figure out where to begin if no operators exists, e.g expression sqrt(3)
 
 
@@ -493,4 +516,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 	}
 
 
-
+	void interpreter::setFunction(math_func::function_interface* functions)
+	{
+		this->current_functions = functions;
+	}

@@ -77,7 +77,7 @@ struct funcToken : public baseToken
 {
 	typedef number_type(*funcPtr)(number_type);
 	funcPtr ptr;
-
+	short baseWheight;
 	mathNode::mathExpressionNode* node();
 	bool  hasNode();
 	funcToken(short startPos, short endPos, funcPtr ptr);

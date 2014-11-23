@@ -28,6 +28,7 @@ typedef double number_type;
 		void load(function obj);
 		bool isloaded(std::string funcName);
 		funcPtr get(std::string funcName);
+		void display();
 
 	};
 };

@@ -187,6 +187,7 @@
 		this->endPos = endPos;
 		this->startPos = startPos;
 		this->type = FUNCTION;
+		this->baseWheight = 4;
 	}
 
 	funcToken::funcToken()
@@ -195,5 +196,6 @@
 		this->endPos = 0;
 		this->startPos = 0;
 		this->type = FUNCTION;
+		this->baseWheight = 4;
 	}
 
