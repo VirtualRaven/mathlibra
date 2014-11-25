@@ -34,18 +34,18 @@ namespace util
 		std::getline(std::cin, input);
 		if (input == "1")
 		{
-			std::cout << "\nThis program is only meant to showcase an concept of expression handling by using tree like data structures. It serves in its current state as an replacement for a calculator or other software as bugs an limited precisions exists.\n\n" << "The goal of the program is to develop an expression interpretor back end to be utilized in a more advance graphical application.In its current state the application will try to evaluate any expression entered and compute an answer using floating point mathematics.\n\n" << " The expression can contain functions, variables operators and of course values in form of numbers.See the other topics in the help menu for more info.";
+			std::cout << "\nThis program is only meant to showcase an concept of expression handling by using tree like data structures. It in its current state it doesn't serve as an replacement for a calculator or other software as bugs and precisions problems may exist.\n\n" << "The goal of the program is to develop an expression interpretor back end to be utilized in a more advance graphical application.In its current state the application will try to evaluate any expression entered and compute an answer using floating point mathematics.\n\n" << " The expression can contain functions, variables operators and of course values in form of numbers.See the other topics in the help menu for more info.";
 
 			return;
 		}
 		else if (input == "2")
 		{
-			std::cout << "\nValues are any real number.\nvalues can be entered as 35 -2 or 2e10\n2e10 is equal to writing 2*10^10 but the first is evaluated faster.\n";
+			std::cout << "\nValues are any real number.\nvalues can be entered as 35, -2 or 2e10\n2e10 is equal to writing 2*10^10 but the first is evaluated faster.\n";
 			return;
 		}
 		else if (input == "3")
 		{
-			std::cout << "\noperators are + -/ *^\nThey represent addition, subtraction, division, multiplication and raised to x.\nparentheses are also accepted to alter order of evaluation\n";
+			std::cout << "\noperators are + -/ *^\nThey represent addition, subtraction, division, multiplication and raised to.\nparentheses are also accepted to alter order of evaluation\n";
 			return;
 		}
 		else if (input == "4")
@@ -55,7 +55,7 @@ namespace util
 		}
 		else if (input == "5")
 		{
-			std::cout << "\nAn variable is defined as an variable memory storage unity which is used to represent an number during an callcilation. The variable can is defined as an string or single character which can be both upper and lower case.\n\nX, PI,ans are all legal variables.\n\nNames which are the same as any loaded function is illegal\nNames are case sensitive \nX is not equal to x\nans is always stores the result of previous calculations\nPI is an example of an constant which can not be altered by the assignment operator.\n\nVariable are assigned a value using the assigment operator =.\nX=12 is an legal assigment so is x=(23+45)/2 but 13 =x is illegal as the assigment operator excpects the variable on the left hand side.\n";
+			std::cout << "\nAn variable is defined as an variable memory storage unit which is used to represent an number during an calculation. The variable can is defined as an string or single character which can be both upper and lower case.\n\nX, PI,ans are all legal variables.\n\nNames which are the same as any loaded function is illegal as the interpreter will fail to distinguish these from functions\nNames are case sensitive \nX is not equal to x\nans always stores the result of previous calculations\nPI is an example of an constant variable which can not be altered by the assignment operator.\n\nVariable are assigned a value using the assigment operator =.\nX=12 is an legal assigment so is x=(23+45)/2 but 13 =x is illegal as the assigment operator excpects the variable on the left hand side.\n";
 			return;
 		}
 		else if (input == "6")
