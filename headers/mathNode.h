@@ -2,6 +2,7 @@
 #define MATHNODE_H_INCLUDED
 #include "tree.h"
 #include "memory.h"
+#include "main.h"
 struct buildVector;
 struct variableToken;
 namespace mathNode

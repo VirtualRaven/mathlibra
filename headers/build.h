@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include "operators.h"
+#include "main.h"
 //Contains function for creating an exression tree
 
 

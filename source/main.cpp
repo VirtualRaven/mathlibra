@@ -12,31 +12,11 @@
     Verify that exception system does not intoduce memmory leaks
 
 */
-std::vector< math_func::function> std_math_trig_func = {
-	math_func::function("sin", static_cast<double(*)(double)>(sin)),
-	math_func::function("cos", static_cast<double(*)(double)>(cos)),
-	math_func::function("tan", static_cast<double(*)(double)>(tan)),
-	math_func::function("asin", static_cast<double(*)(double)>(asin)),
-	math_func::function("acos", static_cast<double(*)(double)>(acos)),
-	math_func::function("atan", static_cast<double(*)(double)>(atan))
-};
 
-std::vector<math_func::function> std_math_func = {
-	math_func::function("abs", static_cast<double(*)(double)>(abs)),
-	math_func::function("sqrt", static_cast<double(*)(double)>(sqrt)),
-	math_func::function("log", static_cast<double(*)(double)>(log)),
-	math_func::function("lg", static_cast<double(*)(double)>(log10))
-};
-
-std::vector<math_func::function> std_math_num_func = {
-	math_func::function("ceil", static_cast<double(*)(double)>(ceil)),
-	math_func::function("floor", static_cast<double(*)(double)>(floor)),
-	math_func::function("round", static_cast<double(*)(double)>(round))
-};
 
 bool menu(memory& mem,math_func::function_interface& func)
 {
-	std::cout << "PRINT VARIABLES [1]\nEMPTY VARIABLE TABLE[2]\nPRINT FUNCS[3]\nEXIT [4]\nMenu> ";
+	std::cout << "PRINT VARIABLES [1]\nEMPTY VARIABLE TABLE[2]\nPRINT FUNCS[3]\nPRINT BUILD INFO[4]\nPRINT HELP[5]\nEXIT [6]\nMenu> ";
 	std::string input;
 	std::getline(std::cin, input);
 	if (input == "1")
@@ -65,6 +45,16 @@ bool menu(memory& mem,math_func::function_interface& func)
 	}
 	else if (input == "4")
 	{
+		util::buildInfo();
+		return false;
+	}
+	else if (input == "5")
+	{
+		util::help();
+		return false;
+	}
+	else if (input == "6")
+	{
 		return true;
 	}
 	else
@@ -73,9 +63,9 @@ bool menu(memory& mem,math_func::function_interface& func)
 		return menu(mem,func);
 	}
 }
-int main()
+int main(int argc, wchar_t* argv[])
 {
-	std::cout << "Calculator backend test\nLukas Rahmn 2014\n";
+	std::cout << "Calculator backend test\nLukas Rahmn 2014\n\nEnter an expression or write menu to open the menu\n\n";
 
 	interpreter inter;
 	std::string expression = "";
@@ -85,9 +75,9 @@ int main()
 	inter.setMemory(&mem); //Assign memory unit to interpreter
 	//init func unit
 	math_func::function_interface functions; //Create function unit
-	functions.load(std_math_trig_func); // Load std_math_trig_funct into function unit
-	functions.load(std_math_func);
-	functions.load(std_math_num_func);
+	functions.load(math_func::std_math_trig_func); // Load std_math_trig_funct into function unit
+	functions.load(math_func::std_math_func);
+	functions.load(math_func::std_math_num_func);
 	inter.setFunction(&functions);
 
 	err_redirect err; //remove cerr stream

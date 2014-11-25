@@ -26,7 +26,9 @@ namespace mathNode
 
 		void mathExpressionNode::destroy() //Here goes nothing, fingers crossed
 		{
-			std::cerr << "Delete signal received, self destruct!\n";
+			#ifdef SYNTAX_TREE_DEBUG_INFO
+				std::cerr << "Delete signal received, self destruct!\n";
+			#endif
 			delete this;
 		}
 

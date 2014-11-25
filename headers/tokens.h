@@ -1,5 +1,5 @@
 #include "mathNode.h"
-
+#include "main.h"
 
 using mathNode::number_type;
 

@@ -47,6 +47,7 @@ void node::createSubNodes(nodeDataInterface* data1, nodeDataInterface* data2) //
 		this->nodePtr2->data->bind(this->nodePtr2);
 	}
 }
+#ifdef STRUCTUAL_INTEGRITY_TEST
 void node::integrityTest(int level )
 {
 	std::cerr << "Testing level " << level << "\nNodePtr1: " << nodePtr1 << "\nNodePtr2: " << nodePtr2 << "\n";
@@ -62,6 +63,7 @@ void node::integrityTest(int level )
 	}
 
 }
+#endif
 node * node::sub1()
 {
 	return nodePtr1;
@@ -138,14 +140,14 @@ void rootNode::_empty()
 			}
 
 			this->data = nullptr;
-
+#ifdef SYNTAX_TREE_DEBUG_INFO
 			std::cerr << "Destroyed root node\n";
-
+#endif
 			delete copies;
 			copies = nullptr;
-
+#ifdef SYNTAX_TREE_DEBUG_INFO
 			std::cerr << "Destroyed copy index node\n";
-
+#endif
 		}
 	}
 	else

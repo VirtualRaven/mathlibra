@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include "exception.h"
+#include "main.h"
 typedef double number_type;
 
 struct memoryOops : public exception

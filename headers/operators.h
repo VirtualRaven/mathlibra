@@ -1,4 +1,5 @@
 #include "tokens.h"
+#include "main.h"
 #include <cmath>
 using mathNode::number_type;
 

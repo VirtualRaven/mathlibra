@@ -87,7 +87,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 
                 built=true;
 
-                #ifdef DEBUG
+#ifdef STRUCTUAL_INTEGRITY_TEST
                     this->root.integrityTest();
                 #endif
                 return built;
@@ -408,7 +408,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 		{
 			return false;
 		}
-#ifdef DEBUG
+#ifdef  LEXICAL_ANANALYSIS_DEBUG
 		for(unsigned int i = 0; i < this->tokens.size(); i++)
 		{
 			std::cerr <<"-[Token> start: "<< this->tokens[i]->startPos<<" end: " << this->tokens[i]->endPos << " ]\n";
@@ -456,9 +456,8 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 			}
 			
 		}
-#endif //DEBUG
-		// if 0 == this->startOperatorPos we need a way to figure out where to begin if no operators exists, e.g expression sqrt(3)
-
+#endif 
+		 
 
 
 		if (!this->buildSyntaxTree())
@@ -467,7 +466,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 			return false;
 		}
 		this->destroyTokens(); //Remove all tokens
-        #ifdef DEBUG
+	#ifdef STRUCTUAL_INTEGRITY_TEST
             this->root.integrityTest();
         #endif
 
@@ -478,7 +477,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 	{
         if(!rootEmpty)
         {
-            #ifdef DEBUG
+#ifdef STRUCTUAL_INTEGRITY_TEST
             this->root.integrityTest();
             #endif
 			this->root.TakeContext();

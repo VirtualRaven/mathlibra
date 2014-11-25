@@ -3,7 +3,7 @@
 #include <cmath>
 #include <vector>
 #include <iostream>
-
+#include "main.h"
 namespace math_func
 {
 typedef double number_type;
@@ -31,5 +31,12 @@ typedef double number_type;
 		void display();
 
 	};
+
+	//Vector containing basic trigometric functions form dervired from math.h
+	extern std::vector< math_func::function> std_math_trig_func;
+	//Vector containing the very basic functions like sqrt or log form dervired from math.h
+	extern std::vector<math_func::function> std_math_func;
+	//Vector containing basic numerical functions like ceil dervired from math.h
+	extern std::vector<math_func::function> std_math_num_func;
 };
 #endif

@@ -10,8 +10,12 @@
 		{
 			std::cout << "Failed to redirect!\n";
 		}
-
 	}
+	void err_redirect::toggle()
+	{
+		
+	}
+	
 
 	err_redirect::~err_redirect()
 	{

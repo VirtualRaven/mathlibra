@@ -55,4 +55,25 @@ namespace math_func
 			std::cout << " }\nLoaded " << this->funcs.size() << " functions]\n";
 
 		}
+		std::vector< math_func::function> std_math_trig_func = {
+			math_func::function("sin", static_cast<double(*)(double)>(sin)),
+			math_func::function("cos", static_cast<double(*)(double)>(cos)),
+			math_func::function("tan", static_cast<double(*)(double)>(tan)),
+			math_func::function("asin", static_cast<double(*)(double)>(asin)),
+			math_func::function("acos", static_cast<double(*)(double)>(acos)),
+			math_func::function("atan", static_cast<double(*)(double)>(atan))
+		};
+
+		std::vector<math_func::function> std_math_func = {
+			math_func::function("abs", static_cast<double(*)(double)>(abs)),
+			math_func::function("sqrt", static_cast<double(*)(double)>(sqrt)),
+			math_func::function("log", static_cast<double(*)(double)>(log)),
+			math_func::function("lg", static_cast<double(*)(double)>(log10))
+		};
+
+		std::vector<math_func::function> std_math_num_func = {
+			math_func::function("ceil", static_cast<double(*)(double)>(ceil)),
+			math_func::function("floor", static_cast<double(*)(double)>(floor)),
+			math_func::function("round", static_cast<double(*)(double)>(round))
+		};
 };

@@ -1,10 +1,9 @@
 #ifndef TREE_H_INCLUDED
 #define TREE_H_INCLUDED
 #include <iostream>
-
+#include "main.h"
 #include "exception.h"
 
-//template<typename mathType> struct baseToken;
 class node;
 
 
@@ -61,7 +60,9 @@ public:
 
 	nodeDataInterface* data;
 	void createSubNodes(nodeDataInterface* data1, nodeDataInterface* data2 = nullptr); // Creats one or two sub nodes
+#ifdef  STRUCTUAL_INTEGRITY_TEST
 	void integrityTest(int level = 0);
+#endif
 	node * sub1();
 	node * sub2();
 	void deleteSubNodes();
