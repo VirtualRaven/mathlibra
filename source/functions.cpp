@@ -65,7 +65,7 @@ namespace math_func
 		};
 
 		std::vector<math_func::function> std_math_func = {
-			math_func::function("abs", static_cast<double(*)(double)>(abs)),
+			//math_func::function("abs", static_cast<double(*)(double)>(abs)), //Only defined with double overload on certain platforms
 			math_func::function("sqrt", static_cast<double(*)(double)>(sqrt)),
 			math_func::function("log", static_cast<double(*)(double)>(log)),
 			math_func::function("lg", static_cast<double(*)(double)>(log10))

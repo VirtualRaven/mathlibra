@@ -7,7 +7,7 @@
 /* TODO
 	Add function inpterpeting and execution DONE
 	Add varible interpeting and memmory system. DONE
-	Add syntax checking and error reporting
+	Add syntax checking and error reporting PARTERLY
 	Add polyargument functions
     Verify that exception system does not intoduce memmory leaks
 
@@ -63,7 +63,7 @@ bool menu(memory& mem,math_func::function_interface& func)
 		return menu(mem,func);
 	}
 }
-int main(int argc, wchar_t* argv[])
+int main(int argc, char* argv[])
 {
 	std::cout << "Calculator backend test\nLukas Rahmn 2014\n\nEnter an expression or write menu to open the menu\n\n";
 
