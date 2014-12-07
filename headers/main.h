@@ -2,8 +2,8 @@
 #define MAI_H_INCLUDED
 #define DEBUG
 #ifdef DEBUG
-
-#ifdef DEBUG 
+typedef double number_type;
+#ifdef DEBUG
 #define LEXICAL_ANANALYSIS_DEBUG
 //#define SYNTAX_TREE_DEBUG_INFO
 //#define STRUCTUAL_INTEGRITY_TEST

@@ -1,14 +1,9 @@
 #include "exception.h"
 
 
-exception::exception(std::string inf)
-	{
-		info = inf;
-	}
-exception::exception()
-	{
-		info = "";
-	}
+exception::exception(std::string inf) : info(inf){}
+
+exception::exception():info(""){}
 
 	const char * exception::what()
 	{
@@ -18,3 +13,7 @@ exception::exception()
 	{
 		 return info;
 	}
+ exception::~exception()
+ {
+
+ }

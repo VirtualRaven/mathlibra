@@ -13,8 +13,10 @@ public:
 
 	exception(std::string inf);
 	exception();
+	virtual ~exception();
 	virtual const char * what();
     std::string desc();
+
 
 };
 #endif //EXCEPTION_H_INCLUDED

@@ -1,4 +1,0 @@
-class interpeter_interface
-{
-
-};
