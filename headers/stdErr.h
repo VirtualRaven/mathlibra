@@ -3,12 +3,13 @@
 #include "main.h"
 class err_redirect {
 
-	std::streambuf * old;
-	std::streambuf * newBuff;
 	std::stringstream stream;
+	std::streambuf * newBuff;
+	std::streambuf * old;
+
 
 public:
-	
+
 	void toggle();
 	err_redirect();
 	~err_redirect();

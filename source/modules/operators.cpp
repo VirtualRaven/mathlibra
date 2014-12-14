@@ -29,36 +29,62 @@ namespace operators
 		return pow(x,y);
 	}
 
-	number_type oper_assign(variableToken storage, double val)
+	number_type oper_assign(memory* mem,std::string name, double val)
 	{
-		storage.mem->set(storage.variableName,val);
+		mem->set(name,val);
 		return val;
 	}
 
-    operators std_operators= {
-        operatorToken(&sub,'-',1),
-		operatorToken(&add,'+' ,1),
-		operatorToken(&multi,'*' ,2),
-		operatorToken(&divide,'/' ,2),
-		operatorToken(&oper_pow,'^' ,3),
-        operatorToken(&oper_assign,'=',0),
+    vec_operators std_operators= {
+        interpreter_operator(&sub,'-',1),
+		interpreter_operator(&add,'+' ,1),
+		interpreter_operator(&multi,'*' ,2),
+		interpreter_operator(&divide,'/' ,2),
+		interpreter_operator(&oper_pow,'^' ,3),
+        interpreter_operator(&oper_assign,'=',0),
     };
 
+operators::interpreter_operator::interpreter_operator(operPtr opr, char symbol, short wheight):
+  oper(opr),
+  assign(nullptr),
+  operChar(symbol),
+  baseWheight(wheight),
+  operType(MATH)
+{}
 
-        void operators_interface::load(operators oprs)
+operators::interpreter_operator::interpreter_operator(assigmentPtr assigne, char symbol, short wheight):
+ oper(nullptr),
+ assign(assigne),
+ operChar(symbol),
+ baseWheight(wheight),
+ operType(ASSIGN)
+{}
+
+operators::interpreter_operator::interpreter_operator():
+ oper(nullptr),
+ assign(nullptr),
+ operChar(0),
+ baseWheight(0),
+ operType(NOT_SET)
+ {}
+
+
+
+
+        void operators_interface::load(vec_operators oprs)
         {
             this->_operators.insert(_operators.end(),oprs.begin(),oprs.end());
         }
-        void operators_interface::load(operatorToken tok)
+        void operators_interface::load(interpreter_operator tok)
         {
             this->_operators.push_back(tok);
         }
 
 operators_interface::operators_interface()
-{
-    this->lastOffset=0;
-    this->_operators = std_operators;
-}
+: _operators(std_operators),
+lastOffset(0)
+
+{}
 
 	bool  operators_interface::inArray(char opr)
 	{
@@ -72,7 +98,7 @@ operators_interface::operators_interface()
 		}
 		return false;
 	}
-	operatorToken  operators_interface::getCurrent()
+	interpreter_operator  operators_interface::getCurrent()
 	{
 		return this->_operators[lastOffset];
 	}

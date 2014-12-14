@@ -27,12 +27,12 @@
 	{
 		switch (operType)
 		{
-		case ASSIGN:
+		case operators::ASSIGN:
 		{
 					   return new mathNode::mathExpressionNode_opr(assign);
 		}
 			break;
-		case MATH:
+		case operators::MATH:
 		{
 			return new mathNode::mathExpressionNode_opr(oper);
 		}
@@ -49,46 +49,30 @@
 	{
 		return true;
 	}
-	operatorToken::operatorToken(operPtr opr, char symbol, short wheight)
+	operatorToken::operatorToken(operators::operPtr opr, char symbol, short wheight)
 	 :baseToken(),
-    oper(opr),
-    assign(nullptr),
-      operChar(symbol),
-      baseWheight(wheight),
-       operType(MATH)
+	 operators::interpreter_operator( opr, symbol,wheight)
 	{
 		this->type = OPERATOR;
 	}
-
-
-
-	operatorToken::operatorToken(assigmentPtr assigne, char symbol, short wheight)
-	 :baseToken(),
-     oper(nullptr),
-    assign(assigne),
-     operChar(symbol),
-      baseWheight(wheight),
-     operType(ASSIGN)
-
-
+	operatorToken::operatorToken(operators::assigmentPtr assigne, char symbol, short wheight)
+	 :baseToken(), operators::interpreter_operator(assign,symbol,wheight)
 	{
 
 		this->type = OPERATOR;
 	}
+	operatorToken::operatorToken(operators::interpreter_operator opr)
+	:baseToken(), operators::interpreter_operator::interpreter_operator(opr)
+    {
+		this->type = OPERATOR;
+	}
+
 	operatorToken::operatorToken()
-    :baseToken(),
-    oper(nullptr),
-    assign(nullptr),
-      operChar(0),
-    baseWheight(0),
-
-
-    operType(NOT_SET)
-
-	{
-
+    :baseToken(),operators::interpreter_operator::interpreter_operator()
+    {
 		this->type = OPERATOR;
-	}
+    }
+
 
 	bool parenthesesToken::isOppening()
 	{

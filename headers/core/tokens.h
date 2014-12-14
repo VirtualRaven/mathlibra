@@ -3,6 +3,7 @@
 
 #include "mathNode.h"
 #include "main.h"
+#include "modules/operators.h"
 
 using mathNode::number_type;
 
@@ -21,23 +22,13 @@ struct baseToken
 };
 
 
-struct operatorToken : public baseToken
+struct operatorToken : public baseToken, operators::interpreter_operator
 {
-	typedef number_type(*operPtr)(number_type,number_type);
-	typedef number_type(*assigmentPtr)(variableToken, number_type);
-    enum operationType{NOT_SET,ASSIGN,MATH};
-
-
-	operPtr oper;
-	assigmentPtr assign;
-	char operChar;
-	short baseWheight;
-	operationType operType;
-
 	mathNode::mathExpressionNode * node();
 	bool  hasNode();
-	operatorToken(operPtr opr, char symbol, short wheight);
-	operatorToken(assigmentPtr assign, char symbol, short wheight);
+	operatorToken(operators::operPtr opr, char symbol, short wheight);
+	operatorToken(operators::assigmentPtr assign, char symbol, short wheight);
+	operatorToken(operators::interpreter_operator opr);
 	operatorToken();
 };
 
@@ -55,7 +46,6 @@ struct parenthesesToken : public baseToken
 
 struct valueToken : public baseToken
 {
-
 	double value;
 
 	mathNode::mathExpressionNode* node();
@@ -75,8 +65,8 @@ struct variableToken : public baseToken
 	bool  hasNode();
 	variableToken(short startPos, short endPos,memory* mem);
 	variableToken();
-variableToken(const variableToken&);
-variableToken operator=(const variableToken&);
+    variableToken(const variableToken&);
+    variableToken operator=(const variableToken&);
 
 
 };

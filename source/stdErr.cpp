@@ -3,9 +3,10 @@
 
 
 	err_redirect::err_redirect()
+	:stream(),
+	newBuff(stream.rdbuf()),
+	old(std::cerr.rdbuf(newBuff))
 	{
-		newBuff = stream.rdbuf();
-		old = std::cerr.rdbuf(newBuff);
 		if (std::cerr.fail())
 		{
 			std::cout << "Failed to redirect!\n";
@@ -13,9 +14,9 @@
 	}
 	void err_redirect::toggle()
 	{
-		
+
 	}
-	
+
 
 	err_redirect::~err_redirect()
 	{

@@ -1,30 +1,47 @@
 #ifndef OPERATORS_H_INCLUDED
 #define OPERATORS_H_INCLUDED
 
-#include "core/tokens.h"
 #include "main.h"
+#include "modules/memory.h"
 #include <cmath>
 #include <vector>
 
-using mathNode::number_type;
+struct variableToken; //Forward declared from core
 
 namespace operators
 {
-   typedef std::vector<operatorToken> operators;
+    typedef number_type(*operPtr)(number_type,number_type);
+    typedef number_type(*assigmentPtr)(memory* mem,std::string name, number_type);
+    enum operationType{NOT_SET,ASSIGN,MATH};
+
+    struct interpreter_operator
+    {
+
+        operPtr oper;
+        assigmentPtr assign;
+        char operChar;
+        short baseWheight;
+        operationType operType;
+        interpreter_operator(operPtr opr, char symbol, short wheight);
+        interpreter_operator(assigmentPtr assign, char symbol, short wheight);
+        interpreter_operator();
+    };
+
+   typedef std::vector<interpreter_operator> vec_operators;
 
     class operators_interface
     {
-        operators _operators;
+        vec_operators _operators;
         unsigned int lastOffset;
         public:
-        void load(operators oprs);
-        void load(operatorToken tok);
+        void load(vec_operators oprs);
+        void load(interpreter_operator tok);
         operators_interface();
         void getOperators();
         bool inArray(char opr);
-        operatorToken getCurrent();
+        interpreter_operator getCurrent();
     };
-    extern operators std_operators;
+    extern vec_operators std_operators;
 
 
 

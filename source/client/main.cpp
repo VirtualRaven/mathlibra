@@ -1,5 +1,6 @@
 #define DEBUG
 #include <iostream>
+#include <cstring>
 #include "client.h"
 
 /* TODO
@@ -63,7 +64,6 @@ bool menu(memory& mem,math_func::function_interface& func)
 }
 int main(int argc, char* argv[])
 {
-	std::cout << "Calculator backend test\nLukas Rahmn 2014\n\nEnter an expression or write menu to open the menu\n\n";
 
 	interface::interpreter_interface* inter = create_interpreter();
 	std::string expression = "";
@@ -84,8 +84,38 @@ int main(int argc, char* argv[])
 	err_redirect err; //remove cerr stream
 
 	bool exit = false;
+	if( argc > 1)
+    {
+
+        try
+			{
+				inter->set(argv[1],strlen(argv[1]));
+				if (inter->interpret())
+				{
+					mem.set("ans",inter->exec());
+					std::cout << mem.get("ans") << std::endl;
+				}
+				else
+				{
+					std::cout << "Failed to interpret expression!" << std::endl;
+					return 1;
+				}
+
+			}
+
+			catch (exception& e)
+			{
+
+				std::cout << "[\n Exception: " << e.what() << "\n";
+				std::cout << " Description: " << e.desc() << "\n]\n";
+				return 1;
+			}
+			return 0;
+    }
+     std::cout << "Calculator backend test\nLukas Rahmn 2014\n\nEnter an expression or write menu to open the menu\n\n";
 	do
 	{
+
 		std::cout << "> ";
 		std::getline(std::cin, expression);
 		if (expression == "menu")

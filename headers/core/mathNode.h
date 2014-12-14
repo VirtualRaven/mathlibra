@@ -2,6 +2,7 @@
 #define MATHNODE_H_INCLUDED
 #include "tree.h"
 #include "modules/memory.h"
+#include "modules/operators.h"
 #include "main.h"
 struct buildVector;
 struct variableToken;
@@ -57,15 +58,14 @@ struct mathExpressionNode_opr;
 	{
 
 
-		typedef number_type (*operatorPtr)(number_type,number_type);
-		typedef number_type (*assigmentPtr)(variableToken, number_type);
-		operatorPtr operation;
-		assigmentPtr assign;
+
+		operators::operPtr operation;
+		operators::assigmentPtr assign;
 		bool assignB;
 
 
-		mathExpressionNode_opr(operatorPtr operation);
-		mathExpressionNode_opr(assigmentPtr assign);
+		mathExpressionNode_opr(operators::operPtr operation);
+		mathExpressionNode_opr(operators::assigmentPtr assign);
         mathExpressionNode_opr(void);
 
 		number_type eval();
