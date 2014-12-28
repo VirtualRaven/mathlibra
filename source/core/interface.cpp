@@ -1,6 +1,8 @@
 #include "interface/interface.h"
 #include "interpreter.h"
-interface::interpreter_interface* create_interpreter()
+#include "ptr_protect.h"
+
+interpreter_container create_interpreter()
 {
-    return new interpreter;
+    return interpreter_container(new interpreter);
 }

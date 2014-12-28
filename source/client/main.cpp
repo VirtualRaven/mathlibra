@@ -2,6 +2,8 @@
 #include <iostream>
 #include <cstring>
 #include "client.h"
+#include "ptr_protect.h"
+
 
 /* TODO
 	Add function inpterpeting and execution DONE
@@ -65,7 +67,10 @@ bool menu(memory& mem,math_func::function_interface& func)
 int main(int argc, char* argv[])
 {
 
-	interface::interpreter_interface* inter = create_interpreter();
+    ptr_protect<char*,false> my_char = safe_alloc<char>();
+
+	interpreter_container inter_obj = create_interpreter();
+	interface::interpreter_interface * inter = inter_obj.ptr();
 	std::string expression = "";
 	//Init memory unit
 	memory mem; //Create memory unit

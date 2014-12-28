@@ -1,7 +1,6 @@
 #ifndef MAIN_H_INCLUDED
 #define MAI_H_INCLUDED
 #define DEBUG
-#ifdef DEBUG
 typedef double number_type;
 #ifdef DEBUG
 #define LEXICAL_ANANALYSIS_DEBUG
@@ -15,4 +14,4 @@ namespace util
 	void help();
 }
 #endif
-#endif
+

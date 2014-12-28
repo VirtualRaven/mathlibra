@@ -1,4 +1,5 @@
 #include "interpreter.h"
+#include "ptr_protect.h"
 
 interpreterOops::interpreterOops(std::string inf)
 	{
@@ -122,21 +123,22 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 
 	void interpreter::stripSlashes()
 	{
-		char * tmp_buffer = new char[ expressionLength];
+		ptr_protect<char*,true> tmp_buffer = safe_alloc<char>(expressionLength);
 		short tmp_buffer_index =0;
 		for(int i = 0; i < expressionLength; i++)
 		{
 			if(expression[i] != ' ' )
 			{
-				tmp_buffer[tmp_buffer_index] = expression[i];
+				tmp_buffer.ptr()[tmp_buffer_index] = expression[i];
 				tmp_buffer_index++;
 			}
 
 		}
 
-		allocExpression(tmp_buffer_index);
-		memcpy(expression,tmp_buffer,tmp_buffer_index*sizeof(char));
-		delete[] tmp_buffer;
+
+        allocExpression(tmp_buffer_index);
+		memcpy(expression,tmp_buffer.ptr(),tmp_buffer_index*sizeof(char));
+
 	}
 	void interpreter::freeExpression()
 	{
@@ -172,6 +174,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 				tokens.push_back(new parenthesesToken(i,i));
 				parStack.push( (parenthesesToken*)tokens.back() );
 				extraOperatorWheight+=4;
+				continue;
 			}
 			else if(expression[i] == ')')
 			{
@@ -189,49 +192,62 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 					tmp2->opposit = tmp->startPos;
 					tokens.push_back(tmp2);
 					extraOperatorWheight-=4;
+					continue;
 
 				}
 			}
 			else if(isdigit(expression[i]))
 			{
-				valueToken * tmp = new valueToken(i,0);
+				ptr_protect<valueToken*,false> tmp(new valueToken(i,0));
 				short valueLength=0;
 				for(int i2 =i+1; i2 < expressionLength; i2++)
 				{
-					if( !isdigit(expression[i2]) && expression[i2] !='.' && expression[i2] != 'e')
+					if( !isdigit(expression[i2]) && expression[i2] !='.' && expression[i2] != 'e' && expression[i2] != '-' )
 					{
 						break;
 					}
 					else if(expression[i2] == 'e')
 					{
-						if(i2+1 < expressionLength && !isdigit(expression[i2+1]) )
+						if(i2+1 < expressionLength && ( !isdigit(expression[i2+1]) && expression[i2+1] !='-') )
 						{
 							std::cerr << "Syntax error: expected exponent after e \n";
+
 							return false;
+						}
+
+					}
+					else if(expression[i2] == '-')
+					{
+						if(i2-1 > 0 && expression[i2-1] != 'e')
+						{
+							break;
 						}
 
 					}
 					valueLength++;
 				}
-				tmp->endPos = i+valueLength;
-				short tmp_str_length = (tmp->endPos+1)-tmp->startPos;
+				tmp.ptr()->endPos = i+valueLength;
+				short tmp_str_length = (tmp.ptr()->endPos+1)-tmp.ptr()->startPos;
 
 				//Create a temporary string from which we can convert the string to a double
-				char* tmp_str = new char[tmp_str_length+1];
+				char* tmp_str = nullptr;
+                tmp_str = new char[tmp_str_length+1];
 				memcpy(tmp_str, &expression[i], (tmp_str_length*sizeof(char)) );
 				tmp_str[tmp_str_length] = '\0';
-				tmp->value =  atof(tmp_str);
+				tmp.ptr()->value =  atof(tmp_str);
 				delete[] tmp_str;
-				tokens.push_back(tmp);
+				tokens.push_back(tmp.ptr());
+				tmp.release(); //Release ownership of pointer
 				i+=valueLength;
+				continue;
 			}
 			else if (expression[i] == '-' && PNegativeDigit(tokens, &expression,i) &&i + 1 < expressionLength && isdigit(expression[i+1]) )
 			{
-				valueToken * tmp = new valueToken(i, 0);
+				ptr_protect<valueToken*,false> tmp(new valueToken(i, 0));
 				short valueLength = 0;
 				for (int i2 = i + 1; i2 < expressionLength; i2++)
 				{
-					if (!isdigit(expression[i2]) && expression[i2] != '.' && expression[i2] != 'e')
+					if (!isdigit(expression[i2]) && expression[i2] != '.' && expression[i2] != 'e' && expression[i2] != '-')
 					{
 						break;
 					}
@@ -240,37 +256,48 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 						if (i2 + 1 < expressionLength && !isdigit(expression[i2 + 1]))
 						{
 							std::cerr << "Syntax error: expected exponent after e \n";
+
 							return false;
+						}
+
+					}
+					else if(expression[i2] == '-')
+					{
+						if(i2-1 > 0 && expression[i2-1] != 'e')
+						{
+							break;
 						}
 
 					}
 					valueLength++;
 				}
-				tmp->endPos = i + valueLength;
-				short tmp_str_length = (tmp->endPos + 1) - tmp->startPos;
+				tmp.ptr()->endPos = i + valueLength;
+				short tmp_str_length = (tmp.ptr()->endPos + 1) - tmp.ptr()->startPos;
 
 				//Create a temporary string from which we can convert the string to a double
 				char* tmp_str = new char[tmp_str_length + 1];
 				memcpy(tmp_str, &expression[i], (tmp_str_length*sizeof(char)));
 				tmp_str[tmp_str_length] = '\0';
-				tmp->value = atof(tmp_str);
+				tmp.ptr()->value = atof(tmp_str);
 				delete[] tmp_str;
-				tokens.push_back(tmp);
+				tokens.push_back(tmp.ptr());
+				tmp.release();
 				i += valueLength;
+				continue;
 			}
 
 			else if(this->_operators!=nullptr && this->_operators->inArray(expression[i]))
 			{
-				operatorToken* tmp = new operatorToken(_operators->getCurrent());
-				tmp->startPos=i;
-				tmp->endPos=i;
-				tmp->baseWheight +=extraOperatorWheight;
-				if(tmp->baseWheight <= lowestWheight) // <= for left association && < for right association
+				ptr_protect<operatorToken*,false> tmp(new operatorToken(_operators->getCurrent()));
+				tmp.ptr()->startPos=i;
+				tmp.ptr()->endPos=i;
+				tmp.ptr()->baseWheight +=extraOperatorWheight;
+				if(tmp.ptr()->baseWheight <= lowestWheight) // <= for left association && < for right association
 				{
-					lowestWheight = tmp->baseWheight;
+					lowestWheight = tmp.ptr()->baseWheight;
 					this->startOperatorPos =tokens.size();
 				}
-				if (tmp->operChar == '=')
+				if (tmp.ptr()->operChar == '=')
 				{
 
 					if (tokens.back()->type != tokenType::VARIABLE)
@@ -279,7 +306,9 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 						return false;
 					}
 				}
-				tokens.push_back(tmp);
+				tokens.push_back(tmp.ptr());
+				tmp.release();
+				continue;
 
 			}
 			else if (isalpha(expression[i]) )
@@ -306,14 +335,15 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 					i += valueLength;
 					if (current_functions != nullptr && current_functions->isloaded(name) == true)
 					{
-						funcToken *tmp = new funcToken(startPos, endPos, current_functions->get(name));
-						tmp->baseWheight += extraOperatorWheight;
-						if (tmp->baseWheight <= lowestWheight) // <= for left association && < for right association
+						ptr_protect<funcToken *,false> tmp(new funcToken(startPos, endPos, current_functions->get(name)));
+						tmp.ptr()->baseWheight += extraOperatorWheight;
+						if (tmp.ptr()->baseWheight <= lowestWheight) // <= for left association && < for right association
 						{
-							lowestWheight = tmp->baseWheight;
+							lowestWheight = tmp.ptr()->baseWheight;
 							this->startOperatorPos = tokens.size();
 						}
-						tokens.push_back(tmp);
+						tokens.push_back(tmp.ptr());
+						tmp.release();
 					}
 					else if (mem != nullptr)
 					{
@@ -326,6 +356,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 						std::cerr << "Found variable in string but no memory unit is assigned to the interpeter\n";
 						return false;
 					}
+					continue;
 			}
 			else
 			{

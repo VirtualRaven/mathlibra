@@ -1,10 +1,11 @@
 #ifndef INTERFACE_H_INCLUDED
 #define INTERFACE_H_INCLUDED
 #include "interface/interpreter_interface.h"
-
+#include "ptr_protect.h"
+typedef ptr_protect<interface::interpreter_interface*,false> interpreter_container;
 extern "C"
 {
-   extern interface::interpreter_interface* create_interpreter();
+   extern interpreter_container create_interpreter();
 
 }
 

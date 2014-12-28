@@ -1,5 +1,5 @@
 #include "modules/functions.h"
-
+//Contains temporary implementation of function module
 namespace math_func
 {
 
