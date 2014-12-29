@@ -44,13 +44,12 @@ libary: $(CORE_FILES) $(SOURCE_FILES) $(INTERFACE_FILES)
 	@echo $*
 	$(CC) $(CFLAGS) -c  $*.cpp -o $*.o
 
-clean_libary: 
-	-rm $(patsubst %.cpp,%.o,$(wildcard $(ODIR)*.cpp)) 
-	
-	-rm $(EXECUTABLE) $(EXECUTABLE)_debug
-
 clean:
-	-rm $(patsubst %.cpp,%.o,$(wildcard $(ODIR)*.cpp)) 
-	-rm $(patsubst 
-	-rm $(EXECUTABLE) $(EXECUTABLE)_debug
+	-rm $(LIBARY).so
+	-rm $(EXECUTABLE)
+	-rm $(SOURCE_FILES)
+	-rm $(CLIENT_FILES)
+	-rm $(MODULE_FILES)
+	-rm $(CORE_FILES)
+	-rm $(INTERFACE_FILES)
 	
