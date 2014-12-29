@@ -2,8 +2,8 @@ CC=g++
 
 CXXF=  -Wall -std=c++11 -I ./headers/ -I ./headers/client/ -I ./headers/core/ -fexceptions
 DXXF= -g  -Wall -std=c++11 -I ./headers/ -I ./headers/client/ -I ./headers/core/ -fexceptions
-SCXXF = -Wall -std=c++11 -I ./headers/ -I ./headers/client/ -I ./headers/core/ -fexceptions
-SDXXF =  -g -Wall -std=c++11 -I ./headers/ -I ./headers/client/ -I ./headers/core/ -fexceptions
+SCXXF = -Wall -fPIC -std=c++11 -I ./headers/ -I ./headers/client/ -I ./headers/core/ -fexceptions
+SDXXF =  -g -fPIC -Wall -std=c++11 -I ./headers/ -I ./headers/client/ -I ./headers/core/ -fexceptions
 
 CURRENT_F = ""
 
@@ -19,24 +19,38 @@ INTERFACE_DIR = interface/
 
 LIBARY= mathinterpreter
 EXECUTABLE=  calc
+SOURCE_FILES	=$(patsubst %.cpp,%.o,$(wildcard $(SOURCE_DIR)*.cpp))
+CLIENT_FILES	=$(patsubst %.cpp,%.o,$(wildcard $(SOURCE_DIR)$(CLIENT_DIR)*.cpp))
+MODULE_FILES	=$(patsubst %.cpp,%.o,$(wildcard $(SOURCE_DIR)$(MODULE_DIR)*.cpp))
+CORE_FILES	=$(patsubst %.cpp,%.o,$(wildcard $(SOURCE_DIR)$(CORE_DIR)*.cpp)) 
+INTERFACE_FILES	=$(patsubst %.cpp,%.o,$(wildcard $(SOURCE_DIR)$(INTERFACE_DIR)*.cpp)) 
+
 
 default:  client
 
 
-client: $(patsubst %.cpp,%.o,$(wildcard $(SOURCE_DIR)$(CLIENT_DIR)*.cpp)) $(patsubst %.cpp,%.o,$(wildcard $(SOURCE_DIR)*.cpp)) libary
+client: CFLAGS= $(CXXF)
+client: $(CLIENT_FILES) $(SOURCE_FILES)  $(MODULE_FILES) $(LIBARY).so
 	$(CC) $(CFLAGS) $? -o$(EXECUTABLE) 
 
-libary:  $(patsubst %.cpp,%.o,$(wildcard $(SOURCE_DIR)$(CORE_DIR)*.cpp)) $(patsubst %.cpp,%.o,$(wildcard $(SOURCE_DIR)*.cpp)) 
-	
-	$(CC) -shared -fPIC $(CFLAGS) $? -o$(LIBARY).so 
+libary: CFLAGS=$(SCXXF)
+libary: $(CORE_FILES) $(SOURCE_FILES) $(INTERFACE_FILES)
+		
+	$(CC) -shared  $(CFLAGS) $? -o$(LIBARY).so 
 
+.so: libary
 
 .cpp.o: 
 	@echo $*
 	$(CC) $(CFLAGS) -c  $*.cpp -o $*.o
 
+clean_libary: 
+	-rm $(patsubst %.cpp,%.o,$(wildcard $(ODIR)*.cpp)) 
+	
+	-rm $(EXECUTABLE) $(EXECUTABLE)_debug
 
 clean:
 	-rm $(patsubst %.cpp,%.o,$(wildcard $(ODIR)*.cpp)) 
+	-rm $(patsubst 
 	-rm $(EXECUTABLE) $(EXECUTABLE)_debug
 	
