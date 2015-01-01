@@ -5,11 +5,6 @@ DXXF= -g  -Wall -std=c++11 -I ./headers/ -I ./headers/client/ -I ./headers/core/
 SCXXF = -Wall -fPIC -std=c++11 -I ./headers/ -I ./headers/client/ -I ./headers/core/ -fexceptions
 SDXXF =  -g -fPIC -Wall -std=c++11 -I ./headers/ -I ./headers/client/ -I ./headers/core/ -fexceptions
 
-CURRENT_F = ""
-
-ifdef DEBUG
-override CFLAGS=$(DFLAGS)
-endif
 
 SOURCE_DIR =  ./source/
 CLIENT_DIR = client/
@@ -24,6 +19,11 @@ CLIENT_FILES	=$(patsubst %.cpp,%.o,$(wildcard $(SOURCE_DIR)$(CLIENT_DIR)*.cpp))
 MODULE_FILES	=$(patsubst %.cpp,%.o,$(wildcard $(SOURCE_DIR)$(MODULE_DIR)*.cpp))
 CORE_FILES	=$(patsubst %.cpp,%.o,$(wildcard $(SOURCE_DIR)$(CORE_DIR)*.cpp)) 
 INTERFACE_FILES	=$(patsubst %.cpp,%.o,$(wildcard $(SOURCE_DIR)$(INTERFACE_DIR)*.cpp)) 
+
+ifdef DEBUG
+override CXXF=$(DXXF)
+override SCXXF=$(SDXXF)
+endif
 
 
 default:  client
