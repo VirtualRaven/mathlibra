@@ -7,7 +7,7 @@ namespace util
 
 	void buildInfo()
 	{
-		std::cout << "-[ Build date: " << __DATE__ << "\n "<< "Version: "<< git_version << "DEBUG: ";
+		std::cout << "-[ Build date: " << __DATE__ << "\n "<< "Version: "<< git_version << "\n\nDEBUG: ";
 
 #ifdef DEBUG
 		std::cout << "TRUE\n";

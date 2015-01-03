@@ -3,7 +3,7 @@
 
 #include "mathNode.h"
 #include "modules/operators.h"
-
+#include "main.h"
 using mathNode::number_type;
 
 

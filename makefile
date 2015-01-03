@@ -1,7 +1,7 @@
 CC=g++
 
-CXXF=  -Wall -std=c++11 -I ./headers/ -I ./headers/client/ -I ./headers/core/ -fexceptions
-DXXF= -g  -Wall -std=c++11 -I ./headers/ -I ./headers/client/ -I ./headers/core/ -fexceptions
+CXXF=  -Wall -std=c++11 -I ./headers/ -I ./headers/client/ -I ./headers/core/ -fexceptions -L ./
+DXXF= -g  -Wall -std=c++11 -I ./headers/ -I ./headers/client/ -I ./headers/core/ -fexceptions -L ./
 SCXXF = -Wall -fPIC -std=c++11 -I ./headers/ -I ./headers/client/ -I ./headers/core/ -fexceptions
 SDXXF =  -g -fPIC -Wall -std=c++11 -I ./headers/ -I ./headers/client/ -I ./headers/core/ -fexceptions
 
@@ -33,7 +33,7 @@ default:  client
 
 client: CFLAGS= $(CXXF)
 client: $(CLIENT_FILES) $(SOURCE_FILES)  $(MODULE_FILES) $(LIBARY).so
-	$(CC) $(CFLAGS) $? -o$(EXECUTABLE) 
+	$(CC) $(CFLAGS) -Wl,-rpath,./ $? -o$(EXECUTABLE) 
 
 libary: CFLAGS=$(SCXXF)
 libary: $(CORE_FILES) $(SOURCE_FILES) $(INTERFACE_FILES) 		

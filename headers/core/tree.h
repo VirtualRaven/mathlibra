@@ -2,7 +2,7 @@
 #define TREE_H_INCLUDED
 #include <iostream>
 #include "exception.h"
-
+#include "main.h"
 class node;
 
 
