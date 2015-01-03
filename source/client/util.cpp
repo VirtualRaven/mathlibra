@@ -1,4 +1,5 @@
 #include "main.h"
+#include "version.h"
 #include <iostream>
 #include <string>
 namespace util
@@ -6,7 +7,7 @@ namespace util
 
 	void buildInfo()
 	{
-		std::cout << "-[ Build date: " << __DATE__ << "\n DEBUG: ";
+		std::cout << "-[ Build date: " << __DATE__ << "\n "<< "Version: "<< git_version << "DEBUG: ";
 
 #ifdef DEBUG
 		std::cout << "TRUE\n";
@@ -19,7 +20,7 @@ namespace util
 #ifdef SYNTAX_TREE_DEBUG_INFO
 		std::cout << "SYNTAX_TREE_DEBUG_INFO ENABLED\n";
 #endif
-#else 
+#else
 		std::cout << "False\n";
 #endif
 		std::cout << "\n]\n";

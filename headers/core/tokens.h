@@ -2,7 +2,6 @@
 #define TOKENS_H_INCLUDED
 
 #include "mathNode.h"
-#include "main.h"
 #include "modules/operators.h"
 
 using mathNode::number_type;

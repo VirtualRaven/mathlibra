@@ -3,7 +3,7 @@
 #include "tree.h"
 #include "modules/memory.h"
 #include "modules/operators.h"
-#include "main.h"
+
 struct buildVector;
 struct variableToken;
 namespace mathNode

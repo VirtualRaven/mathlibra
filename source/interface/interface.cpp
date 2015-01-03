@@ -20,11 +20,11 @@ namespace interface
 	 }
 	 bool interpreter_interface::interpret()
 	 {
-
+        return false;
 	 }
 	 number_type interpreter_interface::exec()
 	 {
-
+        return -1;
 	 }
 	 void interpreter_interface::set(const char * expression, short lenght)
 	 {

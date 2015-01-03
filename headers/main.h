@@ -12,6 +12,8 @@ namespace util
 
 	void buildInfo();
 	void help();
+	
 }
+extern const char * git_version;
 #endif
 

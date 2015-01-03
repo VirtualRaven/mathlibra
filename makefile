@@ -24,6 +24,8 @@ ifdef DEBUG
 override CXXF=$(DXXF)
 override SCXXF=$(SDXXF)
 endif
+VERSION_FILE = source/gitversion.cpp
+SOURCE_FILES +=$(patsubst %.cpp,%.o,$(VERSION_FILE))
 
 
 default:  client
@@ -34,9 +36,11 @@ client: $(CLIENT_FILES) $(SOURCE_FILES)  $(MODULE_FILES) $(LIBARY).so
 	$(CC) $(CFLAGS) $? -o$(EXECUTABLE) 
 
 libary: CFLAGS=$(SCXXF)
-libary: $(CORE_FILES) $(SOURCE_FILES) $(INTERFACE_FILES)
-		
+libary: $(CORE_FILES) $(SOURCE_FILES) $(INTERFACE_FILES) 		
 	$(CC) -shared  $(CFLAGS) $? -o$(LIBARY).so 
+
+$(VERSION_FILE): .git/HEAD .git/index
+	echo "const char *git_version = \"$(shell git rev-parse HEAD)\";" > $@
 
 .so: libary
 
