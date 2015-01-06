@@ -50,7 +50,7 @@ namespace math_func
 			std::cout << "-[ function_interface {\n";
 			for (unsigned int i = 0; i < funcs.size(); i++)
 			{
-				std::cout << this->funcs[i].name.c_str() << "\t: " << std::hex << this->funcs[i].ptr << std::dec << "\n";
+				std::cout << this->funcs[i].name.c_str() << "\t: " << std::hex << (void *)this->funcs[i].ptr << std::dec << "\n";
 			}
 			std::cout << " }\nLoaded " << this->funcs.size() << " functions]\n";
 

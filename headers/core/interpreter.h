@@ -83,6 +83,9 @@ public:
 	void set(const char * expression, short lenght);
 	interpreter();
 	~interpreter();
+	//Experimental
+	bool compile();
 };
+
 
 #endif

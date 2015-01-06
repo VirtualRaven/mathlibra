@@ -501,10 +501,10 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 			return false;
 		}
 		this->destroyTokens(); //Remove all tokens
-	#ifdef STRUCTUAL_INTEGRITY_TEST
+        #ifdef STRUCTUAL_INTEGRITY_TEST
             this->root.integrityTest();
         #endif
-
+        this->compile();
 		return true;
 
 	}
@@ -559,4 +559,64 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 	void interpreter::setFunction(math_func::function_interface* functions)
 	{
 		this->current_functions = functions;
+	}
+
+	void rpn_check(node * nodePtr, std::string * stc )
+	{
+	    if(nodePtr == nullptr)
+        {
+            return;
+        }
+	    else if(nodePtr->data->type == tokenType::VALUE || nodePtr->data->type == tokenType::VARIABLE  )
+        {
+            //PUSH
+            if(nodePtr->data->type == tokenType::VALUE)
+            {
+               std::cout << static_cast<mathNode::mathExpressionNode_val*>(nodePtr->data)->value;
+            }
+            else
+            {
+                 std::cout << static_cast<mathNode::mathExpressionNode_variable*>(nodePtr->data)->name;
+            }
+            return;
+        }
+        else if(nodePtr->data->type == tokenType::UNKNOWN)
+        {
+            throw interpreterOops("COMPILER FAILURE: found unknown node type");
+        }
+        else
+        {
+            rpn_check(nodePtr->sub1(),stc);
+            rpn_check(nodePtr->sub2(),stc);
+            if(nodePtr->data->type == tokenType::FUNCTION)
+            {
+
+                std::cout << "FUNCTION(" << std::hex << (void *)static_cast<mathNode::mathExpressionNode_func*>(nodePtr->data)->func<< std::dec << ")";
+            }
+            else //Is operator
+            {
+                mathNode::mathExpressionNode_opr * tmp = static_cast<mathNode::mathExpressionNode_opr*>(nodePtr->data);
+                if(tmp->assignB)
+                {
+                    std::cout << "ASSIGN(" << std::hex<< (void *)tmp->assign << std::dec<< ")";
+                }
+                else
+                {
+                    std::cout << "OPER("<< std::hex << (void *)tmp->operation<< std::dec << ")";
+                }
+            }
+
+        }
+	}
+
+	bool interpreter::compile()
+	{
+	    if(rootEmpty)
+        {
+            return false;
+        }
+	     //Create rpn
+        rpn_check(&this->root,nullptr);
+        return true;
+
 	}

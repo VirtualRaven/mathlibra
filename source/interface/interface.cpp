@@ -34,6 +34,10 @@ namespace interface
 	 {
 
 	 }
+	 bool interpreter_interface::compile()
+	 {
+	     return false;
+	 }
 
 
 

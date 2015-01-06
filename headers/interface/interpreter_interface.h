@@ -30,6 +30,9 @@ public:
 	virtual number_type exec(); //Evaluates and returns the value of the expression
 	virtual void set(const char * expression, short lenght); //Sets the expression to be interpret
 	virtual ~interpreter_interface();
+
+	//EXPERIMENTAL
+	virtual bool compile();
 };
 
 
