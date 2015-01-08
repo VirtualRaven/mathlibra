@@ -561,7 +561,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 		this->current_functions = functions;
 	}
 
-	void rpn_check(node * nodePtr, std::string * stc )
+	void rpn(node * nodePtr, std::string * stc )
 	{
 	    if(nodePtr == nullptr)
         {
@@ -586,8 +586,8 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
         }
         else
         {
-            rpn_check(nodePtr->sub1(),stc);
-            rpn_check(nodePtr->sub2(),stc);
+            rpn(nodePtr->sub1(),stc);
+            rpn(nodePtr->sub2(),stc);
             if(nodePtr->data->type == tokenType::FUNCTION)
             {
 
@@ -616,7 +616,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
             return false;
         }
 	     //Create rpn
-        rpn_check(&this->root,nullptr);
+        rpn(&this->root,nullptr);
         return true;
 
 	}

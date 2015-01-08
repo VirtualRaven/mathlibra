@@ -66,6 +66,7 @@ bool menu(memory& mem,math_func::function_interface& func)
 }
 int main(int argc, char* argv[])
 {
+    std::cout << sizeof(void*);
 
     ptr_protect<char*,false> my_char = safe_alloc<char>();
 

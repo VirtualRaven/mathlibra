@@ -10,12 +10,11 @@
 	}
 
 
-	memoryObject::memoryObject(std::string name, number_type value, bool constant)
-	{
-		this->name = name;
-		this->value = value;
-		this->constant = constant;
-	}
+	memoryObject::memoryObject(std::string name, number_type value, bool constant):
+	    name(name),
+	    value(value),
+	    constant(constant)
+	    {}
 
 
 
