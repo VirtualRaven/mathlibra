@@ -504,7 +504,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
         #ifdef STRUCTUAL_INTEGRITY_TEST
             this->root.integrityTest();
         #endif
-        this->compile();
+
 		return true;
 
 	}
@@ -561,7 +561,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 		this->current_functions = functions;
 	}
 
-	void rpn(node * nodePtr, std::string * stc )
+	void rpn(node * nodePtr, CoraxVM::corax_program * prgm )
 	{
 	    if(nodePtr == nullptr)
         {
@@ -572,11 +572,14 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
             //PUSH
             if(nodePtr->data->type == tokenType::VALUE)
             {
-               std::cout << static_cast<mathNode::mathExpressionNode_val*>(nodePtr->data)->value;
+               prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::LDI | CoraxVM::instruction_flags::R1,
+                                                                               static_cast<mathNode::mathExpressionNode_val*>(nodePtr->data)->value ));
+               prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::PUSH | CoraxVM::instruction_flags::R1, nullptr));
+               //std::cout << static_cast<mathNode::mathExpressionNode_val*>(nodePtr->data)->value;
             }
             else
             {
-                 std::cout << static_cast<mathNode::mathExpressionNode_variable*>(nodePtr->data)->name;
+                 //std::cout << static_cast<mathNode::mathExpressionNode_variable*>(nodePtr->data)->name;
             }
             return;
         }
@@ -586,37 +589,43 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
         }
         else
         {
-            rpn(nodePtr->sub1(),stc);
-            rpn(nodePtr->sub2(),stc);
+            rpn(nodePtr->sub1(),prgm);
+            rpn(nodePtr->sub2(),prgm);
             if(nodePtr->data->type == tokenType::FUNCTION)
             {
+                prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::CALL | CoraxVM::instruction_flags::ARG1, //Load constant to R1
+                                                                            (void*)static_cast<mathNode::mathExpressionNode_func*>(nodePtr->data)->func));
 
-                std::cout << "FUNCTION(" << std::hex << (void *)static_cast<mathNode::mathExpressionNode_func*>(nodePtr->data)->func<< std::dec << ")";
+
+                //std::cout << "FUNCTION(" << std::hex << (void *)static_cast<mathNode::mathExpressionNode_func*>(nodePtr->data)->func<< std::dec << ")";
             }
             else //Is operator
             {
                 mathNode::mathExpressionNode_opr * tmp = static_cast<mathNode::mathExpressionNode_opr*>(nodePtr->data);
                 if(tmp->assignB)
                 {
-                    std::cout << "ASSIGN(" << std::hex<< (void *)tmp->assign << std::dec<< ")";
+                    //std::cout << "ASSIGN(" << std::hex<< (void *)tmp->assign << std::dec<< ")";
                 }
                 else
                 {
-                    std::cout << "OPER("<< std::hex << (void *)tmp->operation<< std::dec << ")";
+                    prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::CALL | CoraxVM::instruction_flags::ARG2, //Load constant to R1
+                                                                            (void*)tmp->operation));
+
+                  //  std::cout << "OPER("<< std::hex << (void *)tmp->operation<< std::dec << ")";
                 }
             }
 
         }
 	}
 
-	bool interpreter::compile()
+	bool interpreter::compile(CoraxVM::corax_program * prgm)
 	{
 	    if(rootEmpty)
         {
             return false;
         }
 	     //Create rpn
-        rpn(&this->root,nullptr);
+        rpn(&this->root,prgm);
         return true;
 
 	}

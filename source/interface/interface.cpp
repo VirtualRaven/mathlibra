@@ -34,7 +34,7 @@ namespace interface
 	 {
 
 	 }
-	 bool interpreter_interface::compile()
+	 bool interpreter_interface::compile(CoraxVM::corax_program*)
 	 {
 	     return false;
 	 }

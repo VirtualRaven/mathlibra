@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include <stack>
 #include "modules/functions.h"
 #include "modules/memory.h"
 #include "modules/operators.h"
@@ -19,64 +20,55 @@ namespace CoraxVM
 
     };
 
-    typedef uint16_t instruction;
     typedef uint8_t byte;
-
+    typedef byte instruction;
+    typedef void*  corax_pointer_register;
+    typedef number_type corax_register;
     //INSTRUCTION DEFINITION
     //The instruction is set in the hi nibble of the hi byte
     struct instruction_set
      {
-        static const  instruction    LDI ;
-        static const  instruction    LD  ;
-        static const  instruction    ST ;
-        static const  instruction    PUSH;
-        static const  instruction    POP ;
-        static const  instruction    CALL;
+        static const  instruction    LDI ; //Load constant value to register R1 or R2
+        static const  instruction    LD  ; //Load variable value from address to R1 or R2
+        static const  instruction    ST ;  //Store variable From R1 or R2 to address
+        static const  instruction    PUSH; //Push r1 or r2 to stack
+        static const  instruction    POP ; //Pop  from stack to r1 or r2
+        static const  instruction    CALL;  //Call function from address, if
+        static const  instruction    MOV;
 
 
     };
-    //Bit flags which can alter the behavior of each instruction
+    //Bit flags which alter which registers are used
     struct instruction_flags
     {
-        static const instruction FLAG1;
-        static const instruction FLAG2;
-        static const instruction FLAG3;
-        static const instruction FLAG4;
+        static const instruction R1;
+        static const instruction R2;
+        static const instruction PR1;
+        static const instruction PR2;
+
+        static const instruction ARG1;
+        static const instruction ARG2;
+
 
     };
 
 
-
-    struct symbol
+    struct corax_program_instruction
     {
-        byte value;
-        std::string name;
-        enum type
+        instruction ins;
+        union
         {
-            VARIABLE,
-            FUNCTIONARG1,
-            OPERATOR,
-            FUNC_PTR //Special reserved value only to be used  in searches for FUNCTIONS or OPERATORS
+            void* ptr;
+            number_type val;
         };
-        type symbol_type;
-        symbol(byte,std::string,type);
+        corax_program_instruction(instruction, void*);
+        corax_program_instruction(instruction,number_type);
     };
 
-    class symbol_table
-    {
-        std::vector<symbol> _funcs;
-        std::vector<symbol> _variables;
-        short _find(byte,symbol::type);
-        short _find(std::string name, symbol::type symbol_type);
-    public:
-        byte add(std::string name, symbol::type symbol_type);
-        std::string get(byte num,symbol::type symbol_type = symbol::type::FUNC_PTR);
-
-    };
 
     struct corax_program
     {
-
+        std::vector<corax_program_instruction> instructions;
     };
 
     class corax
@@ -85,16 +77,32 @@ namespace CoraxVM
         operators::operators_interface* _operators;
         memory* _mem;
         math_func::function_interface* _functions;
+
+        corax_register _r1,_r2;
+        corax_pointer_register _pr1,_pr2;
+
+
         public:
 
         void setOperator(operators::operators_interface* operators);
         void setMemory(memory* mem);
         void setFunction(math_func::function_interface* functions);
         number_type run(corax_program * prgm);
+        number_type debug(corax_program *prgm);
         corax();
         corax(operators::operators_interface* operators,memory* mem,math_func::function_interface* functions);
         ~corax();
     };
+
+
+
+
+
+
+
+
+
+
 
 }
 #endif // CORAX_VIRTUAL_MACHINE_H_INCLUDED

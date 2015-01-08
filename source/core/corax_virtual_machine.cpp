@@ -3,18 +3,22 @@
 namespace CoraxVM
 {
 
-         const  instruction    instruction_set::LDI =   0x1000u;
-         const  instruction    instruction_set::LD  =   0x2000u;
-         const  instruction    instruction_set::ST  =   0x3000u;
-         const  instruction    instruction_set::PUSH=   0x4000u;
-         const  instruction    instruction_set::POP =   0x5000u;
-         const  instruction    instruction_set::CALL=   0x6000u;
+         const  instruction    instruction_set::LDI =   0x10u;
+         const  instruction    instruction_set::LD  =   0x20u;
+         const  instruction    instruction_set::ST  =   0x30u;
+         const  instruction    instruction_set::PUSH=   0x40u;
+         const  instruction    instruction_set::POP =   0x50u;
+         const  instruction    instruction_set::CALL=   0x60u;
+         const  instruction    instruction_set::MOV =   0x70u;
 
 
-         const instruction instruction_flags::FLAG1   = 0x100u;
-         const instruction instruction_flags::FLAG2   = 0x200u;
-         const instruction instruction_flags::FLAG3   = 0x400u;
-         const instruction instruction_flags::FLAG4   = 0x800u;
+         const instruction instruction_flags::R1   = 0x1u;
+         const instruction instruction_flags::R2   = 0x2u;
+         const instruction instruction_flags::PR1   = 0x4u;
+         const instruction instruction_flags::PR2   = 0x8u;
+         const instruction instruction_flags::ARG1 = instruction_flags::R1;
+         const instruction instruction_flags::ARG2 = instruction_flags::R2;
+
 
 
     coraxOops::coraxOops(std::string inf)
@@ -29,106 +33,15 @@ namespace CoraxVM
 
 
 
-        CoraxVM::symbol::symbol(byte nr_,std::string name_,type type_):
-          value(nr_),
-          name(name_),
-          symbol_type(type_)
+
+        corax_program_instruction::corax_program_instruction(instruction ins_, void* ptr_):
+            ins(ins_),
+            ptr(ptr_)
             {};
-
-
-       short symbol_table::_find(byte val,symbol::type symbol_type)
-        {
-
-            if(symbol_type== symbol::type::VARIABLE)
-            {
-                for(short i =0; i< this->_variables.size(); i++ )
-                {
-                    if(this->_variables[i].value ==  val)
-                    {
-                        return i;
-                    }
-                }
-                return -1;
-            }
-            else
-            {
-                for(short i =0; i< this->_funcs.size(); i++ )
-                {
-                    if(this->_funcs[i].value ==  val)
-                    {
-                        return i;
-                    }
-                }
-                return -1;
-            }
-        }
-
-        short symbol_table::_find(std::string name, symbol::type symbol_type)
-        {
-
-            if(symbol_type== symbol::type::VARIABLE)
-            {
-                for(short i =0; i< this->_variables.size(); i++ )
-                {
-                    if(this->_variables[i].name ==  name)
-                    {
-                        return i;
-                    }
-                }
-                return -1;
-            }
-            else
-            {
-                for(short i =0; i< this->_funcs.size(); i++ )
-                {
-                    if(this->_funcs[i].name ==  name)
-                    {
-                        return i;
-                    }
-                }
-                return -1;
-            }
-        }
-
-        byte symbol_table::add(std::string name, symbol::type symbol_type)
-        {
-            short val = _find(name,symbol_type);
-            if(val == -1)
-            {
-                if(symbol_type== symbol::VARIABLE)
-                {
-                    _variables.push_back(symbol(this->_variables.size()+1,name,symbol_type));
-                    return this->_variables.size();
-                }
-                else
-                {
-
-                    _funcs.push_back(symbol(this->_funcs.size()+1,name,symbol_type));
-                    return this->_funcs.size();
-                }
-            }
-            return val; //Symbol already defined, returning old symbol number
-        }
-        std::string symbol_table::get(byte num,symbol::type symbol_type)
-        {
-            short val = _find(num,symbol_type);
-            if(val == -1)
-            {
-                throw coraxOops("Reference to undefined symbol");
-            }
-            else if(symbol_type == symbol::VARIABLE)
-            {
-                return _variables[val].name;
-            }
-            else
-            {
-                return _funcs[val].name;
-            }
-        }
-
-
-
-
+        corax_program_instruction::corax_program_instruction(instruction ins_,number_type val_):
+            ins(ins_),
+            val(val_)
+        {};
 
         void corax::setOperator(operators::operators_interface* operators)
         {
@@ -147,25 +60,293 @@ namespace CoraxVM
 
         number_type corax::run(corax_program * prgm)
         {
-            return 0;
+
+
+             std::stack<number_type> _stack;
+             for(size_t i=0; i< prgm->instructions.size(); i++ )
+             {
+                 bool rpxu=false;
+                 bool rxu=false;
+                 corax_pointer_register* p_rpx;
+                 corax_register* p_rx;
+                  switch(prgm->instructions[i].ins & 0xF)
+                  {
+                  case instruction_flags::R1:
+                    {
+                        p_rx = &_r1;
+                        rxu=true;
+                    }
+                    break;
+                    case instruction_flags::R2:
+                    {
+                        p_rx = &_r2;
+                        rxu=true;
+                    }
+                    break;
+                    case instruction_flags::PR1:
+                        {
+                         p_rpx = &_pr1;
+                         rpxu=true;
+                        }
+                        break;
+                    case instruction_flags::PR2:
+                        {
+                            p_rpx = &_pr2;
+                            rpxu=true;
+                        }
+                        break;
+                  }
+                  corax_pointer_register& rpx= *p_rpx;
+                 corax_register& rx= *p_rx;
+                 switch(prgm->instructions[i].ins & 0xF0 )
+                 {
+                 case instruction_set::CALL:
+                    {
+                        if(prgm->instructions[i].ins & instruction_flags::ARG2)
+                        {
+                             operators::operPtr ptr = (operators::operPtr)prgm->instructions[i].ptr;
+                            number_type tmp = _stack.top();
+                            _stack.pop();
+                            number_type tmp2 = _stack.top();
+                            _stack.pop();
+                            _stack.push(ptr(tmp2,tmp));
+
+                        }
+                        else if (prgm->instructions[i].ins & instruction_flags::ARG1)
+                        {
+                          math_func::function::funcPtr ptr = (math_func::function::funcPtr)prgm->instructions[i].ptr;
+                            number_type tmp = _stack.top();
+                            _stack.pop();
+                            _stack.push(ptr(tmp));
+                        }
+                        else throw coraxOops("CALL called without register");
+                    }
+                    break;
+                 case instruction_set::LD:
+                    {
+                       if(rxu)
+                       {
+                            rx = *(number_type*)prgm->instructions[i].ptr;
+                       }
+                       else throw coraxOops("LD called without register");
+                    }
+                    break;
+                 case instruction_set::LDI:
+                    {
+
+                        if(rxu)
+                        {
+                            rx =prgm->instructions[i].val;
+                        }
+                        else throw coraxOops("LDI called without register");
+
+                    }
+                    break;
+                 case instruction_set::MOV:
+                    {
+
+                    }
+                    break;
+                 case instruction_set::POP:
+                    {
+                        if(rxu)
+                        {
+                            rx = _stack.top();
+                            _stack.pop();
+                        }
+                        else throw coraxOops("POP called without reigster");
+                    }
+                    break;
+                 case instruction_set::PUSH:
+                    {
+                        if(rxu)
+                        {
+                            _stack.push(rx);
+                        }
+                        else throw coraxOops("PUSH called without register");
+                    }
+                    break;
+                case instruction_set::ST:
+                    {
+                        if(rpxu && rxu)
+                        {
+                                *(number_type*)rpx = rx;
+                        }
+                        else throw coraxOops("ST called without register");
+                    }
+                    break;
+                default:
+                    {
+                        throw coraxOops("Unknown bytecode");
+                    }
+                    break;
+                 }
+             }
+            return _stack.top();
         }
 
         corax::corax() :
             _operators(nullptr),
             _mem(nullptr),
-            _functions(nullptr)
+            _functions(nullptr),
+            _r1(0),
+            _r2(0),
+            _pr1(nullptr),
+            _pr2(nullptr)
         {};
 
         corax::corax(operators::operators_interface* operators,memory* mem,math_func::function_interface* functions) :
             _operators(operators),
             _mem(mem),
-            _functions(functions)
+            _functions(functions),
+            _r1(0),
+            _r2(0),
+            _pr1(nullptr),
+            _pr2(nullptr)
         {};
 
         corax::~corax()
         {
 
         }
+
+        number_type corax::debug(corax_program *prgm)
+        {
+            std::stack<number_type> _stack;
+            for(size_t i=0; i< prgm->instructions.size(); i++ )
+             {
+                 bool rpxu=false;
+                 bool rxu=false;
+                 corax_pointer_register* p_rpx;
+                 corax_register* p_rx;
+                  switch(prgm->instructions[i].ins & 0xF)
+                  {
+                  case instruction_flags::R1:
+                    {
+                        p_rx = &_r1;
+                        std::cout << "PC: "<< i << " Selected register R1\n";
+                        rxu=true;
+                    }
+                    break;
+                    case instruction_flags::R2:
+                    {
+                        p_rx = &_r2;
+                        std::cout << "PC: "<< i << " Selected register R2\n";
+                        rxu=true;
+                    }
+                    break;
+                    case instruction_flags::PR1:
+                        {
+                         p_rpx = &_pr1;
+                         std::cout << "PC: "<< i << " Selected register PR1\n";
+                         rpxu=true;
+                        }
+                        break;
+                    case instruction_flags::PR2:
+                        {
+                            p_rpx = &_pr2;
+                            std::cout << "PC: "<< i << " Selected register PR2\n";
+                            rpxu=true;
+                        }
+                        break;
+                  }
+                  corax_pointer_register& rpx= *p_rpx;
+                 corax_register& rx= *p_rx;
+                 switch(prgm->instructions[i].ins & 0xF0 )
+                 {
+                 case instruction_set::CALL:
+                    {
+                        if(prgm->instructions[i].ins & instruction_flags::ARG2)
+                        {
+                             std::cout << "PC: "<< i << " CALL, ARG2\n";
+                             operators::operPtr ptr = (operators::operPtr)prgm->instructions[i].ptr;
+                            number_type tmp = _stack.top();
+                            _stack.pop();
+                            number_type tmp2 = _stack.top();
+                            _stack.pop();
+                            _stack.push(ptr(tmp2,tmp));
+
+                        }
+                        else if (prgm->instructions[i].ins & instruction_flags::ARG1)
+                        {
+                            std::cout << "PC: "<< i << " CALL ARG1\n";
+                          math_func::function::funcPtr ptr = (math_func::function::funcPtr)prgm->instructions[i].ptr;
+                            number_type tmp = _stack.top();
+                            _stack.pop();
+                            _stack.push(ptr(tmp));
+                        }
+                        else throw coraxOops("CALL called without register");
+                    }
+                    break;
+                 case instruction_set::LD:
+                    {
+                       if(rxu)
+                       { std::cout << "PC: "<< i << " LD\n";
+                            rx = *(number_type*)prgm->instructions[i].ptr;
+                       }
+                       else throw coraxOops("LD called without register");
+                    }
+                    break;
+                 case instruction_set::LDI:
+                    {
+
+                        if(rxu)
+                        {
+                            std::cout << "PC: "<< i << " LDI\n";
+                            rx =prgm->instructions[i].val;
+                        }
+                        else throw coraxOops("LDI called without register");
+
+                    }
+                    break;
+                 case instruction_set::MOV:
+                    {
+
+                    }
+                    break;
+                 case instruction_set::POP:
+                    {
+                        if(rxu)
+                        {
+                            std::cout << "PC: "<< i << " POP\n";
+                            rx = _stack.top();
+                            _stack.pop();
+                        }
+                        else throw coraxOops("POP called without reigster");
+                    }
+                    break;
+                 case instruction_set::PUSH:
+                    {
+                        if(rxu)
+                        {
+                            std::cout << "PC: "<< i << " PUSH\n";
+                            _stack.push(rx);
+                        }
+                        else throw coraxOops("PUSH called without register");
+                    }
+                    break;
+                case instruction_set::ST:
+                    {
+                        if(rpxu && rxu)
+                        {
+                            std::cout << "PC: "<< i << " ST\n";
+                                *(number_type*)rpx = rx;
+                        }
+                        else throw coraxOops("ST called without register");
+                    }
+                    break;
+                default:
+                    {
+                        throw coraxOops("Unknown bytecode");
+                    }
+                    break;
+                 }
+             }
+            return _stack.top();
+        }
+
+
+
 
 
 }

@@ -3,7 +3,7 @@
 #include <cstring>
 #include "client.h"
 #include "ptr_protect.h"
-
+#include "corax_virtual_machine.h"
 
 /* TODO
 	Add function inpterpeting and execution DONE
@@ -67,11 +67,13 @@ bool menu(memory& mem,math_func::function_interface& func)
 int main(int argc, char* argv[])
 {
     std::cout << sizeof(void*);
-
+    std::cout << sizeof(number_type);
     ptr_protect<char*,false> my_char = safe_alloc<char>();
 
 	interpreter_container inter_obj = create_interpreter();
 	interface::interpreter_interface * inter = inter_obj.ptr();
+	CoraxVM::corax runtime;
+
 	std::string expression = "";
 	//Init memory unit
 	memory mem; //Create memory unit
@@ -86,7 +88,7 @@ int main(int argc, char* argv[])
 	functions.load(math_func::std_math_func);
 	functions.load(math_func::std_math_num_func);
 	inter->setFunction(&functions);
-
+    CoraxVM::corax_program prgm;
 	err_redirect err; //remove cerr stream
 
 	bool exit = false;
@@ -100,6 +102,8 @@ int main(int argc, char* argv[])
 				{
 					mem.set("ans",inter->exec());
 					std::cout << mem.get("ans") << std::endl;
+					inter->compile(&prgm);
+					std::cout << runtime.run(&prgm) << std::endl;
 				}
 				else
 				{
@@ -139,6 +143,9 @@ int main(int argc, char* argv[])
 				{
 					mem.set("ans",inter->exec());
 					std::cout << expression << " = " << mem.get("ans") << std::endl;
+					inter->compile(&prgm);
+					std::cout << "CoraxVM: " << runtime.debug(&prgm) << std::endl;
+					prgm.instructions.clear();
 				}
 				else
 				{

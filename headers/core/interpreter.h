@@ -9,6 +9,7 @@
 #include "build.h"
 #include "modules/functions.h"
 #include "interface/interpreter_interface.h"
+#include "corax_virtual_machine.h"
 
 using mathNode::number_type;
 struct interpreterOops : public exception
@@ -84,7 +85,7 @@ public:
 	interpreter();
 	~interpreter();
 	//Experimental
-	bool compile();
+	bool compile(CoraxVM::corax_program*);
 };
 
 

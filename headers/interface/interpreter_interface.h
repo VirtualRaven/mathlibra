@@ -4,6 +4,7 @@
 #include "modules/functions.h"
 #include "modules/memory.h"
 #include "modules/operators.h"
+#include "corax_virtual_machine.h"
 namespace interface
 {
 
@@ -32,7 +33,7 @@ public:
 	virtual ~interpreter_interface();
 
 	//EXPERIMENTAL
-	virtual bool compile();
+	virtual bool compile(CoraxVM::corax_program*);
 };
 
 
