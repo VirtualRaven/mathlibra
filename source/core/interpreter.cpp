@@ -83,7 +83,8 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
         {
             root.deleteSubNodes();
             root.data->destroy();
-            root.data=0;
+            root.data=nullptr;
+            rootEmpty=true;
         }
 	}
 	void interpreter::destroyTokens()
