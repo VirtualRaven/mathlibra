@@ -58,9 +58,11 @@ struct mathExpressionNode_opr;
 	{
 
 
+        union{ //Saves memory as these pointers will never be used at the same time
 
 		operators::operPtr operation;
 		operators::assigmentPtr assign;
+        };
 		bool assignB;
 
 

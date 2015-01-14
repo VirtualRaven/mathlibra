@@ -26,29 +26,11 @@ struct interpreterOops : public exception
 
 
 class interpreter;
-
-
-
-class buildTree
-{
-	interpreter* parentInterpreter;
-	rootNode root;
-	bool built;
-
-public:
-	buildTree(interpreter * tgt);
-	~buildTree();
-	rootNode getTree();
-	bool buildEntry1();
-};
-
-
+rootNode buildEntry1(interpreter * parentInterpreter);
 
 class interpreter : public interface::interpreter_interface
 {
-
-		friend buildTree;
-
+    friend rootNode buildEntry1(interpreter * parentInterpreter);
 	char * expression;
 	unsigned short expressionLength;
 	unsigned short startOperatorPos; //contains the index in the tokens array where the starting operator is located

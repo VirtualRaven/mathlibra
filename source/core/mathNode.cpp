@@ -97,7 +97,6 @@ namespace mathNode
 
 		mathExpressionNode_opr::mathExpressionNode_opr()
 		:operation(nullptr),
-		assign(nullptr),
 		assignB(false)
 		{
 			this->type=OPERATOR;
@@ -106,14 +105,12 @@ namespace mathNode
 
 		mathExpressionNode_opr::mathExpressionNode_opr(operators::operPtr operation)
 		:operation(operation),
-		assign(nullptr),
 		assignB(false)
 		{
 			this->type=OPERATOR;
 		}
 		mathExpressionNode_opr::mathExpressionNode_opr(operators::assigmentPtr assign)
-		:operation(nullptr),
-		assign(assign),
+		:assign(assign),
 		assignB(true)
 		{
 			this->type = OPERATOR;

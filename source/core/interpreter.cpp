@@ -43,56 +43,32 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 
 
 
-
-	buildTree::buildTree(interpreter * tgt)
-	:parentInterpreter(tgt),
-	root(),
-	built(false)
-	{}
-
-	buildTree::~buildTree()
-	{
-
-	}
-	rootNode buildTree::getTree()
-	{
-	    if(built)
-        {
-          return this->root;
-        }
-		else throw interpreterOops("-[ Tried to retreiv an incomplete tree ]");
-
-	}
-	bool buildTree::buildEntry1()
-	{
-            built=false;
+ rootNode buildEntry1(interpreter * parentInterpreter)
+{
+           rootNode root;
 			if (parentInterpreter->tokens.size() <= parentInterpreter->startOperatorPos)
 			{
 				throw interpreterOops("Panic: Tokens subscript operator out of bounds");
 			}
 			mathNode::mathExpressionNode* topNode = parentInterpreter->tokens[parentInterpreter->startOperatorPos]->node(); //Create the top node out of the starting token
 
-			this->root.set(topNode); // Put the node into the root of the tree
+			root.set(topNode); // Put the node into the root of the tree
 			buildVector build(0, parentInterpreter->tokens.size(), parentInterpreter->startOperatorPos,&parentInterpreter->tokens); //Fill the build vector
 			if (!buildSubNodes(static_cast<mathNode::mathExpressionNode*>(root.data),build)) //Build the sub node acording to the build vector
 			{
-				std::cerr << "-[ Failed to build syntax tree ]\n";
+
 				root.deleteSubNodes();
                 root.data->destroy();
                 root.data=0;
-                built=false;
-                return built;
+                throw interpreterOops("Failed to build syntax tree");
 			}
 			else
 			{
-
-                built=true;
-
 #ifdef STRUCTUAL_INTEGRITY_TEST
-                    this->root.integrityTest();
-                #endif
-                return built;
-			}
+                    root.integrityTest();
+#endif
+                return root;
+            }
 
 
 	}
@@ -380,45 +356,25 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 
 	bool interpreter::buildSyntaxTree()
 	{
-		buildTree buildObject(this);
+        if(this->startOperatorPos)
+        {
+            emptyRoot();
+            this->root =buildEntry1(this);
+            rootEmpty = false;
+            return true;
 
-
-		if(this->startOperatorPos)
-		{
-			if(buildObject.buildEntry1())
-            {
-               emptyRoot();
-               this->root =buildObject.getTree();
-               rootEmpty = false;
-               return true;
-
-            }
-            else
-            {
-				std::cerr << "Failed to build tree\n";
-				return false;
-            }
-		}
+        }
 		else
 		{
 			if (this->tokens[this->startOperatorPos]->type == FUNCTION)
 			{
-				if (buildObject.buildEntry1())
-				{
 					emptyRoot();
-					this->root = buildObject.getTree();
+					this->root = buildEntry1(this);
 					rootEmpty = false;
 					return true;
-
-				}
-				else
-				{
-					std::cerr << "Failed to build tree\n";
-					return false;
-				}
 			}
 			std::cerr << "Can't find start point\n";
-				return false;
+            return false;
 		}
 
 	}
