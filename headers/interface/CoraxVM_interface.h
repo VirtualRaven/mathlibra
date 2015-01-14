@@ -13,7 +13,7 @@ namespace interface
     {
         public:
         virtual bool serilize();
-        virtual void clear();
+        virtual void clear()=0;
         virtual ~corax_program();
     };
 
@@ -23,11 +23,11 @@ namespace interface
   class corax_runtime_interface
     {
     public:
-     virtual void setOperator(operators::operators_interface* operators);
-     virtual void setMemory(memory* mem);
-     virtual void setFunction(math_func::function_interface* functions);
-     virtual number_type run(interface::corax_program * prgm_);
-     virtual number_type debug(interface::corax_program *prgm_);
+     virtual void setOperator(operators::operators_interface* operators) =0;
+     virtual void setMemory(memory* mem)=0;
+     virtual void setFunction(math_func::function_interface* functions)=0;
+     virtual number_type run(interface::corax_program * prgm_)=0;
+
      virtual ~corax_runtime_interface();
 
     };

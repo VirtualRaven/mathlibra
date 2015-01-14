@@ -92,10 +92,10 @@ namespace CoraxVM
         void setMemory(memory* mem);
         void setFunction(math_func::function_interface* functions);
         number_type run(interface::corax_program * prgm_);
-        number_type debug(interface::corax_program *prgm_);
+
         corax_runtime();
         corax_runtime(operators::operators_interface* operators,memory* mem,math_func::function_interface* functions);
-        ~corax_runtime();
+        virtual ~corax_runtime();
     };
 
 

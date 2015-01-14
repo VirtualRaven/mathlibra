@@ -149,7 +149,7 @@ int main(int argc, char* argv[])
 					mem.set("ans",inter->exec());
 					std::cout << expression << " = " << mem.get("ans") << std::endl;
 					inter->compile(prgm);
-					std::cout << "CoraxVM: " << runtime->debug(prgm) << std::endl;
+					std::cout << "CoraxVM: " << runtime->run(prgm) << std::endl;
 					prgm->clear();
 				}
 				else

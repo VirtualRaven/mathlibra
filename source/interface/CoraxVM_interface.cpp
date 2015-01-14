@@ -1,4 +1,4 @@
-#include "CoraxVM_interface.h"
+#include "interface/CoraxVM_interface.h"
 namespace interface
 {
 
@@ -7,10 +7,7 @@ namespace interface
         {
             return false;
         }
-        void corax_program::clear()
-        {
-            return;
-        }
+
 
     corax_program::~corax_program()
     {
@@ -20,25 +17,6 @@ namespace interface
     {
     //dtor
     }
-     void corax_runtime_interface::setOperator(operators::operators_interface* operators)
-     {
-         return;
-     }
-     void  corax_runtime_interface::setMemory(memory* mem)
-     {
-         return;
-     }
-     void  corax_runtime_interface::setFunction(math_func::function_interface* functions)
-     {
-         return;
-     }
-     number_type  corax_runtime_interface::run(interface::corax_program * prgm)
-     {
-         return -1;
-     }
-     number_type  corax_runtime_interface::debug(interface::corax_program *prgm)
-     {
-         return -1;
-     }
+
 
 }

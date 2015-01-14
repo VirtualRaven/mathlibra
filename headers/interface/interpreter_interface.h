@@ -22,18 +22,18 @@ public:
         of the interpreterm object.
 	*/
     //Functions for
-	virtual void setMemory(memory* mem);
-	virtual void setFunction(math_func::function_interface* functions);
-	virtual void setOperator(operators::operators_interface* operators);
+	virtual void setMemory(memory* mem)=0;
+	virtual void setFunction(math_func::function_interface* functions)=0;
+	virtual void setOperator(operators::operators_interface* operators)=0;
 
 	//Basic controll functions for the interpreter
-	virtual bool interpret(); //Interprets expression provided by set
-	virtual number_type exec(); //Evaluates and returns the value of the expression
-	virtual void set(const char * expression, short lenght); //Sets the expression to be interpret
+	virtual bool interpret()=0; //Interprets expression provided by set
+	virtual number_type exec()=0; //Evaluates and returns the value of the expression
+	virtual void set(const char * expression, short lenght)=0; //Sets the expression to be interpret
 	virtual ~interpreter_interface();
 
 	//EXPERIMENTAL
-	virtual bool compile(interface::corax_program*);
+	virtual bool compile(interface::corax_program*)=0;
 };
 
 
