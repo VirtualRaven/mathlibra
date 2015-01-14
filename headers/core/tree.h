@@ -47,7 +47,6 @@ public:
 	{
 		return 0;
 	}
-	 void _createSubNodes_in_wrapper(nodeDataInterface* data1, nodeDataInterface* data2 = nullptr);
 
 };
 

@@ -9,7 +9,7 @@ namespace CoraxVM
          const  instruction    instruction_set::PUSH=   0x40u;
          const  instruction    instruction_set::POP =   0x50u;
          const  instruction    instruction_set::CALL=   0x60u;
-         const  instruction    instruction_set::MOV =   0x70u;
+         const  instruction    instruction_set::SWITCH =   0x70u;
 
 
          const instruction instruction_flags::R1   = 0x1u;
@@ -105,6 +105,10 @@ namespace CoraxVM
                         if(prgm->instructions[i].ins & instruction_flags::ARG2)
                         {
                              operators::operPtr ptr = (operators::operPtr)prgm->instructions[i].ptr;
+                            if(_stack.size() < 2)
+                            {
+                                throw coraxOops("Stack don't contain necessary arguments for function call");
+                            }
                             number_type tmp = _stack.top();
                             _stack.pop();
                             number_type tmp2 = _stack.top();
@@ -114,8 +118,12 @@ namespace CoraxVM
                         }
                         else if (prgm->instructions[i].ins & instruction_flags::ARG1)
                         {
-                          math_func::function::funcPtr ptr = (math_func::function::funcPtr)prgm->instructions[i].ptr;
+                            math_func::function::funcPtr ptr = (math_func::function::funcPtr)prgm->instructions[i].ptr;
                             number_type tmp = _stack.top();
+                             if(_stack.size() < 1)
+                            {
+                                throw coraxOops("Stack don't contain necessary arguments for function call");
+                            }
                             _stack.pop();
                             _stack.push(ptr(tmp));
                         }
@@ -124,9 +132,13 @@ namespace CoraxVM
                     break;
                  case instruction_set::LD:
                     {
-                       if(rxu)
+                       if(rxu && rpxu)
                        {
-                            rx = *(number_type*)prgm->instructions[i].ptr;
+                            rx = *(number_type*)rpx;
+                       }
+                       else if (rxu)
+                       {
+                           rx= *(number_type*)prgm->instructions[i].ptr;
                        }
                        else throw coraxOops("LD called without register");
                     }
@@ -138,19 +150,41 @@ namespace CoraxVM
                         {
                             rx =prgm->instructions[i].val;
                         }
+                        else if(rpxu)
+                        {
+                            rpx = prgm->instructions[i].ptr;
+                        }
                         else throw coraxOops("LDI called without register");
 
                     }
                     break;
-                 case instruction_set::MOV:
+                    case instruction_set::SWITCH:
                     {
+                        if(rpxu)
+                        {
+                            corax_pointer_register tmp =_pr1;
+                            _pr1 = _pr2;
+                            _pr2 = tmp;
 
+                        }
+                        else if(rpx)
+                        {
+                            corax_register tmp =corax::_r1;
+                            _r1 = _r2;
+                            _r2 = tmp;
+                        }
+                        else throw coraxOops("SWITCH was called without register");
                     }
                     break;
                  case instruction_set::POP:
                     {
                         if(rxu)
                         {
+                            if(_stack.size() < 1)
+                            {
+                                throw coraxOops("Tried to pop from empty stack");
+                            }
+
                             rx = _stack.top();
                             _stack.pop();
                         }
@@ -171,6 +205,14 @@ namespace CoraxVM
                         if(rpxu && rxu)
                         {
                                 *(number_type*)rpx = rx;
+                        }
+                        else if(rxu)
+                        {
+                          *(number_type*)prgm->instructions[i].ptr = rx;
+                        }
+                        else if (rpxu)
+                        {
+                            *(number_type*)rpx = prgm->instructions[i].val;
                         }
                         else throw coraxOops("ST called without register");
                     }
@@ -260,6 +302,10 @@ namespace CoraxVM
                         {
                              std::cout << "PC: "<< i << " CALL, ARG2\n";
                              operators::operPtr ptr = (operators::operPtr)prgm->instructions[i].ptr;
+                            if(_stack.size() < 2)
+                            {
+                                throw coraxOops("Stack don't contain necessary arguments for function call");
+                            }
                             number_type tmp = _stack.top();
                             _stack.pop();
                             number_type tmp2 = _stack.top();
@@ -272,6 +318,10 @@ namespace CoraxVM
                             std::cout << "PC: "<< i << " CALL ARG1\n";
                           math_func::function::funcPtr ptr = (math_func::function::funcPtr)prgm->instructions[i].ptr;
                             number_type tmp = _stack.top();
+                            if(_stack.size() < 1)
+                            {
+                                throw coraxOops("Stack don't contain necessary arguments for function call");
+                            }
                             _stack.pop();
                             _stack.push(ptr(tmp));
                         }
@@ -299,9 +349,22 @@ namespace CoraxVM
 
                     }
                     break;
-                 case instruction_set::MOV:
+                 case instruction_set::SWITCH:
                     {
+                        if(rpxu)
+                        {
+                            corax_pointer_register tmp =corax::_pr1;
+                            _pr1 = _pr2;
+                            _pr2 = tmp;
 
+                        }
+                        else if(rpx)
+                        {
+                            corax_register tmp=corax::_r1;
+                            _r1 = _r2;
+                            _r2 = tmp;
+                        }
+                        else throw coraxOops("SWITCH was called without register");
                     }
                     break;
                  case instruction_set::POP:
@@ -309,6 +372,10 @@ namespace CoraxVM
                         if(rxu)
                         {
                             std::cout << "PC: "<< i << " POP\n";
+                            if(_stack.size() < 1)
+                            {
+                                throw coraxOops("Tried to pop from empty stack");
+                            }
                             rx = _stack.top();
                             _stack.pop();
                         }

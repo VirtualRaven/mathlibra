@@ -28,13 +28,14 @@ namespace CoraxVM
     //The instruction is set in the hi nibble of the hi byte
     struct instruction_set
      {
-        static const  instruction    LDI ; //Load constant value to register R1 or R2
-        static const  instruction    LD  ; //Load variable value from address to R1 or R2
-        static const  instruction    ST ;  //Store variable From R1 or R2 to address
+        static const  instruction    LDI ; //Load constant value to register R1 or R2, or pointer registers
+        static const  instruction    LD  ; //Load variable value from address to R1 or R2, or load from address in pointer register.
+        static const  instruction    ST ;  //Store variable From R1 or R2 to address or save to  pointer in pointer register
         static const  instruction    PUSH; //Push r1 or r2 to stack
         static const  instruction    POP ; //Pop  from stack to r1 or r2
         static const  instruction    CALL;  //Call function from address, if
-        static const  instruction    MOV;
+        static const  instruction    SWITCH;   // Switches content of R1 and R2 if R1 or R2 is passed as flag, If PR1 or PR2 is passed content of PR1 or PR2 is moved.
+                                              //If both a pointer register flag and a register flag is passed behavior is unspecified
 
 
     };

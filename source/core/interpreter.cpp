@@ -156,7 +156,8 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 			freeExpression();
 		}
 		expressionLength= lenght;
-		expression = new char[lenght];
+		expression = new char[lenght+1];
+		expression[expressionLength] = '\0';
 	}
 
 	bool interpreter::lexicalAnalys()
@@ -330,7 +331,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 
 					}
 					endPos = i + valueLength;
-					name = std::string(expression, startPos, valueLength + 1);
+					name = std::string(expression, startPos, valueLength +1 );
 
 					i += valueLength;
 					if (current_functions != nullptr && current_functions->isloaded(name) == true)
