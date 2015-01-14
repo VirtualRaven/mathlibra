@@ -7,6 +7,7 @@
 #include "modules/functions.h"
 #include "modules/memory.h"
 #include "modules/operators.h"
+#include "interface/CoraxVM_interface.h"
 #include "main.h"
 
 
@@ -36,8 +37,6 @@ namespace CoraxVM
         static const  instruction    CALL;  //Call function from address, if
         static const  instruction    SWITCH;   // Switches content of R1 and R2 if R1 or R2 is passed as flag, If PR1 or PR2 is passed content of PR1 or PR2 is moved.
                                               //If both a pointer register flag and a register flag is passed behavior is unspecified
-
-
     };
     //Bit flags which alter which registers are used
     struct instruction_flags
@@ -67,12 +66,16 @@ namespace CoraxVM
     };
 
 
-    struct corax_program
+    class corax_program : public interface::corax_program
     {
+        public:
         std::vector<corax_program_instruction> instructions;
+        void clear();
+        ~corax_program();
     };
 
-    class corax
+
+    class corax_runtime : public interface:: corax_runtime_interface
     {
 
         operators::operators_interface* _operators;
@@ -88,11 +91,11 @@ namespace CoraxVM
         void setOperator(operators::operators_interface* operators);
         void setMemory(memory* mem);
         void setFunction(math_func::function_interface* functions);
-        number_type run(corax_program * prgm);
-        number_type debug(corax_program *prgm);
-        corax();
-        corax(operators::operators_interface* operators,memory* mem,math_func::function_interface* functions);
-        ~corax();
+        number_type run(interface::corax_program * prgm_);
+        number_type debug(interface::corax_program *prgm_);
+        corax_runtime();
+        corax_runtime(operators::operators_interface* operators,memory* mem,math_func::function_interface* functions);
+        ~corax_runtime();
     };
 
 

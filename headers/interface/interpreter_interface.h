@@ -33,7 +33,7 @@ public:
 	virtual ~interpreter_interface();
 
 	//EXPERIMENTAL
-	virtual bool compile(CoraxVM::corax_program*);
+	virtual bool compile(interface::corax_program*);
 };
 
 

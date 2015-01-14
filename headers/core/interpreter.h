@@ -67,7 +67,7 @@ public:
 	interpreter();
 	~interpreter();
 	//Experimental
-	bool compile(CoraxVM::corax_program*);
+	bool compile(interface::corax_program*);
 };
 
 

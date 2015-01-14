@@ -575,14 +575,15 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
         }
 	}
 
-	bool interpreter::compile(CoraxVM::corax_program * prgm)
+	bool interpreter::compile(interface::corax_program * prgm)
 	{
+	    CoraxVM::corax_program * cast_prgm = dynamic_cast<CoraxVM::corax_program*>(prgm);
 	    if(rootEmpty)
         {
             return false;
         }
 	     //Create rpn
-        rpn(&this->root,prgm);
+        rpn(&this->root,cast_prgm);
         return true;
 
 	}

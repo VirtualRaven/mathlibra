@@ -70,9 +70,13 @@ int main(int argc, char* argv[])
     std::cout << sizeof(number_type);
     ptr_protect<char*,false> my_char = safe_alloc<char>();
 
-	interpreter_container inter_obj = create_interpreter();
+    //Load core functions from libary
+	interpreter_container inter_obj = create_interpreter(); //Load interpreter from CORE
 	interface::interpreter_interface * inter = inter_obj.ptr();
-	CoraxVM::corax runtime;
+    corax_runtime_container corax_obj = create_corax_runtime();
+	interface:: corax_runtime_interface * runtime = corax_obj.ptr();
+    corax_program_container prgm_obj = create_corax_program();
+    interface::corax_program* prgm = prgm_obj.ptr();
 
 	std::string expression = "";
 	//Init memory unit
@@ -88,7 +92,8 @@ int main(int argc, char* argv[])
 	functions.load(math_func::std_math_func);
 	functions.load(math_func::std_math_num_func);
 	inter->setFunction(&functions);
-    CoraxVM::corax_program prgm;
+
+
 	err_redirect err; //remove cerr stream
 
 	bool exit = false;
@@ -102,8 +107,8 @@ int main(int argc, char* argv[])
 				{
 					mem.set("ans",inter->exec());
 					std::cout << mem.get("ans") << std::endl;
-					inter->compile(&prgm);
-					std::cout << runtime.run(&prgm) << std::endl;
+					inter->compile(prgm);
+					std::cout << runtime->run(prgm) << std::endl;
 				}
 				else
 				{
@@ -143,9 +148,9 @@ int main(int argc, char* argv[])
 				{
 					mem.set("ans",inter->exec());
 					std::cout << expression << " = " << mem.get("ans") << std::endl;
-					inter->compile(&prgm);
-					std::cout << "CoraxVM: " << runtime.debug(&prgm) << std::endl;
-					prgm.instructions.clear();
+					inter->compile(prgm);
+					std::cout << "CoraxVM: " << runtime->debug(prgm) << std::endl;
+					prgm->clear();
 				}
 				else
 				{

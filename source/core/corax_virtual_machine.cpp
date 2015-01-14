@@ -43,26 +43,31 @@ namespace CoraxVM
             val(val_)
         {};
 
-        void corax::setOperator(operators::operators_interface* operators)
+        void corax_runtime::setOperator(operators::operators_interface* operators)
         {
-            corax::_operators = operators;
+            corax_runtime::_operators = operators;
         }
 
-        void corax::setMemory(memory* mem)
+        void corax_runtime::setMemory(memory* mem)
         {
-            corax::_mem = mem;
+            corax_runtime::_mem = mem;
         }
 
-        void corax::setFunction(math_func::function_interface* functions)
+        void corax_runtime::setFunction(math_func::function_interface* functions)
         {
-            corax::_functions = functions;
+            corax_runtime::_functions = functions;
         }
 
-        number_type corax::run(corax_program * prgm)
+        number_type corax_runtime::run(interface::corax_program * prgm_)
         {
 
+                CoraxVM::corax_program* prgm = dynamic_cast<CoraxVM::corax_program*>(prgm_);
+                if(prgm == nullptr)
+                {
+                    throw CoraxVM::coraxOops("Bad program pointer");
+                }
 
-             std::stack<number_type> _stack;
+            std::stack<number_type> _stack;
              for(size_t i=0; i< prgm->instructions.size(); i++ )
              {
                  bool rpxu=false;
@@ -169,7 +174,7 @@ namespace CoraxVM
                         }
                         else if(rpx)
                         {
-                            corax_register tmp =corax::_r1;
+                            corax_register tmp =corax_runtime::_r1;
                             _r1 = _r2;
                             _r2 = tmp;
                         }
@@ -227,7 +232,7 @@ namespace CoraxVM
             return _stack.top();
         }
 
-        corax::corax() :
+        corax_runtime::corax_runtime() :
             _operators(nullptr),
             _mem(nullptr),
             _functions(nullptr),
@@ -237,7 +242,7 @@ namespace CoraxVM
             _pr2(nullptr)
         {};
 
-        corax::corax(operators::operators_interface* operators,memory* mem,math_func::function_interface* functions) :
+        corax_runtime::corax_runtime(operators::operators_interface* operators,memory* mem,math_func::function_interface* functions) :
             _operators(operators),
             _mem(mem),
             _functions(functions),
@@ -246,14 +251,27 @@ namespace CoraxVM
             _pr1(nullptr),
             _pr2(nullptr)
         {};
+        void CoraxVM::corax_program::clear()
+        {
 
-        corax::~corax()
+            instructions.clear();
+        }
+        CoraxVM::corax_program::~corax_program()
+        {
+
+        }
+        corax_runtime::~corax_runtime()
         {
 
         }
 
-        number_type corax::debug(corax_program *prgm)
+        number_type corax_runtime::debug(interface::corax_program *prgm_)
         {
+             CoraxVM::corax_program* prgm = dynamic_cast<CoraxVM::corax_program*>(prgm_);
+                if(prgm == nullptr)
+                {
+                    throw CoraxVM::coraxOops("Bad program pointer");
+                }
             std::stack<number_type> _stack;
             for(size_t i=0; i< prgm->instructions.size(); i++ )
              {
@@ -353,14 +371,14 @@ namespace CoraxVM
                     {
                         if(rpxu)
                         {
-                            corax_pointer_register tmp =corax::_pr1;
+                            corax_pointer_register tmp =_pr1;
                             _pr1 = _pr2;
                             _pr2 = tmp;
 
                         }
                         else if(rpx)
                         {
-                            corax_register tmp=corax::_r1;
+                            corax_register tmp=_r1;
                             _r1 = _r2;
                             _r2 = tmp;
                         }
