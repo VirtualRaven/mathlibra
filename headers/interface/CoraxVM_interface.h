@@ -12,7 +12,6 @@ namespace interface
     class corax_program
     {
         public:
-        virtual bool serilize();
         virtual void clear()=0;
         virtual ~corax_program();
     };

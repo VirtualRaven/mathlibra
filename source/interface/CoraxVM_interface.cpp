@@ -3,11 +3,6 @@ namespace interface
 {
 
 
-        bool corax_program::serilize()
-        {
-            return false;
-        }
-
 
     corax_program::~corax_program()
     {
