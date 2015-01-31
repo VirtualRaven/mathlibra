@@ -62,13 +62,13 @@
 		this->type = OPERATOR;
 	}
 	operatorToken::operatorToken(operators::interpreter_operator opr)
-	:baseToken(), operators::interpreter_operator::interpreter_operator(opr)
-    {
+	:baseToken(), operators::interpreter_operator(opr)
+	  {
 		this->type = OPERATOR;
 	}
 
 	operatorToken::operatorToken()
-    :baseToken(),operators::interpreter_operator::interpreter_operator()
+    :baseToken(),operators::interpreter_operator()
     {
 		this->type = OPERATOR;
     }

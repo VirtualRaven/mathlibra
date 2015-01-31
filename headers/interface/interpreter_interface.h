@@ -4,7 +4,7 @@
 #include "modules/functions.h"
 #include "modules/memory.h"
 #include "modules/operators.h"
-#include "corax_virtual_machine.h"
+#include "interface/CoraxVM_interface.h"
 namespace interface
 {
 

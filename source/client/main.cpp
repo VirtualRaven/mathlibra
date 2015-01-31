@@ -3,7 +3,7 @@
 #include <cstring>
 #include "client.h"
 #include "ptr_protect.h"
-#include "corax_virtual_machine.h"
+
 
 /* TODO
 	Add function inpterpeting and execution DONE
@@ -71,12 +71,10 @@ int main(int argc, char* argv[])
     ptr_protect<char*,false> my_char = safe_alloc<char>();
 
     //Load core functions from libary
-	interpreter_container inter_obj = create_interpreter(); //Load interpreter from CORE
-	interface::interpreter_interface * inter = inter_obj.ptr();
-    corax_runtime_container corax_obj = create_corax_runtime();
-	interface:: corax_runtime_interface * runtime = corax_obj.ptr();
-    corax_program_container prgm_obj = create_corax_program();
-    interface::corax_program* prgm = prgm_obj.ptr();
+	
+	interface::interpreter_interface * inter  = create_interpreter(); //Load interpreter from CORE
+	interface::corax_runtime_interface * runtime = create_corax_runtime();
+	interface::corax_program* prgm = create_corax_program();
 
 	std::string expression = "";
 	//Init memory unit

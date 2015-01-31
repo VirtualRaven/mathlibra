@@ -3,16 +3,18 @@
 #include "corax_virtual_machine.h"
 #include "ptr_protect.h"
 
-interpreter_container create_interpreter()
+
+
+interface::interpreter_interface* create_interpreter()
 {
-    return interpreter_container(new interpreter);
+    return new interpreter;
 }
 
-corax_runtime_container create_corax_runtime()
+interface::corax_runtime_interface* create_corax_runtime()
 {
-    return corax_runtime_container(new CoraxVM::corax_runtime);
+    return new CoraxVM::corax_runtime;
 }
-corax_program_container create_corax_program()
+interface::corax_program* create_corax_program()
 {
-    return corax_program_container(new CoraxVM::corax_program);
+    return new CoraxVM::corax_program;
 }

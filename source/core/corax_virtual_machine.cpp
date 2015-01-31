@@ -72,8 +72,8 @@ namespace CoraxVM
              {
                  bool rpxu=false;
                  bool rxu=false;
-                 corax_pointer_register* p_rpx;
-                 corax_register* p_rx;
+                 corax_pointer_register* p_rpx = nullptr;
+                 corax_register* p_rx=nullptr;
                   switch(prgm->instructions[i].ins & 0xF)
                   {
                   case instruction_flags::R1:
@@ -101,8 +101,7 @@ namespace CoraxVM
                         }
                         break;
                   }
-                  corax_pointer_register& rpx= *p_rpx;
-                 corax_register& rx= *p_rx;
+                  
                  switch(prgm->instructions[i].ins & 0xF0 )
                  {
                  case instruction_set::CALL:
@@ -139,11 +138,11 @@ namespace CoraxVM
                     {
                        if(rxu && rpxu)
                        {
-                            rx = *(number_type*)rpx;
+                            *p_rx = *(number_type*)(*p_rpx);
                        }
                        else if (rxu)
                        {
-                           rx= *(number_type*)prgm->instructions[i].ptr;
+                           *p_rx= *(number_type*)prgm->instructions[i].ptr;
                        }
                        else throw coraxOops("LD called without register");
                     }
@@ -153,11 +152,11 @@ namespace CoraxVM
 
                         if(rxu)
                         {
-                            rx =prgm->instructions[i].val;
+                            *p_rx =prgm->instructions[i].val;
                         }
                         else if(rpxu)
                         {
-                            rpx = prgm->instructions[i].ptr;
+                            *p_rpx = prgm->instructions[i].ptr;
                         }
                         else throw coraxOops("LDI called without register");
 
@@ -172,7 +171,7 @@ namespace CoraxVM
                             _pr2 = tmp;
 
                         }
-                        else if(rpx)
+                        else if(rxu)
                         {
                             corax_register tmp =corax_runtime::_r1;
                             _r1 = _r2;
@@ -190,7 +189,7 @@ namespace CoraxVM
                                 throw coraxOops("Tried to pop from empty stack");
                             }
 
-                            rx = _stack.top();
+                            *p_rx = _stack.top();
                             _stack.pop();
                         }
                         else throw coraxOops("POP called without reigster");
@@ -200,7 +199,7 @@ namespace CoraxVM
                     {
                         if(rxu)
                         {
-                            _stack.push(rx);
+                            _stack.push(*p_rx);
                         }
                         else throw coraxOops("PUSH called without register");
                     }
@@ -209,15 +208,15 @@ namespace CoraxVM
                     {
                         if(rpxu && rxu)
                         {
-                                *(number_type*)rpx = rx;
+                                *(number_type*)(*p_rpx) = *p_rx;
                         }
                         else if(rxu)
                         {
-                          *(number_type*)prgm->instructions[i].ptr = rx;
+                          *(number_type*)prgm->instructions[i].ptr = *p_rx;
                         }
                         else if (rpxu)
                         {
-                            *(number_type*)rpx = prgm->instructions[i].val;
+                            *(number_type*)(*p_rpx) = prgm->instructions[i].val;
                         }
                         else throw coraxOops("ST called without register");
                     }

@@ -584,6 +584,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
             return false;
         }
 	     //Create rpn
+		cast_prgm->clear();
         rpn(&this->root,cast_prgm);
         return true;
 
