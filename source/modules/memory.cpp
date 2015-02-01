@@ -15,61 +15,72 @@
 	    value(value),
 	    constant(constant)
 	    {}
-
+	memoryObject::memoryObject() :
+		name(""),
+		value(0),
+		constant(false)
+	{}
 
 
 	number_type memory::get(std::string var)
 	{
-		for (unsigned int i = 0; i < mem.size(); i++)
+		mem_it = mem.find(var);
+		if (mem_it == mem.end())
 		{
-			if (mem[i].name == var)
-			{
-				return mem[i].value;
-			}
-		}
-		throw memoryOops("requested variable not found");
-		return false;
+			throw memoryOops("requested variable not found");
+			return false;
 
+		}
+		else return mem_it->second.value;
 	}
 	bool memory::set(std::string var,number_type value, bool allocateIfNotFound , bool constant )
 	{
-		for (unsigned int i = 0; i < mem.size(); i++)
+		mem_it =mem.find(var);
+		if (mem_it == mem.end())
 		{
-			if (mem[i].name == var)
+			if (allocateIfNotFound)
 			{
-				if (mem[i].constant == true)
+				mem[var] = memoryObject(var, value, constant);
+				return true;
+			}
+			else
+			{
+				throw memoryOops("requested variable not found");
+				return false;
+			}
+		 }
+				if (mem_it->second.constant == true)
 				{
 					throw memoryOops("Tried to alter constant variable");
 					return false;
 				}
-				mem[i].value = value;
+				mem_it->second.value = value;
 				return true;
-			}
-		}
-		//Variable not found
-		if (allocateIfNotFound)
-		{
-			mem.push_back(memoryObject(var, value,constant));
-			return true;
-
-		}
-		else
-		{
-			throw memoryOops("requested variable not found");
-			return false;
-		}
 	}
+	
 	std::vector<std::string> memory::allVars()
 	{
 		std::vector<std::string> re;
-
-		for (unsigned int i = 0; i < mem.size(); i++)
+		re.resize(mem.size()); //Save a lot of reallocations
+		for (this->mem_it  = mem.begin(); mem_it != mem.end(); mem_it++)
 		{
-			re.push_back(mem[i].name);
+			re.push_back(mem_it->second.name);
 		}
 		return re;
 	}
 	void memory::empty()
 	{
 		this->mem.clear();
+	}
+	 
+	number_type* memory::raw_ptr(std::string var)
+	{
+		mem_it = mem.find(var);
+		if (mem_it == mem.end())
+		{
+			throw memoryOops("requested variable not found");
+			return false;
+
+		}
+		else return &mem_it->second.value;
 	}
