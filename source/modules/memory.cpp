@@ -62,9 +62,11 @@
 	{
 		std::vector<std::string> re;
 		re.resize(mem.size()); //Save a lot of reallocations
+		std::vector<std::string>::iterator it = re.begin();
 		for (this->mem_it  = mem.begin(); mem_it != mem.end(); mem_it++)
 		{
-			re.push_back(mem_it->second.name);
+			*it = (mem_it->second.name);
+			it++;
 		}
 		return re;
 	}
