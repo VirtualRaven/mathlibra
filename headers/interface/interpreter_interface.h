@@ -32,8 +32,7 @@ public:
 	virtual void set(const char * expression, short lenght)=0; //Sets the expression to be interpret
 	virtual ~interpreter_interface();
 
-	//EXPERIMENTAL
-	virtual bool compile(interface::corax_program*)=0;
+	
 };
 
 

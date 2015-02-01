@@ -26,11 +26,31 @@ struct interpreterOops : public exception
 
 
 class interpreter;
+
+
+namespace CoraxVM
+{
+
+	class Corax_program_builder_module
+	{
+	private:
+		interpreter * _ptr;
+		//Internal command for compiling tree objects to CoraxVM byte code
+		void _rpn(node * nodePtr, CoraxVM::corax_program * prgm);
+	public:
+		bool create_program(interface::corax_program*);
+		Corax_program_builder_module(interpreter * ptr);
+	};
+};
+
 rootNode buildEntry1(interpreter * parentInterpreter);
+
+
 
 class interpreter : public interface::interpreter_interface
 {
     friend rootNode buildEntry1(interpreter * parentInterpreter);
+	friend CoraxVM::Corax_program_builder_module;
 	char * expression;
 	unsigned short expressionLength;
 	unsigned short startOperatorPos; //contains the index in the tokens array where the starting operator is located
@@ -52,7 +72,7 @@ class interpreter : public interface::interpreter_interface
 	void allocExpression(short lenght);
 	bool lexicalAnalys();
 	bool buildSyntaxTree();
-
+	
 
 
 public:
@@ -66,8 +86,7 @@ public:
 	void set(const char * expression, short lenght);
 	interpreter();
 	~interpreter();
-	//Experimental
-	bool compile(interface::corax_program*);
+	
 };
 
 

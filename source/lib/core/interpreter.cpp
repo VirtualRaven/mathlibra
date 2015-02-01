@@ -472,7 +472,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
         {
 #ifdef STRUCTUAL_INTEGRITY_TEST
             this->root.integrityTest();
-            #endif
+#endif
 			this->root.TakeContext();
 			return this->root.data->eval();
 
@@ -519,7 +519,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 		this->current_functions = functions;
 	}
 
-	void rpn(node * nodePtr, CoraxVM::corax_program * prgm )
+	void CoraxVM::Corax_program_builder_module::_rpn(node * nodePtr, CoraxVM::corax_program * prgm )
 	{
 	    if(nodePtr == nullptr)
         {
@@ -527,16 +527,29 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
         }
 	    else if(nodePtr->data->type == tokenType::VALUE || nodePtr->data->type == tokenType::VARIABLE  )
         {
-            //PUSH
+			/* 
+				LDI R1 CONST
+				PUSH R1
+			*/
             if(nodePtr->data->type == tokenType::VALUE)
             {
                prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::LDI | CoraxVM::instruction_flags::R1,
                                                                                static_cast<mathNode::mathExpressionNode_val*>(nodePtr->data)->value ));
                prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::PUSH | CoraxVM::instruction_flags::R1, nullptr));
                //std::cout << static_cast<mathNode::mathExpressionNode_val*>(nodePtr->data)->value;
+#ifdef DEBUG_CORAX_INS
+			   std::cout << "LDI R1 " <<  static_cast<mathNode::mathExpressionNode_val*>(nodePtr->data)->value <<"\nPUSH R1\n";
+#endif
             }
+			/*
+				LD R1 CONST_PTR
+				PUSH R1
+			*/
             else
             {
+			//	static_cast<mathNode::mathExpressionNode_variable*>(nodePtr->data)->name;
+			//	nodePtr->
+			//	prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::LD |CoraxVM::instruction_flags::R1,  ))
                  //std::cout << static_cast<mathNode::mathExpressionNode_variable*>(nodePtr->data)->name;
             }
             return;
@@ -547,16 +560,24 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
         }
         else
         {
-            rpn(nodePtr->sub1(),prgm);
-            rpn(nodePtr->sub2(),prgm);
+            _rpn(nodePtr->sub1(),prgm);
+            _rpn(nodePtr->sub2(),prgm);
+			/*
+				CALL ARG1 CONST_PTR
+			*/
             if(nodePtr->data->type == tokenType::FUNCTION)
             {
-                prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::CALL | CoraxVM::instruction_flags::ARG1, //Load constant to R1
+                prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::CALL | CoraxVM::instruction_flags::ARG1, 
                                                                             (void*)static_cast<mathNode::mathExpressionNode_func*>(nodePtr->data)->func));
-
+#ifdef DEBUG_CORAX_INS
+				std::cout << "CALL ARG1 " <<  (void*)static_cast<mathNode::mathExpressionNode_func*>(nodePtr->data)->func << "\n";
+#endif
 
                 //std::cout << "FUNCTION(" << std::hex << (void *)static_cast<mathNode::mathExpressionNode_func*>(nodePtr->data)->func<< std::dec << ")";
             }
+			/*
+				CALL ARG2 CONST_PTR
+			*/
             else //Is operator
             {
                 mathNode::mathExpressionNode_opr * tmp = static_cast<mathNode::mathExpressionNode_opr*>(nodePtr->data);
@@ -566,9 +587,11 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
                 }
                 else
                 {
-                    prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::CALL | CoraxVM::instruction_flags::ARG2, //Load constant to R1
+                    prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::CALL | CoraxVM::instruction_flags::ARG2, 
                                                                             (void*)tmp->operation));
-
+#ifdef DEBUG_CORAX_INS
+					std::cout << "CALL ARG2 " <<  (void*)tmp->operation << "\n";
+#endif
                   //  std::cout << "OPER("<< std::hex << (void *)tmp->operation<< std::dec << ")";
                 }
             }
@@ -576,16 +599,17 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
         }
 	}
 
-	bool interpreter::compile(interface::corax_program * prgm)
+	bool CoraxVM::Corax_program_builder_module::create_program(interface::corax_program * prgm)
 	{
 	    CoraxVM::corax_program * cast_prgm = dynamic_cast<CoraxVM::corax_program*>(prgm);
-	    if(rootEmpty)
+	    if(this->_ptr->rootEmpty)
         {
             return false;
         }
 	     //Create rpn
 		cast_prgm->clear();
-        rpn(&this->root,cast_prgm);
+		_rpn(&this->_ptr->root, cast_prgm);
         return true;
 
 	}
+	CoraxVM::Corax_program_builder_module::Corax_program_builder_module(interpreter* ptr) : _ptr(ptr){}

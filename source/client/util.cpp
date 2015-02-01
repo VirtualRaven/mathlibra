@@ -1,5 +1,5 @@
 #include "main.h"
-#include "version.h"
+
 #include <iostream>
 #include <string>
 namespace util
@@ -23,6 +23,10 @@ namespace util
 #endif
 #ifdef SYNTAX_TREE_DEBUG_INFO
 		std::cout << "SYNTAX_TREE_DEBUG_INFO ENABLED\n";
+#endif
+
+#ifdef DEBUG_CORAX_INS
+		std::cout << "DEBUG_CORAX_INS ENABLED\n";
 #endif
 #else
 		std::cout << "False\n";
@@ -65,7 +69,7 @@ namespace util
 		}
 		else if (input == "6")
 		{
-			std::cout << "\nthe menu item build information of which debug systems are activated, to enable more or less information the program has to be recompiled as the settings depend upon preprocessor defintion in the main.h header.\nAlso include the version string\nLEXICAL_ANANALYSIS_DEBUG:\nOutputs information about how the lexical analysis interprets the different characters in an string.\n\nSYNTAX_TREE_DEBUG_INFO:\nincreased debug messages about memory allocations and deallocations conducted by the tree object\n\nSTRUCTUAL_INTEGRITY_TEST:\nCheck the syntax tree before evaluation to ensure that all pointers are valid.Aborts program execution on failure \n";
+			std::cout << "\nthe menu item build information of which debug systems are activated, to enable more or less information the program has to be recompiled as the settings depend upon preprocessor defintion in the main.h header.\nAlso include the version string\nLEXICAL_ANANALYSIS_DEBUG:\nOutputs information about how the lexical analysis interprets the different characters in an string.\n\nSYNTAX_TREE_DEBUG_INFO:\nincreased debug messages about memory allocations and deallocations conducted by the tree object\n\nSTRUCTUAL_INTEGRITY_TEST:\nCheck the syntax tree before evaluation to ensure that all pointers are valid.Aborts program execution on failure \n\nDEBUG_CORAX_INS:\nDisplays instructions bytecode instruction memonics executed by CoraxVM\n";
 
 		}
 		else if (input == "7")

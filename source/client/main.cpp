@@ -66,47 +66,45 @@ bool menu(memory& mem,math_func::function_interface& func)
 }
 int main(int argc, char* argv[])
 {
-    std::cout << sizeof(void*);
-    std::cout << sizeof(number_type);
-    ptr_protect<char*,false> my_char = safe_alloc<char>();
-
+   
     //Load core functions from libary
 	
-	interface::interpreter_interface * inter  = create_interpreter(); //Load interpreter from CORE
-	interface::corax_runtime_interface * runtime = create_corax_runtime();
-	interface::corax_program* prgm = create_corax_program();
-
+	interpreter inter; 
+	CoraxVM::corax_runtime runtime;
+	CoraxVM::corax_program prgm;
+	CoraxVM::Corax_program_builder_module prgm_builder(&inter);
 	std::string expression = "";
 	//Init memory unit
 	memory mem; //Create memory unit
 	operators::operators_interface oper;
 	oper.load(operators::std_operators);
-	inter->setOperator(&oper);
+	inter.setOperator(&oper);
 	mem.set("PI", 3.14159f, true, true);  //Add constat variable PI with value 3.14
-	inter->setMemory(&mem); //Assign memory unit to interpreter
+	inter.setMemory(&mem); //Assign memory unit to interpreter
 	//init func unit
 	math_func::function_interface functions; //Create function unit
 	functions.load(math_func::std_math_trig_func); // Load std_math_trig_funct into function unit
 	functions.load(math_func::std_math_func);
 	functions.load(math_func::std_math_num_func);
-	inter->setFunction(&functions);
+	inter.setFunction(&functions);
 
-
+	*(mem.raw_ptr("PI")) = 42;
+#ifndef DEBUG
 	err_redirect err; //remove cerr stream
-
+#endif
 	bool exit = false;
 	if( argc > 1)
     {
 
         try
 			{
-				inter->set(argv[1],strlen(argv[1]));
-				if (inter->interpret())
+				inter.set(argv[1],strlen(argv[1]));
+				if (inter.interpret())
 				{
-					mem.set("ans",inter->exec());
+					mem.set("ans",inter.exec());
 					std::cout << mem.get("ans") << std::endl;
-					inter->compile(prgm);
-					std::cout << runtime->run(prgm) << std::endl;
+					prgm_builder.create_program(&prgm);
+					std::cout << runtime.run(&prgm) << std::endl;
 				}
 				else
 				{
@@ -141,14 +139,14 @@ int main(int argc, char* argv[])
 
 			try
 			{
-				inter->set(expression.c_str(), expression.size());
-				if (inter->interpret())
+				inter.set(expression.c_str(), expression.size());
+				if (inter.interpret())
 				{
-					mem.set("ans",inter->exec());
+					mem.set("ans",inter.exec());
 					std::cout << expression << " = " << mem.get("ans") << std::endl;
-					inter->compile(prgm);
-					std::cout << "CoraxVM: " << runtime->run(prgm) << std::endl;
-					prgm->clear();
+					prgm_builder.create_program(&prgm);
+					std::cout << "CoraxVM: " << runtime.run(&prgm) << std::endl;
+					prgm.clear();
 				}
 				else
 				{
@@ -169,6 +167,7 @@ int main(int argc, char* argv[])
 			}*/
 		}
 	} while (!exit);
+	
 	return 0;
 
 }
