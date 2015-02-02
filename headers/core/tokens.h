@@ -59,7 +59,7 @@ struct variableToken : public baseToken
 
 	std::string variableName;
 	memory *mem;
-
+	bool _stack;
 	mathNode::mathExpressionNode* node();
 	bool  hasNode();
 	variableToken(short startPos, short endPos,memory* mem);

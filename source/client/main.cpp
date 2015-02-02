@@ -66,15 +66,27 @@ bool menu(memory& mem,math_func::function_interface& func)
 }
 int main(int argc, char* argv[])
 {
-   
+
+#ifdef RUN_TESTS
+	if (!test::memory_module_test1())
+	{
+		std::cin.get();
+		return false;
+	}
+#endif
+#ifndef DEBUG
+	err_redirect err; //remove cerr stream
+#endif
+
     //Load core functions from libary
 	
 	interpreter inter; 
-	CoraxVM::corax_runtime runtime;
+	CoraxVM::corax_runtime runtime; //Execution enviroment for corax programs
 	CoraxVM::corax_program prgm;
 	CoraxVM::Corax_program_builder_module prgm_builder(&inter);
 	std::string expression = "";
 	//Init memory unit
+
 	memory mem; //Create memory unit
 	operators::operators_interface oper;
 	oper.load(operators::std_operators);
@@ -87,43 +99,12 @@ int main(int argc, char* argv[])
 	functions.load(math_func::std_math_func);
 	functions.load(math_func::std_math_num_func);
 	inter.setFunction(&functions);
+	runtime.setMemory(&mem);
 
-	*(mem.raw_ptr("PI")) = 42;
-#ifndef DEBUG
-	err_redirect err; //remove cerr stream
-#endif
+
+
 	bool exit = false;
-	if( argc > 1)
-    {
-
-        try
-			{
-				inter.set(argv[1],strlen(argv[1]));
-				if (inter.interpret())
-				{
-					mem.set("ans",inter.exec());
-					std::cout << mem.get("ans") << std::endl;
-					prgm_builder.create_program(&prgm);
-					std::cout << runtime.run(&prgm) << std::endl;
-				}
-				else
-				{
-					std::cout << "Failed to interpret expression!" << std::endl;
-					return 1;
-				}
-
-			}
-
-			catch (exception& e)
-			{
-
-				std::cout << "[\n Exception: " << e.what() << "\n";
-				std::cout << " Description: " << e.desc() << "\n]\n";
-				return 1;
-			}
-			return 0;
-    }
-     std::cout << "Calculator backend test\nLukas Rahmn 2014\n\nEnter an expression or write menu to open the menu\n\n";
+     std::cout << "Calculator backend test\nLukas Rahmn 2015\n\nEnter an expression or write menu to open the menu\n\n";
 	do
 	{
 
@@ -142,11 +123,17 @@ int main(int argc, char* argv[])
 				inter.set(expression.c_str(), expression.size());
 				if (inter.interpret())
 				{
+#if  defined(SYNTAX_TREE_EXEC)
 					mem.set("ans",inter.exec());
-					std::cout << expression << " = " << mem.get("ans") << std::endl;
+					
+#elif defined(CORAX_VM_EXEC)
 					prgm_builder.create_program(&prgm);
-					std::cout << "CoraxVM: " << runtime.run(&prgm) << std::endl;
+					mem.set("ans", runtime.run(&prgm));
 					prgm.clear();
+#else
+#error "WARNING, no execution enviroment selected"
+#endif
+					std::cout << expression << " = " << mem.get("ans") << std::endl;
 				}
 				else
 				{

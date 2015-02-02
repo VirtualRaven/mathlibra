@@ -41,11 +41,13 @@ struct mathExpressionNode_opr;
 
 	private:
 		memory* mem;
+		bool _stack;
 		friend mathExpressionNode_opr;
 	public:
 		std::string name;
-		mathExpressionNode_variable(std::string var, memory* mem);
+		mathExpressionNode_variable(std::string var, memory* mem, bool b);
 		number_type eval();
+		bool is_pushable();
 		mathExpressionNode_variable(const mathExpressionNode_variable&);
 		mathExpressionNode_variable operator=(const mathExpressionNode_variable&);
 

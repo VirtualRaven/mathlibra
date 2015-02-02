@@ -77,9 +77,10 @@ namespace mathNode
 
 
 
-		mathExpressionNode_variable::mathExpressionNode_variable(std::string var, memory* mem)
+		mathExpressionNode_variable::mathExpressionNode_variable(std::string var, memory* mem, bool b)
 		:mem(mem),
-		name(var)
+		name(var),
+		_stack(b)
 
 		{
 			this->type = tokenType::VARIABLE;
@@ -88,7 +89,10 @@ namespace mathNode
 		{
 			return mem->get(name);
 		}
-
+		bool mathExpressionNode_variable::is_pushable()
+		{
+			return _stack;
+		}
 
 
 

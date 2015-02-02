@@ -283,6 +283,11 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 						std::cerr << "Syntax error: Assigment operator requirers an variable on left hand side\n";
 						return false;
 					}
+					else
+					{
+						//token is going to be used in an asigment and should thus not be bushed to the stack
+						static_cast<variableToken*>(tokens.back())->_stack =false;
+					}
 				}
 				tokens.push_back(tmp.ptr());
 				tmp.release();
@@ -536,7 +541,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
                prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::LDI | CoraxVM::instruction_flags::R1,
                                                                                static_cast<mathNode::mathExpressionNode_val*>(nodePtr->data)->value ));
                prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::PUSH | CoraxVM::instruction_flags::R1, nullptr));
-               //std::cout << static_cast<mathNode::mathExpressionNode_val*>(nodePtr->data)->value;
+              // std::cout << static_cast<mathNode::mathExpressionNode_val*>(nodePtr->data)->value;
 #ifdef DEBUG_CORAX_INS
 			   std::cout << "LDI R1 " <<  static_cast<mathNode::mathExpressionNode_val*>(nodePtr->data)->value <<"\nPUSH R1\n";
 #endif
@@ -547,10 +552,31 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 			*/
             else
             {
-			//	static_cast<mathNode::mathExpressionNode_variable*>(nodePtr->data)->name;
-			//	nodePtr->
-			//	prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::LD |CoraxVM::instruction_flags::R1,  ))
-                 //std::cout << static_cast<mathNode::mathExpressionNode_variable*>(nodePtr->data)->name;
+				mathNode::mathExpressionNode_variable* tmp_math_var = static_cast<mathNode::mathExpressionNode_variable*>(nodePtr->data);
+				
+				if (tmp_math_var->is_pushable())
+				{
+					void* tmp_ptr = (void*)this->_ptr->mem->raw_ptr(tmp_math_var->name);
+					prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::LD | CoraxVM::instruction_flags::R1, tmp_ptr));
+					prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::PUSH | CoraxVM::instruction_flags::R1, nullptr));
+					#ifdef DEBUG_CORAX_INS
+					std::cout << "LD R1 " << tmp_ptr << "\nPUSH R1\n";
+					#endif
+				}
+				else
+				{
+					if (!this->_ptr->mem->set(tmp_math_var->name, 0))
+					{
+						throw CoraxVM::coraxOops("Failed to allocate memory for variable for assigment operator");
+					}
+					void* tmp_ptr = (void*)this->_ptr->mem->raw_ptr(tmp_math_var->name);
+					prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::LDI | CoraxVM::instruction_flags::PR2, tmp_ptr));
+#ifdef DEBUG_CORAX_INS
+					std::cout << "LDI PR2 " << tmp_ptr << "\n";
+#endif
+				}
+				//std::cout << tmp_math_var->name;
+			
             }
             return;
         }
@@ -573,7 +599,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 				std::cout << "CALL ARG1 " <<  (void*)static_cast<mathNode::mathExpressionNode_func*>(nodePtr->data)->func << "\n";
 #endif
 
-                //std::cout << "FUNCTION(" << std::hex << (void *)static_cast<mathNode::mathExpressionNode_func*>(nodePtr->data)->func<< std::dec << ")";
+               // std::cout << "FUNCTION(" << std::hex << (void *)static_cast<mathNode::mathExpressionNode_func*>(nodePtr->data)->func<< std::dec << ")";
             }
 			/*
 				CALL ARG2 CONST_PTR
@@ -583,7 +609,13 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
                 mathNode::mathExpressionNode_opr * tmp = static_cast<mathNode::mathExpressionNode_opr*>(nodePtr->data);
                 if(tmp->assignB)
                 {
-                    //std::cout << "ASSIGN(" << std::hex<< (void *)tmp->assign << std::dec<< ")";
+					prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::POP | CoraxVM::instruction_flags::R2,nullptr));
+					prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::ST | CoraxVM::instruction_flags::R2 | CoraxVM::instruction_flags::PR2, nullptr));
+					prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::PUSH  |CoraxVM::instruction_flags::R2, nullptr));
+#ifdef DEBUG_CORAX_INS
+					std::cout << "POP R2\nST R2 PR2\nPUSH R2\n";
+#endif
+                //    std::cout << "ASSIGN(" << std::hex<< (void *)tmp->assign << std::dec<< ")";
                 }
                 else
                 {
@@ -592,7 +624,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 #ifdef DEBUG_CORAX_INS
 					std::cout << "CALL ARG2 " <<  (void*)tmp->operation << "\n";
 #endif
-                  //  std::cout << "OPER("<< std::hex << (void *)tmp->operation<< std::dec << ")";
+               //   std::cout << "OPER("<< std::hex << (void *)tmp->operation<< std::dec << ")";
                 }
             }
 

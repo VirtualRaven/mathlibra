@@ -7,31 +7,32 @@ namespace util
 
 	void buildInfo()
 	{
-		std::cout << "-[ Build date: " << __DATE__ << "\n ";
+		std::cout << "-[ Build date: " << __DATE__ << "]\n";
+		std::cout << "-[ Execution enviroment " << EXEC_ENV_STRING << "]\n";
 #ifdef GIT_COMMIT_HASH
 		std::cout  << "Version: " << git_version << "\n\n;
 #endif
-		std::cout << "DEBUG: ";
+		std::cout << "-[DEBUG: ";
 
 #ifdef DEBUG
-		std::cout << "TRUE\n";
+		std::cout << "TRUE ]\n";
 #ifdef LEXICAL_ANANALYSIS_DEBUG
-		std::cout << "LEXICAL_ANANALYSIS_DEBUG ENABLED\n";
+		std::cout << "-[LEXICAL_ANANALYSIS_DEBUG: ENABLED ]\n";
 #endif
 #ifdef STRUCTUAL_INTEGRITY_TEST
-		std::cout << "STRUCTUAL_INTEGRITY_TEST ENABLED\n";
+		std::cout << "-[STRUCTUAL_INTEGRITY_TEST: ENABLED ]\n";
 #endif
 #ifdef SYNTAX_TREE_DEBUG_INFO
-		std::cout << "SYNTAX_TREE_DEBUG_INFO ENABLED\n";
+		std::cout << "-[SYNTAX_TREE_DEBUG_INFO: ENABLED ]\n";
 #endif
 
 #ifdef DEBUG_CORAX_INS
-		std::cout << "DEBUG_CORAX_INS ENABLED\n";
+		std::cout << "-[DEBUG_CORAX_INS: ENABLED ]\n";
 #endif
 #else
-		std::cout << "False\n";
+		std::cout << "False ]\n";
 #endif
-		std::cout << "\n]\n";
+		std::cout << "\n\n";
 
 	}
 

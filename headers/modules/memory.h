@@ -34,4 +34,11 @@ public:
 	void empty();
 	number_type* raw_ptr(std::string var);
 };
+
+
+namespace test
+{
+	bool memory_module_test1();
+}
+
 #endif // MEMORY_H_INCLUDED

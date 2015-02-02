@@ -1,12 +1,22 @@
 #ifndef MAIN_H_INCLUDED
 #define MAI_H_INCLUDED
-//#define DEBUG
+#define EXEC_ENV 2
+
+#if EXEC_ENV == 1
+#define SYNTAX_TREE_EXEC
+#define EXEC_ENV_STRING "abstract syntax tree"
+#else if EXEC_ENV == 2
+#define CORAX_VM_EXEC
+#define EXEC_ENV_STRING "Corax virtual machine"
+#endif
+
 typedef double number_type;
 #define DEBUG
 #ifdef DEBUG
-#define LEXICAL_ANANALYSIS_DEBUG
-#define SYNTAX_TREE_DEBUG_INFO
-#define STRUCTUAL_INTEGRITY_TEST
+//#define RUN_TESTS
+//#define LEXICAL_ANANALYSIS_DEBUG
+//#define SYNTAX_TREE_DEBUG_INFO
+//#define STRUCTUAL_INTEGRITY_TEST
 #define DEBUG_CORAX_INS
 #endif //DEBUG
 namespace util

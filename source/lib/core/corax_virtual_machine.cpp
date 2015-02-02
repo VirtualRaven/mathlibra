@@ -100,6 +100,23 @@ namespace CoraxVM
                             rpxu=true;
                         }
                         break;
+					case (instruction_flags::PR2 | instruction_flags::R2):
+						{
+							p_rpx = &_pr2;
+							rpxu = true;
+							p_rx = &_r2;
+							rxu = true;
+						}
+						break;
+					case instruction_flags::PR1 | instruction_flags::R1:
+					{
+						p_rx = &_r1;
+						rxu = true;
+						p_rpx = &_pr1;
+						rpxu = true;
+					}
+						break;
+
                   }
                   
                  switch(prgm->instructions[i].ins & 0xF0 )
@@ -228,7 +245,12 @@ namespace CoraxVM
                     break;
                  }
              }
-            return _stack.top();
+			 if (_stack.size() > 0)
+			 {
+				 return _stack.top();
+			 }
+			 else throw coraxOops("Stack empty on program termination");
+           
         }
 
         corax_runtime::corax_runtime() :

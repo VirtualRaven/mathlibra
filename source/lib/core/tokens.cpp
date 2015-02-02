@@ -147,7 +147,7 @@
 		{
 			throw memoryOops("Tried to create node variable without assigning memoryblock");
 		}
-		return new mathNode::mathExpressionNode_variable(variableName,mem);
+		return new mathNode::mathExpressionNode_variable(variableName,mem,_stack);
 	}
 	bool  variableToken::hasNode()
 	{
@@ -156,7 +156,8 @@
 	variableToken::variableToken(short startPos, short endPos,memory* mem)
 	:baseToken(),
 	variableName(""),
-	mem(mem)
+	mem(mem),
+	_stack(true)
 	{
 		this->endPos = endPos;
 		this->startPos = startPos;
@@ -166,13 +167,15 @@
 	variableToken::variableToken()
 	:baseToken(),
 	variableName(""),
-	mem(nullptr)
+	mem(nullptr),
+	_stack(true)
 	{
 		this->type = VARIABLE;
 	}
     variableToken::variableToken(const variableToken& val)
     :variableName(val.variableName),
-    mem(val.mem)
+    mem(val.mem),
+	_stack(val._stack)
     {
         this->endPos = val.endPos;
         this->startPos = val.startPos;
