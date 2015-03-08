@@ -103,7 +103,7 @@ int main(int argc, char* argv[])
 	functions.load(core_math::lib_core_math);
 	inter.setFunction(&functions);
 
-#define P_TEST
+//#define P_TEST
 #ifdef P_TEST
 	try
 
