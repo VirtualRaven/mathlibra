@@ -9,7 +9,7 @@ namespace math_func
 
 	const char* functionOops::what()
 	{
-		return "interpreter Exception";
+		return "function Exception";
 	}
 
 

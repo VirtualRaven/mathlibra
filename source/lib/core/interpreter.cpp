@@ -89,7 +89,8 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 	}
 	void interpreter::destroyTokens()
 	{
-		for(unsigned int i = 0; i < this->tokens.size(); i++)
+		unsigned int size=this->tokens.size();
+		for (unsigned int i = 0; i < size; i++)
 		{
 			delete	(baseToken*)this->tokens[i];
 			this->tokens[i] = nullptr;

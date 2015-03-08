@@ -12,7 +12,7 @@ namespace core_math
 		}
 		else
 		{
-			throw math_func::functionOops("frac: invalid argument");
+			throw math_func::functionOops("invalid argument, excpected integer");
 		}
 	}
 
