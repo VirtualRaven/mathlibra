@@ -1,6 +1,0 @@
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/lib)
-set(${PROJECT_NAME}_LIB_SOURCES
-	  ${${PROJECT_NAME}_LIB_SOURCES}
-	PARENT_SCOPE
-)
-	
