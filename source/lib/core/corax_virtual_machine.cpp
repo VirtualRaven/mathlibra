@@ -139,7 +139,7 @@ namespace CoraxVM
                         }
                         else if (prgm->instructions[i].ins & instruction_flags::ARG1)
                         {
-                            math_func::function::funcPtr ptr = (math_func::function::funcPtr)prgm->instructions[i].ptr;
+							math_func::m_function::funcPtr ptr = (math_func::m_function::funcPtr)prgm->instructions[i].ptr;
                             number_type tmp = _stack.top();
                              if(_stack.size() < 1)
                             {

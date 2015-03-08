@@ -2,9 +2,10 @@
 #include <iostream>
 #include <cstring>
 #include "client.h"
+#include "core_math.h"
 #include "ptr_protect.h"
-
-
+#include "profiling.h"
+#include "thread_pool.h"
 /* TODO
 	Add function inpterpeting and execution DONE
 	Add varible interpeting and memmory system. DONE
@@ -66,6 +67,7 @@ bool menu(memory& mem,math_func::function_interface& func)
 }
 int main(int argc, char* argv[])
 {
+	
 
 #ifdef RUN_TESTS
 	if (!test::memory_module_test1())
@@ -78,29 +80,79 @@ int main(int argc, char* argv[])
 	err_redirect err; //remove cerr stream
 #endif
 
-    //Load core functions from libary
 	
 	interpreter inter; 
-	CoraxVM::corax_runtime runtime; //Execution enviroment for corax programs
-	CoraxVM::corax_program prgm;
-	CoraxVM::Corax_program_builder_module prgm_builder(&inter);
 	std::string expression = "";
-	//Init memory unit
-
+	
 	memory mem; //Create memory unit
 	operators::operators_interface oper;
+	math_func::function_interface functions; //Create function unit
+
+	//init and load operators
 	oper.load(operators::std_operators);
 	inter.setOperator(&oper);
+
+	//Init and load memory unit
 	mem.set("PI", 3.14159f, true, true);  //Add constat variable PI with value 3.14
 	inter.setMemory(&mem); //Assign memory unit to interpreter
-	//init func unit
-	math_func::function_interface functions; //Create function unit
+	
+	//init and load func unit
 	functions.load(math_func::std_math_trig_func); // Load std_math_trig_funct into function unit
 	functions.load(math_func::std_math_func);
 	functions.load(math_func::std_math_num_func);
+	functions.load(core_math::lib_core_math);
 	inter.setFunction(&functions);
-	runtime.setMemory(&mem);
 
+//#define P_TEST
+#ifdef P_TEST
+	try
+
+	{
+		
+		std::cout << "Running test\n";
+		std::string exr = "x=(sqrt(sqrt(5*5)^2)*100)/5*(sin(PI)^2+cos(PI)^2)";
+		inter.set(exr.c_str(), exr.size());
+		inter.interpret();
+		interpreter inter2(std::move(inter));
+		/*
+		CoraxVM::Corax_program_builder_module prgm_builder(&inter2);
+		CoraxVM::corax_program prgm;
+		CoraxVM::corax_runtime runtime;
+		*/
+		//prgm_builder.create_program(&prgm);
+		auto test1 = [&](){ return inter2.exec(); };
+		auto test2 = [&](){inter2.interpret(); };
+
+		//auto test3 = [&](){ prgm_builder.create_program(&prgm); };
+		//auto test4 = [&](){ runtime.run(&prgm); };
+		const unsigned int test_lenght = 10000;
+		std::cout << "interpret: " << func_profile<test_lenght>(test2) << "s\n";
+		//double exec = func_profile<test_lenght>(test1);
+		/*double ccompile = func_profile<test_lenght>(test3);
+		double cexec = func_profile<test_lenght>(test4);
+		*/
+		//std::cout << "exec: " << exec << "s\n";
+		/*std::cout << "corax compile: " << ccompile << "s\n";
+		std::cout << "corax run: " << cexec << "s\n";
+		std::cout << "virtual machine overhead: " << round(((ccompile + cexec) / exec) * 100)<< "%\n";
+
+		*/
+		
+	
+		
+		
+	}
+	catch (exception& e)
+	{
+
+		std::cout << "[\n Exception: " << e.what() << "\n";
+		std::cout << " Description: " << e.desc() << "\n]\n";
+	}
+	std::cin.get();
+	
+	return 0;
+
+#endif //P_TEST
 
 
 	bool exit = false;
@@ -129,7 +181,6 @@ int main(int argc, char* argv[])
 #elif defined(CORAX_VM_EXEC)
 					prgm_builder.create_program(&prgm);
 					mem.set("ans", runtime.run(&prgm));
-					prgm.clear();
 #else
 #error "WARNING, no execution enviroment selected"
 #endif

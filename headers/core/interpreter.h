@@ -85,6 +85,10 @@ public:
 	number_type exec();
 	void set(const char * expression, short lenght);
 	interpreter();
+	interpreter(interpreter&& other);
+	interpreter(const interpreter& other);
+	interpreter& operator=(const interpreter& other);
+	interpreter& operator=(interpreter&& other);
 	~interpreter();
 	
 };

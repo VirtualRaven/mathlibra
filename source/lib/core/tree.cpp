@@ -114,6 +114,16 @@ node::node(nodeDataInterface* val)
 nodePtr2(nullptr),
 data(val)
 {}
+
+node::node(node&& other):
+nodePtr1(other.nodePtr1),
+nodePtr2(other.nodePtr2),
+data(other.data)
+{
+	other.nodePtr1 = nullptr;
+	other.nodePtr2 = nullptr;
+	other.data = nullptr;
+}
 node::~node()
 {
 
@@ -132,11 +142,20 @@ void node::set(nodeDataInterface* data)
     {
         throw TreeStructOops("bare node can not be copied");
     }
-    node node::operator=(const node&)
+    node& node::operator=(const node&)
     {
         throw TreeStructOops("bare node can not be copied");
     }
-
+	node& node::operator=(node&& other)
+	{
+		this->nodePtr1 = other.nodePtr1;
+		this->nodePtr2 = other.nodePtr2;
+		this->data = other.data;
+		other.nodePtr1 = nullptr;
+		other.nodePtr2 = nullptr;
+		other.data = nullptr;
+		return *this;
+	}
 
 /*
 
@@ -231,11 +250,40 @@ rootNode::rootNode(const rootNode& sourceNode)
 	_copy(sourceNode);
 }
 
-void rootNode::operator=(const rootNode& sourceNode)
+rootNode& rootNode::operator=(const rootNode& sourceNode)
 {
 	_empty();
 	_copy(sourceNode);
+	return *this;
 
+}
+rootNode::rootNode(rootNode&& sourceNode):
+node(std::move(sourceNode)),
+copies(sourceNode.copies)
+{
+	this->copies = sourceNode.copies;
+	sourceNode.copies = new int;
+	*(sourceNode.copies) = 1;
+	
+}
+
+rootNode& rootNode::operator=(rootNode&& sourceNode)
+{
+	this->nodePtr1 = sourceNode.nodePtr1;
+	this->nodePtr2 = sourceNode.nodePtr2;
+	this->data = sourceNode.data;
+	sourceNode.nodePtr1 = nullptr;
+	sourceNode.nodePtr2 = nullptr;
+	sourceNode.data = nullptr;
+	if (this->copies != nullptr)
+	{
+		delete this->copies;
+		this->copies = nullptr;
+	}
+	this->copies = sourceNode.copies;
+	sourceNode.copies = new int;
+	*(sourceNode.copies) = 1;
+	return *this;
 }
 
 struct PtrPair

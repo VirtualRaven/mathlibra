@@ -21,25 +21,26 @@
 		short nextOperation = -2;
 		short lenght = 0;
 		short values = 0;
-		std::vector<baseToken*> vecLocal = *vecPtr;
+		baseToken* basePtr = nullptr;
 		for (int i = lowLimit; i < hiLimit; i++)
 		{
-
-			if (vecLocal[i]->type == OPERATOR && static_cast<operatorToken*>(vecLocal[i])->baseWheight <= lowWheight)  //Check for next least important operator
+			 
+			basePtr = vecPtr->operator[](i);
+			if (basePtr->type == OPERATOR && static_cast<operatorToken*>(basePtr)->baseWheight <= lowWheight)  //Check for next least important operator
 			{
-				lowWheight = static_cast<operatorToken*>(vecLocal[i])->baseWheight;
+				lowWheight = static_cast<operatorToken*>(basePtr)->baseWheight;
 				nextOperation = i;
 				lenght++;
 			}
-			else if (vecLocal[i]->type == FUNCTION && static_cast<funcToken*>(vecLocal[i])->baseWheight <= lowWheight)  //Check for next least important operator
+			else if (basePtr->type == FUNCTION && static_cast<funcToken*>(basePtr)->baseWheight <= lowWheight)  //Check for next least important operator
 			{
-				lowWheight = static_cast<funcToken*>(vecLocal[i])->baseWheight;
+				lowWheight = static_cast<funcToken*>(basePtr)->baseWheight;
 				nextOperation = i;
 				lenght++;
 			}
-			else if (vecLocal[i]->type != PARENTHESES && vecLocal[i]->type != UNKNOWN)
+			else if (basePtr->type != PARENTHESES &&basePtr->type != UNKNOWN)
 			{
-				if (vecLocal[i]->type == VALUE || vecLocal[i]->type == VARIABLE)
+				if (basePtr->type == VALUE || basePtr->type == VARIABLE)
 				{
 					values++;
 				}
@@ -47,7 +48,7 @@
 			}
 
 			//Debug function remove later
-			else if (vecLocal[i]->type == UNKNOWN)
+			else if (basePtr->type == UNKNOWN)
 			{
 				std::cerr << "-[ Found unknown token ]\n";
 			}
@@ -61,7 +62,8 @@
 		{
 			for (int i = lowLimit; i < hiLimit; i++)
 			{
-				if (vecLocal[i]->type == VALUE || vecLocal[i]->type == VARIABLE)
+				basePtr = vecPtr->operator[](i);
+				if (basePtr->type == VALUE || basePtr->type == VARIABLE)
 				{
 					return i;
 				}
@@ -77,7 +79,7 @@
 bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)
 		{
 
-			std::vector<baseToken*> vecLocal = *vec.vecPtr;
+			
 			buildVector node1(0,0,0,vec.vecPtr);
 			buildVector node2(0,0,0,vec.vecPtr);
 
@@ -88,17 +90,17 @@ bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)
 				return false;
 
 			}
-			else if(vecLocal[vec.vecOffset-1]->type == tokenType::OPERATOR) //Won't work if user writes any formating token before the operator
+			else if (vec.vecPtr->operator[](vec.vecOffset - 1)->type == tokenType::OPERATOR) //Won't work if user writes any formating token before the operator
 			{
 				std::cerr << "Syntax error: Unexpected operator before operator\n";
 				return false;
 			}
-			else if( vec.vecOffset >= vecLocal.size()-1 )
+			else if( vec.vecOffset >= vec.vecPtr->size()-1 )
 			{
 				std::cerr << "Syntax error: Expected value or exression after operator\n";
 
 			}
-			else if(vecLocal[vec.vecOffset+1]->type == tokenType::OPERATOR) //Won't work if user writes any formating token before the operator
+			else if(vec.vecPtr->operator[](vec.vecOffset+1)->type == tokenType::OPERATOR) //Won't work if user writes any formating token before the operator
 			{
 				std::cerr << "Syntax error: Unexpected operator after operator\n";
 				return false;
@@ -117,9 +119,9 @@ bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)
 			}
 
 			mathNode::mathExpressionNode* mathNode1;
-			if(vecLocal[result]->hasNode())
+			if(vec.vecPtr->operator[](result)->hasNode())
 			{
-				mathNode1 = vecLocal[result]->node();
+				mathNode1 = vec.vecPtr->operator[](result)->node();
 			}
 			else
 			{
@@ -139,9 +141,9 @@ bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)
 
 			mathNode::mathExpressionNode* mathNode2;
 
-			if(vecLocal[result]->hasNode())
+			if (vec.vecPtr->operator[](result)->hasNode())
 			{
-				mathNode2 = vecLocal[result]->node();
+				mathNode2 = vec.vecPtr->operator[](result)->node();
 			}
 			else
 			{
@@ -166,23 +168,23 @@ bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)
 bool _function_build(mathNode::mathExpressionNode_func * tgt, buildVector vec)
 {
 
-	std::vector<baseToken*> vecLocal = *vec.vecPtr;
+	
 
 
 
-	if (vec.vecOffset >= vecLocal.size() - 1)
+	if (vec.vecOffset >= vec.vecPtr->size() - 1)
 	{
 		std::cerr << "Syntax error: Expected value or exression after function\n";
 
 	}
-	else if (vecLocal[vec.vecOffset + 1]->type != tokenType::PARENTHESES) //Won't work if user writes any formating token before the operator
+	else if (vec.vecPtr->operator[](vec.vecOffset + 1)->type != tokenType::PARENTHESES) //Won't work if user writes any formating token before the operator
 	{
 		std::cerr << "Excpected parentheses after function name";
 		return false;
 	}
 	for (int i = vec.lowLimit; i < vec.vecOffset; i++)
 	{
-		if (vecLocal[i]->type != PARENTHESES)
+		if (vec.vecPtr->operator[](i)->type != PARENTHESES)
 		{
 			std::cerr << "Vital token on lefhand side of function in build vector!\n";
 			return false;
@@ -199,9 +201,9 @@ bool _function_build(mathNode::mathExpressionNode_func * tgt, buildVector vec)
 	}
 
 	mathNode::mathExpressionNode* mathNode1;
-	if (vecLocal[result]->hasNode())
+	if (vec.vecPtr->operator[](result)->hasNode())
 	{
-		mathNode1 = vecLocal[result]->node();
+		mathNode1 = vec.vecPtr->operator[](result)->node();
 	}
 	else
 	{

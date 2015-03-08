@@ -2,22 +2,29 @@
 //Contains temporary implementation of function module
 namespace math_func
 {
+	functionOops::functionOops(std::string inf)
+	{
+		info = inf;
+	}
+
+	const char* functionOops::what()
+	{
+		return "interpreter Exception";
+	}
 
 
-		function::function(std::string name, funcPtr ptr)
-		{
-			this->name = name;
-			this->ptr = ptr;
-		}
+	math_func::m_function::m_function(std::string name, funcPtr ptr) :name(name), ptr(ptr){}
+	math_func::m_function::~m_function(){
+		
+	}
 
 
 
-
-		void function_interface::load(std::vector< function> obj)
+		void function_interface::load(std::vector< m_function>& obj)
 		{
 			funcs.insert(funcs.end(),obj.begin(),obj.end());
 		}
-		void function_interface::load(function obj)
+		void function_interface::load(m_function obj)
 		{
 			funcs.push_back(obj);
 		}
@@ -55,25 +62,30 @@ namespace math_func
 			std::cout << " }\nLoaded " << this->funcs.size() << " functions]\n";
 
 		}
-		std::vector< math_func::function> std_math_trig_func = {
-			math_func::function("sin", static_cast<double(*)(double)>(sin)),
-			math_func::function("cos", static_cast<double(*)(double)>(cos)),
-			math_func::function("tan", static_cast<double(*)(double)>(tan)),
-			math_func::function("asin", static_cast<double(*)(double)>(asin)),
-			math_func::function("acos", static_cast<double(*)(double)>(acos)),
-			math_func::function("atan", static_cast<double(*)(double)>(atan))
+
+	
+
+
+		 std::vector< math_func::m_function> std_math_trig_func = {
+			math_func::m_function("sin", static_cast<double(*)(double)>(sin)),
+			math_func::m_function("cos", static_cast<double(*)(double)>(cos)),
+			math_func::m_function("tan", static_cast<double(*)(double)>(tan)),
+			math_func::m_function("asin", static_cast<double(*)(double)>(asin)),
+			math_func::m_function("acos", static_cast<double(*)(double)>(acos)),
+			math_func::m_function("atan", static_cast<double(*)(double)>(atan))
 		};
 
-		std::vector<math_func::function> std_math_func = {
-			//math_func::function("abs", static_cast<double(*)(double)>(abs)), //Only defined with double overload on certain platforms
-			math_func::function("sqrt", static_cast<double(*)(double)>(sqrt)),
-			math_func::function("log", static_cast<double(*)(double)>(log)),
-			math_func::function("lg", static_cast<double(*)(double)>(log10))
+		std::vector<math_func::m_function> std_math_func = {
+			//math_func::m_function("abs", static_cast<double(*)(double)>(abs)), //Only defined with double overload on certain platforms
+			math_func::m_function("sqrt", static_cast<double(*)(double)>(sqrt)),
+			math_func::m_function("log", static_cast<double(*)(double)>(log)),
+			math_func::m_function("lg", static_cast<double(*)(double)>(log10))
 		};
 
-		std::vector<math_func::function> std_math_num_func = {
-			math_func::function("ceil", static_cast<double(*)(double)>(ceil)),
-			math_func::function("floor", static_cast<double(*)(double)>(floor)),
-			math_func::function("round", static_cast<double(*)(double)>(round))
+		std::vector<math_func::m_function> std_math_num_func = {
+			math_func::m_function("ceil", static_cast<double(*)(double)>(ceil)),
+			math_func::m_function("floor", static_cast<double(*)(double)>(floor)),
+			math_func::m_function("round", static_cast<double(*)(double)>(round))
 		};
+	
 };

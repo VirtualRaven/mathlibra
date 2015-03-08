@@ -212,7 +212,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
                 tmp_str = new char[tmp_str_length+1];
 				memcpy(tmp_str, &expression[i], (tmp_str_length*sizeof(char)) );
 				tmp_str[tmp_str_length] = '\0';
-				tmp.ptr()->value =  atof(tmp_str);
+				tmp->value =  atof(tmp_str);
 				delete[] tmp_str;
 				tokens.push_back(tmp.ptr());
 				tmp.release(); //Release ownership of pointer
@@ -267,15 +267,15 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 			else if(this->_operators!=nullptr && this->_operators->inArray(expression[i]))
 			{
 				ptr_protect<operatorToken*,false> tmp(new operatorToken(_operators->getCurrent()));
-				tmp.ptr()->startPos=i;
-				tmp.ptr()->endPos=i;
-				tmp.ptr()->baseWheight +=extraOperatorWheight;
-				if(tmp.ptr()->baseWheight <= lowestWheight) // <= for left association && < for right association
+				tmp->startPos=i;
+				tmp->endPos=i;
+				tmp->baseWheight +=extraOperatorWheight;
+				if(tmp->baseWheight <= lowestWheight) // <= for left association && < for right association
 				{
-					lowestWheight = tmp.ptr()->baseWheight;
+					lowestWheight = tmp->baseWheight;
 					this->startOperatorPos =tokens.size();
 				}
-				if (tmp.ptr()->operChar == '=')
+				if (tmp->operChar == '=')
 				{
 
 					if (tokens.back()->type != tokenType::VARIABLE)
@@ -319,10 +319,10 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 					if (current_functions != nullptr && current_functions->isloaded(name) == true)
 					{
 						ptr_protect<funcToken *,false> tmp(new funcToken(startPos, endPos, current_functions->get(name)));
-						tmp.ptr()->baseWheight += extraOperatorWheight;
-						if (tmp.ptr()->baseWheight <= lowestWheight) // <= for left association && < for right association
+						tmp->baseWheight += extraOperatorWheight;
+						if (tmp->baseWheight <= lowestWheight) // <= for left association && < for right association
 						{
-							lowestWheight = tmp.ptr()->baseWheight;
+							lowestWheight = tmp->baseWheight;
 							this->startOperatorPos = tokens.size();
 						}
 						tokens.push_back(tmp.ptr());
@@ -645,3 +645,43 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 
 	}
 	CoraxVM::Corax_program_builder_module::Corax_program_builder_module(interpreter* ptr) : _ptr(ptr){}
+
+	/*
+			char * expression;
+	unsigned short expressionLength;
+	unsigned short startOperatorPos; //contains the index in the tokens array where the starting operator is located
+	operators::operators_interface* _operators;
+
+
+	std::vector<baseToken*> tokens;
+
+	rootNode root;
+	math_func::function_interface* current_functions;
+	memory *mem;
+	*/
+	interpreter::interpreter(interpreter&& other) :
+		expression(other.expression),
+		expressionLength(other.expressionLength),
+		_operators(other._operators),
+		tokens(other.tokens),
+		root(std::move(other.root)),
+		current_functions(other.current_functions),
+		mem(other.mem)
+	{
+		other.expression = nullptr;
+		other.expressionLength = 0;
+		other.startOperatorPos = 0;
+		other.tokens.clear();
+	}
+	interpreter::interpreter(const interpreter& other)
+	{
+		throw interpreterOops("Can't copy interpreter object");
+	}
+	interpreter& interpreter::operator=(const interpreter& other)
+	{
+		throw interpreterOops("Can't copy interpreter object");
+	}
+	interpreter& interpreter::operator=(interpreter&& other)
+	{
+		throw interpreterOops("Can't copy interpreter object");
+	}

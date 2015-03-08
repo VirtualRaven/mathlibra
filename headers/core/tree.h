@@ -73,7 +73,9 @@ public:
 	~node();
 	void set(nodeDataInterface* data);
     node(const node&);
-    node operator=(const node&);
+	node(node&&);
+    node& operator=(const node&);
+	node& operator=( node&&);
 };
 /*
  A wrapper for node which implement futher functions to make rootnode serve as an interface for the complete tree
@@ -95,7 +97,9 @@ public:
 	rootNode();
 	void TakeContext(); //Call before operation on tree if several copies exists
 	rootNode(const rootNode& sourceNode);
-	void operator=(const rootNode& sourceNode);
+	rootNode& operator=(const rootNode& sourceNode);
+	rootNode( rootNode&& sourceNode);
+	rootNode& operator=(rootNode&& sourceNode);
 };
 
 void display_tree(rootNode tree);

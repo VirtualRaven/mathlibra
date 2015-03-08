@@ -65,10 +65,12 @@ class ptr_protect<T,false,true>
         };
         void release()  {_enabled=false;};
         T ptr(){return _ptr;};
-
+		T operator ->(){ return _ptr; };
     private:
         T _ptr;
         bool _enabled;
+
+
 };
 
 
