@@ -141,6 +141,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 	bool interpreter::lexicalAnalys()
 	{
 		this->destroyTokens();
+		tokens.reserve(expressionLength); 
 		short extraOperatorWheight =0;
 		this->startOperatorPos = 0;
 		short lowestWheight = 9999;
@@ -205,8 +206,8 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 					}
 					valueLength++;
 				}
-				tmp.ptr()->endPos = i+valueLength;
-				short tmp_str_length = (tmp.ptr()->endPos+1)-tmp.ptr()->startPos;
+				tmp->endPos = i+valueLength;
+				short tmp_str_length = tmp->endPos+1 - tmp->startPos;
 
 				//Create a temporary string from which we can convert the string to a double
 				char* tmp_str = nullptr;
@@ -356,7 +357,11 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 			std::cerr << "Syntax error: found unmatched ( \n";
 			return false ;
 		}
-		else return true;
+		else
+		{
+			tokens.shrink_to_fit();
+			return true;
+		}
 
 
 	}

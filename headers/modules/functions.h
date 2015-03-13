@@ -22,6 +22,7 @@ namespace math_func
 		funcPtr ptr;
 
 		m_function(std::string name, funcPtr ptr);
+		m_function();
 		~m_function();
 	};
 
@@ -30,6 +31,7 @@ namespace math_func
 	class function_interface
 	{
 		std::vector<m_function> funcs;
+		m_function cache;
 		typedef number_type(*funcPtr)(number_type);
 	public:
 

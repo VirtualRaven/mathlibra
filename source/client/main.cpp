@@ -1,4 +1,4 @@
-#define DEBUG
+//#define DEBUG
 #include <iostream>
 #include <cstring>
 #include "client.h"
@@ -102,8 +102,13 @@ int main(int argc, char* argv[])
 	functions.load(math_func::std_math_num_func);
 	functions.load(core_math::lib_core_math);
 	inter.setFunction(&functions);
+#if defined(CORAX_VM_EXEC)
+	CoraxVM::corax_program prgm;
+	CoraxVM::Corax_program_builder_module prgm_builder(&inter);
+	CoraxVM::corax_runtime runtime;
+#endif
 
-#define P_TEST
+//#define P_TEST
 #ifdef P_TEST
 	try
 
@@ -113,7 +118,11 @@ int main(int argc, char* argv[])
 		std::string exr = "x=(sqrt(sqrt(5*5)^2)*100)/5*(sin(PI)^2+cos(PI)^2)";
 		inter.set(exr.c_str(), exr.size());
 		inter.interpret();
+		
 		interpreter inter2(std::move(inter));
+#if defined(CORAX_VM_EXEC)
+		prgm_builder = CoraxVM::Corax_program_builder_module(&inter2);
+#endif
 		/*
 		CoraxVM::Corax_program_builder_module prgm_builder(&inter2);
 		CoraxVM::corax_program prgm;
@@ -123,20 +132,24 @@ int main(int argc, char* argv[])
 		auto test1 = [&](){ return inter2.exec(); };
 		auto test2 = [&](){inter2.interpret(); };
 
-		//auto test3 = [&](){ prgm_builder.create_program(&prgm); };
-		//auto test4 = [&](){ runtime.run(&prgm); };
-		const unsigned int test_lenght = 10000;
+		
+		const unsigned int test_lenght = 100000;
 		std::cout << "interpret: " << func_profile<test_lenght>(test2) << "s\n";
-		//double exec = func_profile<test_lenght>(test1);
-		/*double ccompile = func_profile<test_lenght>(test3);
-		double cexec = func_profile<test_lenght>(test4);
-		*/
-		//std::cout << "exec: " << exec << "s\n";
-		/*std::cout << "corax compile: " << ccompile << "s\n";
-		std::cout << "corax run: " << cexec << "s\n";
-		std::cout << "virtual machine overhead: " << round(((ccompile + cexec) / exec) * 100)<< "%\n";
+		double exec = func_profile<test_lenght>(test1);
+		std::cout << "exec: " << exec << "s\n";
 
-		*/
+#if defined(CORAX_VM_EXEC)
+		auto test3 = [&](){ prgm_builder.create_program(&prgm); };
+		auto test4 = [&](){ runtime.run(&prgm); };
+		double ccompile = func_profile<test_lenght>(test3);
+		double cexec = func_profile<test_lenght>(test4);
+		std::cout << "corax compile: " << ccompile << "s\n";
+		std::cout << "corax run: " << cexec << "s\n";
+		std::cout << "virtual machine overhead: " << round(((ccompile + cexec) / exec) * 100) << "%\n";
+
+#endif
+		
+		
 		
 	
 		
@@ -148,7 +161,7 @@ int main(int argc, char* argv[])
 		std::cout << "[\n Exception: " << e.what() << "\n";
 		std::cout << " Description: " << e.desc() << "\n]\n";
 	}
-	std::cin.get();
+	//std::cin.get();
 	
 	return 0;
 

@@ -14,9 +14,8 @@ namespace math_func
 
 
 	math_func::m_function::m_function(std::string name, funcPtr ptr) :name(name), ptr(ptr){}
-	math_func::m_function::~m_function(){
-		
-	}
+	math_func::m_function::~m_function(){	}
+	math_func::m_function::m_function() : name(), ptr(nullptr){}
 
 
 
@@ -34,6 +33,7 @@ namespace math_func
 			{
 				if (funcs[i].name == funcName)
 				{
+					cache = funcs[i];
 					return true;
 				}
 			}
@@ -42,14 +42,22 @@ namespace math_func
 
 		function_interface::funcPtr function_interface::get(std::string funcName)
 		{
-			for (unsigned int i = 0; i < funcs.size(); i++)
+			if (cache.name == funcName)
 			{
-				if (funcs[i].name == funcName)
-				{
-					return funcs[i].ptr;
-				}
+				return cache.ptr;
 			}
-			return nullptr;
+			else
+			{
+
+				for (unsigned int i = 0; i < funcs.size(); i++)
+				{
+					if (funcs[i].name == funcName)
+					{
+						return funcs[i].ptr;
+					}
+				}
+				return nullptr;
+			}
 		}
 
 		void function_interface::display()
