@@ -1,0 +1,12 @@
+
+set(${PROJECT_NAME}_LIB_HEADERS
+	  ${${PROJECT_NAME}_LIB_HEADERS}
+	  ${CMAKE_CURRENT_LIST_DIR}/build.h
+	  ${CMAKE_CURRENT_LIST_DIR}/corax_virtual_machine.h
+	  ${CMAKE_CURRENT_LIST_DIR}/interpreter.h
+	  ${CMAKE_CURRENT_LIST_DIR}/mathNode.h
+	  ${CMAKE_CURRENT_LIST_DIR}/tokens.h
+	  ${CMAKE_CURRENT_LIST_DIR}/tree.h
+	PARENT_SCOPE
+)
+	
