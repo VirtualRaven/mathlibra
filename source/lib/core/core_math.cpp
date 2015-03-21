@@ -3,12 +3,13 @@
 
 namespace core_math
 {
+	typedef unsigned long long u_big_int;
 
-	unsigned long  integerReqiured(double arg) // Throws exception if not convertable to integer
+	u_big_int  integerReqiured(double arg) // Throws exception if not convertable to integer
 	{
 		if ((fabs(round(arg) - arg) <= 0.00001f)) //Check if value is an integer within given bounds
 		{
-			return (unsigned long)arg;
+			return (u_big_int)arg;
 		}
 		else
 		{
@@ -18,10 +19,10 @@ namespace core_math
 
 	double frac(double arg) 
 	{
-		unsigned long argI = integerReqiured(arg);
+		u_big_int argI = integerReqiured(arg);
 			
 			std::cout << "{ ";
-			for (unsigned int i = 2; i <= floor(sqrt(argI)); i++)
+			for (u_big_int i = 2; i <= floor(sqrt(argI)); i++)
 			{
 				if (argI % i == 0) // if true then i is a factor of argI
 				{
@@ -42,8 +43,8 @@ namespace core_math
 
 	double factorial(double arg)
 	{
-		unsigned long argI = integerReqiured(arg);
-		for (unsigned long i = argI - 1; i > 1; i--)
+		u_big_int argI = integerReqiured(arg);
+		for (u_big_int i = argI - 1; i > 1; i--)
 		{
 			argI = argI*i;
 		}

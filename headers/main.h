@@ -14,7 +14,7 @@
 typedef double number_type;
 //#define DEBUG
 #ifdef DEBUG
-//#define P_TEST
+#define P_TEST
 //#define RUN_TESTS
 //#define LEXICAL_ANANALYSIS_DEBUG
 //#define SYNTAX_TREE_DEBUG_INFO
