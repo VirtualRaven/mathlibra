@@ -36,7 +36,7 @@ namespace calculator
 			void CreateVariable( String^ name, double value);
 			void ClearVariables();
 
-		
+			static String^ get_Version();
 
 	};
 

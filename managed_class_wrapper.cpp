@@ -2,6 +2,7 @@
 #include "managed_class_wrapper.h"
 #include <msclr\marshal.h>
 #include <msclr\marshal_cppstd.h>
+#include "version.h"
 namespace calculator
 {
 	void calc_engine::throwIfFailed()
@@ -81,6 +82,17 @@ namespace calculator
 		this->wrp->clearVariables();
 		this->throwIfFailed();
 	}
+
+	
+	String^ calc_engine::get_Version()
+		{
+			{
+				return msclr::interop::marshal_as<String^>(version::wrapper_git_version);
+			}
+		}
+	
+	
+	
 }
 
 
