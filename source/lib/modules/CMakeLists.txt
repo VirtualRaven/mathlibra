@@ -1,8 +1,0 @@
-set(${PROJECT_NAME}_LIB_SOURCES
-	  ${${PROJECT_NAME}_LIB_SOURCES}
-	   ${CMAKE_CURRENT_LIST_DIR}/functions.cpp
-	   ${CMAKE_CURRENT_LIST_DIR}/memory.cpp
-	   ${CMAKE_CURRENT_LIST_DIR}/operators.cpp
-	PARENT_SCOPE
-)
-	

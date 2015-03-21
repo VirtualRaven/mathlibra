@@ -1,9 +1,0 @@
-
-set(${PROJECT_NAME}_LIB_HEADERS
-	  ${${PROJECT_NAME}_LIB_HEADERS}
-	  ${CMAKE_CURRENT_LIST_DIR}/functions.h
-	  ${CMAKE_CURRENT_LIST_DIR}/memory.h
-	  ${CMAKE_CURRENT_LIST_DIR}/operators.h
-	PARENT_SCOPE
-)
-	
