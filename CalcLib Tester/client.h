@@ -8,8 +8,11 @@
 #include "core/core_math.h"
 #include "core/profiling.h"
 #include "ptr_protect.h"
+#ifndef DEBUG
 #pragma comment(lib, "CalcLib.lib")
-
+#else
+#pragma comment(lib, "CalcLibd.lib")
+#endif
 #include "stdErr.h"
 
 #endif // CLIENT_H_INCLUDED
