@@ -189,3 +189,4 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+Calc_Core_wrapper/git_version.h
