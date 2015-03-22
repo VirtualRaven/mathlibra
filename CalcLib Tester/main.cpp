@@ -2,10 +2,7 @@
 #include <iostream>
 #include <cstring>
 #include "client.h"
-#include "core_math.h"
-#include "ptr_protect.h"
-#include "profiling.h"
-#include "thread_pool.h"
+
 /* TODO
 	Add function inpterpeting and execution DONE
 	Add varible interpeting and memmory system. DONE
