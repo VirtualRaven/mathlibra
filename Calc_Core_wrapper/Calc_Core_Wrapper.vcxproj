@@ -43,13 +43,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\lukas\Documents\Visual Studio 2013\Projects\Calc_Core_wrapper\Calc_Core_wrapper;C:\Users\lukas\Documents\Calc_Core_Wrapper\Headers;C:\Users\lukas\Documents\calculator_backend\headers;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\lukas\Documents\Visual Studio 2013\Projects\calculator_backend_build\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)lib headers\CalcLib;$(ProjectDir);$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib/debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Users\lukas\Documents\calculator_backend\headers;C:\Users\lukas\Documents\Calc_Core_Wrapper\Headers;C:\Users\lukas\Documents\Visual Studio 2013\Projects\Calc_Core_wrapper\Calc_Core_wrapper;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\lukas\Documents\Visual Studio 2013\Projects\calculator_backend_build\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)lib headers\CalcLib;$(ProjectDir);$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib/release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
