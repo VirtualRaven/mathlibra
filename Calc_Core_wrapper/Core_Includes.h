@@ -7,5 +7,5 @@
 #include "modules/memory.h"		//The memory container for the interpreter
 #include "modules/operators.h"	//The operetor container for the inrpreter
 #include "exception.h"
-#pragma comment(lib, "calculator_backend_build")
+#pragma comment(lib, "CalcLib")
 #endif //CORE_INCLUDED
