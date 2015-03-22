@@ -5,6 +5,8 @@
 *.suo
 *.user
 *.sln.docstates
+#Dont include the commit id header
+Calc_Core_wrapper/git_version.h
 
 # Build results
 [Dd]ebug/
