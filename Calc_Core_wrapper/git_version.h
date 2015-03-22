@@ -1,1 +1,0 @@
-#define GIT_SHA_COMMIT "3a3eb5244fe1b563ccc50181b1b0369d844574ad"    
