@@ -90,6 +90,9 @@
     <ClInclude Include="interface\interpreter_interface.h">
       <Filter>Header Files\interface</Filter>
     </ClInclude>
+    <ClInclude Include="core\export_lib_version.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="modules\functions.cpp">
@@ -133,6 +136,9 @@
     </ClCompile>
     <ClCompile Include="interface\interpreter_interface.cpp">
       <Filter>Source Files\interface</Filter>
+    </ClCompile>
+    <ClCompile Include="core\version.cpp">
+      <Filter>Source Files\core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

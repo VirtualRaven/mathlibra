@@ -216,3 +216,4 @@ ompiled Object files
 #Version file
 source/gitversion.cpp
 >>>>>>> cbf2ce9b2054dc4f7df7ab7ef5c92142abead87d
+CalcLib/lib_git_version.h
