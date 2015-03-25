@@ -1,8 +1,8 @@
 //#define DEBUG
 #include <iostream>
 #include <cstring>
-#include "client.h"
 
+#include "tests.h"
 /* TODO
 	Add function inpterpeting and execution DONE
 	Add varible interpeting and memmory system. DONE
@@ -72,7 +72,11 @@ int main(int argc, char* argv[])
 		std::cin.get();
 		return false;
 	}
+	test::profileInterpreter();
+	test::profileInterpreterVM();
+	return 0;
 #endif
+
 #ifndef DEBUG
 	err_redirect err; //remove cerr stream
 #endif
@@ -99,70 +103,12 @@ int main(int argc, char* argv[])
 	functions.load(math_func::std_math_num_func);
 	functions.load(core_math::lib_core_math);
 	inter.setFunction(&functions);
+
 #if defined(CORAX_VM_EXEC)
 	CoraxVM::corax_program prgm;
 	CoraxVM::Corax_program_builder_module prgm_builder(&inter);
 	CoraxVM::corax_runtime runtime;
 #endif
-
-#define P_TEST
-#ifdef P_TEST
-	try
-
-	{
-		
-		std::cout << "Running test\n";
-		std::string exr = "x=(sqrt(sqrt(5*5)^2)*100)/5*(sin(PI)^2+cos(PI)^2)";
-		inter.set(exr.c_str(), exr.size());
-		inter.interpret();
-		
-		interpreter inter2(std::move(inter));
-#if defined(CORAX_VM_EXEC)
-		prgm_builder = CoraxVM::Corax_program_builder_module(&inter2);
-#endif
-		/*
-		CoraxVM::Corax_program_builder_module prgm_builder(&inter2);
-		CoraxVM::corax_program prgm;
-		CoraxVM::corax_runtime runtime;
-		*/
-		//prgm_builder.create_program(&prgm);
-		auto test1 = [&](){ return inter2.exec(); };
-		auto test2 = [&](){inter2.interpret(); };
-
-		
-		const unsigned int test_lenght = 100000;
-		std::cout << "interpret: " << func_profile<test_lenght>(test2) << "s\n";
-		double exec = func_profile<test_lenght>(test1);
-		std::cout << "exec: " << exec << "s\n";
-
-#if defined(CORAX_VM_EXEC)
-		auto test3 = [&](){ prgm_builder.create_program(&prgm); };
-		auto test4 = [&](){ runtime.run(&prgm); };
-		double ccompile = func_profile<test_lenght>(test3);
-		double cexec = func_profile<test_lenght>(test4);
-		std::cout << "corax compile: " << ccompile << "s\n";
-		std::cout << "corax run: " << cexec << "s\n";
-		std::cout << "virtual machine overhead: " << round(((ccompile + cexec) / exec) * 100) << "%\n";
-
-#endif
-		
-		
-		
-	
-		
-		
-	}
-	catch (exception& e)
-	{
-
-		std::cout << "[\n Exception: " << e.what() << "\n";
-		std::cout << " Description: " << e.desc() << "\n]\n";
-	}
-	//std::cin.get();
-	
-	return 0;
-
-#endif //P_TEST
 
 
 	bool exit = false;

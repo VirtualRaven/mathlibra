@@ -39,10 +39,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\lukas\Documents\Visual Studio 2013\Projects\CalcLib Tester\CalcLib;C:\Users\lukas\Documents\Visual Studio 2013\Projects\CalcLib Tester\CalcLib Tester;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(SolutionDir)lib headers/CalcLib;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib/Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Users\lukas\Documents\Visual Studio 2013\Projects\CalcLib Tester\CalcLib;C:\Users\lukas\Documents\Visual Studio 2013\Projects\CalcLib Tester\CalcLib Tester;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)lib headers/CalcLib;$(ProjectDir);$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib/Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -71,14 +73,13 @@
   <ItemGroup>
     <ClInclude Include="client.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="tests.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stdErr.cpp" />
+    <ClCompile Include="tests.cpp" />
     <ClCompile Include="util.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="CalcLib Tester.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
