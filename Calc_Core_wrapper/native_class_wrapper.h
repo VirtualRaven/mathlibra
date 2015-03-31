@@ -32,6 +32,8 @@ namespace native
 		void createVariable(std::string name, double value);
 		void clearVariables();
 
+		std::string getCoreVersion();
+
 		
 	};
 }

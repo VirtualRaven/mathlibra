@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "native_class_wrapper.h"
-
+#include "core/export_lib_version.h"
 namespace native
 {
 	core_native_wrapper::core_native_wrapper()
@@ -166,6 +166,11 @@ namespace native
 			this->exception_occurred = true;
 			return;
 		}
+	}
+
+	std::string getCoreVersion()
+	{
+		return std::string(LIB_VERSION);
 	}
 	
 };
