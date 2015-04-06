@@ -6,6 +6,9 @@
 #include "main.h"
 struct buildVector;
 struct variableToken;
+using tree::node;
+using tree::nodeDataInterface;
+
 namespace mathNode
 {
 
@@ -18,25 +21,27 @@ typedef double number_type;
         const char* what();
     };
 
-	struct mathExpressionNode : public nodeDataInterface
+	class mathExpressionNode : public nodeDataInterface
 	{
+	public:
 		mathExpressionNode();
 		void bind(node * context);
 		void destroy();
 	};
 
 
-    struct mathExpressionNode_val : public mathExpressionNode
+   class mathExpressionNode_val : public mathExpressionNode
 	{
+	public:
 		number_type value;
 		mathExpressionNode_val();
 		mathExpressionNode_val(number_type val);
 		number_type eval();
 	};
 
-struct mathExpressionNode_opr;
+class mathExpressionNode_opr;
 
-	struct mathExpressionNode_variable : public mathExpressionNode
+	class mathExpressionNode_variable : public mathExpressionNode
 	{
 
 	private:
@@ -56,9 +61,9 @@ struct mathExpressionNode_opr;
 
 
 
-	struct mathExpressionNode_opr : public mathExpressionNode
+	class mathExpressionNode_opr : public mathExpressionNode
 	{
-
+	public:
 
         union{ //Saves memory as these pointers will never be used at the same time
 
@@ -78,12 +83,23 @@ struct mathExpressionNode_opr;
 
 
 
-	struct mathExpressionNode_func : public mathExpressionNode
+	class mathExpressionNode_func : public mathExpressionNode
 	{
+	public:
 		number_type (*func)(number_type);
 		typedef number_type (*funcPtr)(number_type);
 		mathExpressionNode_func();
 		mathExpressionNode_func(funcPtr operation);
+		number_type eval();
+	};
+
+	class mathExpressionNode_func_tree : public mathExpressionNode
+	{
+	public:
+		number_type(*func)(tree::node*);
+		typedef number_type(*funcPtr)(tree::node*);
+		mathExpressionNode_func_tree();
+		mathExpressionNode_func_tree(funcPtr operation);
 		number_type eval();
 	};
 
