@@ -12,6 +12,7 @@
 #include "corax_virtual_machine.h"
 
 using mathNode::number_type;
+using tree::rootNode;
 struct interpreterOops : public exception
 {
 	interpreterOops(std::string inf);

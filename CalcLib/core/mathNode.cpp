@@ -17,7 +17,7 @@ namespace mathNode
 
 		mathExpressionNode::mathExpressionNode()
 		{
-			type=UNKNOWN;
+			type = tree::UNKNOWN;
 		}
 		void mathExpressionNode::bind(node * context)
 		{
@@ -38,13 +38,13 @@ namespace mathNode
 		mathExpressionNode_val::mathExpressionNode_val()
 		:value(0)
 		{
-			this->type=tokenType::VALUE;
+			this->type = tree::VALUE;
 		}
 
 		mathExpressionNode_val::mathExpressionNode_val(number_type val)
 		:value(val)
 		{
-			this->type=VALUE;
+			this->type = tree::VALUE;
 		}
 		number_type mathExpressionNode_val::eval()
 		{
@@ -83,7 +83,7 @@ namespace mathNode
 		_stack(b)
 
 		{
-			this->type = tokenType::VARIABLE;
+			this->type = tree::VARIABLE;
 		}
 		number_type mathExpressionNode_variable::eval()
 		{
@@ -103,7 +103,7 @@ namespace mathNode
 		:operation(nullptr),
 		assignB(false)
 		{
-			this->type=OPERATOR;
+			this->type = tree::OPERATOR;
 
 		}
 
@@ -111,13 +111,13 @@ namespace mathNode
 		:operation(operation),
 		assignB(false)
 		{
-			this->type=OPERATOR;
+			this->type = tree::OPERATOR;
 		}
 		mathExpressionNode_opr::mathExpressionNode_opr(operators::assigmentPtr assign)
 		:assign(assign),
 		assignB(true)
 		{
-			this->type = OPERATOR;
+			this->type = tree::OPERATOR;
 
 		}
 
@@ -130,13 +130,13 @@ namespace mathNode
 			}
 			if (assignB)
 			{
-				if (this->wrapperNode->sub1()->data->type == VARIABLE)
+				if (this->wrapperNode->sub1()->data->type == tree::VARIABLE)
 				{
 					mathExpressionNode_variable* tmp = dynamic_cast<mathExpressionNode_variable*>(this->wrapperNode->sub1()->data);
 					tmp->mem->set(tmp->name,this->wrapperNode->sub2()->data->eval());
 					return static_cast<double>(tmp->mem->get(tmp->name));
 				}
-				else throw TreeStructOops("Non variable token on lefthand side of assigment operator\n");
+				else throw tree::TreeStructOops("Non variable token on lefthand side of assigment operator\n");
 			}
 			else
 			{
@@ -150,17 +150,17 @@ namespace mathNode
 
 
 
-        mathExpressionNode_func::mathExpressionNode_func()
+		mathExpressionNode_func::mathExpressionNode_func()
         :func(nullptr)
 		{
 
-			this->type=FUNCTION;
+			this->type = tree::FUNCTION;
 		}
 
 		mathExpressionNode_func::mathExpressionNode_func(funcPtr operation)
 		:func(operation)
 		{
-			this->type=FUNCTION;
+			this->type = tree::FUNCTION;
 
 		}
 
@@ -171,6 +171,29 @@ namespace mathNode
 					std::cerr << "Tree not correct, func type should have an empty second sub node";
 			}
 			return this->func(this->wrapperNode->sub1()->data->eval());
+		}
+		
+		mathExpressionNode_func_tree::mathExpressionNode_func_tree()
+			:func(nullptr)
+		{
+
+			this->type = tree::FUNCTION_TREE;
+		}
+
+		mathExpressionNode_func_tree::mathExpressionNode_func_tree(funcPtr operation)
+			:func(operation)
+		{
+			this->type = tree::FUNCTION_TREE;
+
+		}
+
+		number_type mathExpressionNode_func_tree::eval()
+		{
+			if (this->wrapperNode->sub2())
+			{
+				std::cerr << "Tree not correct, func type should have an empty second sub node";
+			}
+			return this->func(this->wrapperNode->sub1());
 		}
 
 

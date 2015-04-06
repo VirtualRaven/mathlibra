@@ -39,7 +39,7 @@
 			break;
 		default:
 		{
-				   return nullptr;
+			return nullptr;
 		}
 			break;
 		}
@@ -53,24 +53,24 @@
 	 :baseToken(),
 	 operators::interpreter_operator( opr, symbol,wheight)
 	{
-		this->type = OPERATOR;
+		this->type = tree::OPERATOR;
 	}
 	operatorToken::operatorToken(operators::assigmentPtr assigne, char symbol, short wheight)
 	 :baseToken(), operators::interpreter_operator(assign,symbol,wheight)
 	{
 
-		this->type = OPERATOR;
+		this->type = tree::OPERATOR;
 	}
 	operatorToken::operatorToken(operators::interpreter_operator opr)
 	:baseToken(), operators::interpreter_operator(opr)
 	  {
-		this->type = OPERATOR;
+		  this->type = tree::OPERATOR;
 	}
 
 	operatorToken::operatorToken()
     :baseToken(),operators::interpreter_operator()
     {
-		this->type = OPERATOR;
+		this->type = tree::OPERATOR;
     }
 
 
@@ -97,7 +97,7 @@
 	{
 		this->endPos = endPos;
 		this->startPos = startPos;
-		this->type = PARENTHESES;
+		this->type = tree::PARENTHESES;
 
 
 	}
@@ -107,7 +107,7 @@
 	{
 		this->endPos = 0;
 		this->startPos = 0;
-		this->type = PARENTHESES;
+		this->type = tree::PARENTHESES;
 		this->opposit =0;
 	}
 
@@ -127,14 +127,14 @@
 
 		this->endPos = endPos;
 		this->startPos = startPos;
-		this->type = VALUE;
+		this->type = tree::VALUE;
 	}
 
 	valueToken::valueToken()
 	:baseToken(),
 	value(0)
 	{
-		this->type = VALUE;
+		this->type = tree::VALUE;
 	}
 
 
@@ -161,7 +161,7 @@
 	{
 		this->endPos = endPos;
 		this->startPos = startPos;
-		this->type =VARIABLE;
+		this->type = tree::VARIABLE;
 	}
 
 	variableToken::variableToken()
@@ -170,7 +170,7 @@
 	mem(nullptr),
 	_stack(true)
 	{
-		this->type = VARIABLE;
+		this->type = tree::VARIABLE;
 	}
     variableToken::variableToken(const variableToken& val)
     :variableName(val.variableName),
@@ -199,7 +199,15 @@
 		{
 			throw memoryOops("Function node missing pointer to actual function");
 		}
-		return new mathNode::mathExpressionNode_func(ptr);
+		if (_is_general)
+		{
+			return new mathNode::mathExpressionNode_func_tree(gptr);
+		}
+		else
+		{
+			return new mathNode::mathExpressionNode_func(ptr);
+		}
+		
 	}
 	bool  funcToken::hasNode()
 	{
@@ -207,21 +215,28 @@
 	}
 	funcToken::funcToken(short startPos, short endPos, funcPtr ptr)
 	:ptr(ptr),
-	baseWheight(4)
+	baseWheight(4),
+	_is_general(false)
 	{
-
 		this->endPos = endPos;
 		this->startPos = startPos;
-		this->type = FUNCTION;
-
+		this->type = tree::FUNCTION;
 	}
-
+	funcToken::funcToken(short startPos, short endPos, generalFuncPtr ptr)
+		:gptr(ptr),
+		baseWheight(4),
+		_is_general(true)
+	{
+		this->endPos = endPos;
+		this->startPos = startPos;
+		this->type = tree::FUNCTION;
+	}
 	funcToken::funcToken()
 	:ptr(nullptr),
 	baseWheight(4)
 	{
 		this->endPos = 0;
 		this->startPos = 0;
-		this->type = FUNCTION;
+		this->type = tree::FUNCTION;
 	}
 

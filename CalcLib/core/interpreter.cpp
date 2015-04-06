@@ -19,12 +19,12 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 	if (!tokens.empty())
 	{
 		baseToken * token = tokens.back();
-		if (token->type == PARENTHESES)
+		if (token->type == tree::PARENTHESES)
 		{
 			return ((*expression)[i - 1] == '(');
 
 		}
-		else if (token->type == OPERATOR)
+		else if (token->type == tree::OPERATOR)
 		{
 			return true;
 		}
@@ -320,7 +320,18 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 					i += valueLength;
 					if (current_functions != nullptr && current_functions->isloaded(name) == true)
 					{
-						ptr_protect<funcToken *,false> tmp(new funcToken(startPos, endPos, current_functions->get(name)));
+						funcToken * tmp_ptr;
+						if (current_functions->isGeneral())
+						{
+							tmp_ptr = new funcToken(startPos, endPos, (funcToken::generalFuncPtr)current_functions->get(name));
+						}
+						else
+						{
+							tmp_ptr = new funcToken(startPos, endPos, (funcToken::funcPtr)current_functions->get(name));
+						}
+
+						ptr_protect<funcToken *,false> tmp(tmp_ptr);
+						
 						tmp->baseWheight += extraOperatorWheight;
 						if (tmp->baseWheight <= lowestWheight) // <= for left association && < for right association
 						{
@@ -378,7 +389,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
         }
 		else
 		{
-			if (this->tokens[this->startOperatorPos]->type == FUNCTION)
+			if (this->tokens[this->startOperatorPos]->type == tree::FUNCTION)
 			{
 					emptyRoot();
 					this->root = buildEntry1(this);

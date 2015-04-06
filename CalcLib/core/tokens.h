@@ -5,7 +5,7 @@
 #include "modules/operators.h"
 #include "main.h"
 using mathNode::number_type;
-
+using tree::tokenType;
 
 struct baseToken
 {
@@ -73,12 +73,21 @@ struct variableToken : public baseToken
 
 struct funcToken : public baseToken
 {
+
 	typedef number_type(*funcPtr)(number_type);
-	funcPtr ptr;
+	typedef number_type(*generalFuncPtr)(tree::node*);
+	union
+	{
+		funcPtr ptr;
+		generalFuncPtr gptr;
+	};
 	short baseWheight;
 	mathNode::mathExpressionNode* node();
 	bool  hasNode();
 	funcToken(short startPos, short endPos, funcPtr ptr);
+	funcToken(short startPos, short endPos, generalFuncPtr ptr);
 	funcToken();
+private:
+		bool _is_general;
 };
 #endif // TOKENS_H_INCLUDED
