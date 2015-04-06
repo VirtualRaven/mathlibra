@@ -1,40 +1,37 @@
 #include "tests.h"
 
-interpreter init()
-{
-	interpreter inter;
-	std::string expression = "";
-
-	memory mem; //Create memory unit
-	operators::operators_interface oper;
-	math_func::function_interface functions; //Create function unit
-
-	//init and load operators
-	oper.load(operators::std_operators);
-	inter.setOperator(&oper);
-
-	//Init and load memory unit
-	mem.set("PI", 3.14159f, true, true);  //Add constat variable PI with value 3.14
-	inter.setMemory(&mem); //Assign memory unit to interpreter
-
-	//init and load func unit
-	functions.load(math_func::std_math_trig_func); // Load std_math_trig_funct into function unit
-	functions.load(math_func::std_math_func);
-	functions.load(math_func::std_math_num_func);
-	functions.load(core_math::lib_core_math);
-	inter.setFunction(&functions);
-	return inter;
-}
 
 void test::profileInterpreter()
 {
 	try
 
 	{
+		interpreter inter;
+		std::string expression = "";
+
+		memory mem; //Create memory unit
+		operators::operators_interface oper;
+		math_func::function_interface functions; //Create function unit
+
+		//init and load operators
+		oper.load(operators::std_operators);
+		inter.setOperator(&oper);
+
+		//Init and load memory unit
+		mem.set("PI", 3.14159f, true, true);  //Add constat variable PI with value 3.14
+		inter.setMemory(&mem); //Assign memory unit to interpreter
+
+		//init and load func unit
+		functions.load(math_func::std_math_trig_func); // Load std_math_trig_funct into function unit
+		auto tmp = math_func::std_math_func;
+		functions.load(tmp);
+		functions.load(math_func::std_math_num_func);
+		functions.load(core_math::lib_core_math);
+		inter.setFunction(&functions);
 		const unsigned int test_lenght = 10000;
 		std::cout << "Running test\n";
 		std::string exr = "x=(sqrt(sqrt(5*5)^2)*100)/5*(sin(PI)^2+cos(PI)^2)";
-		interpreter inter = init();
+	
 		inter.set(exr.c_str(), exr.size());
 		inter.interpret();
 		interpreter inter2(std::move(inter));
@@ -56,11 +53,31 @@ void test::profileInterpreterVM()
 	try
 
 	{
+		interpreter inter;
+		std::string expression = "";
+
+		memory mem; //Create memory unit
+		operators::operators_interface oper;
+		math_func::function_interface functions; //Create function unit
+
+		//init and load operators
+		oper.load(operators::std_operators);
+		inter.setOperator(&oper);
+
+		//Init and load memory unit
+		mem.set("PI", 3.14159f, true, true);  //Add constat variable PI with value 3.14
+		inter.setMemory(&mem); //Assign memory unit to interpreter
+
+		//init and load func unit
+		functions.load(math_func::std_math_trig_func); // Load std_math_trig_funct into function unit
+		functions.load(math_func::std_math_func);
+		functions.load(math_func::std_math_num_func);
+		functions.load(core_math::lib_core_math);
+		inter.setFunction(&functions);
 
 		const unsigned int test_lenght = 10000;
 		std::cout << "Running test\n";
 		std::string exr = "x=(sqrt(sqrt(5*5)^2)*100)/5*(sin(PI)^2+cos(PI)^2)";
-		interpreter inter = init();
 		CoraxVM::corax_program prgm;
 		CoraxVM::Corax_program_builder_module prgm_builder(&inter);
 		CoraxVM::corax_runtime runtime;
