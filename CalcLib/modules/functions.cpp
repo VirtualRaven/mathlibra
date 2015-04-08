@@ -16,7 +16,7 @@ namespace math_func
 
 
 	math_func::m_function::m_function(std::string name, funcPtr ptr) :name(name), ptr(ptr), is_general(false) {}
-	math_func::m_function::m_function(std::string name, generalFuncPtr ptr) : name(name), gptr(ptr), is_general(false) {}
+	math_func::m_function::m_function(std::string name, generalFuncPtr ptr) : name(name), gptr(ptr), is_general(true) {}
 	math_func::m_function::~m_function(){}
 	math_func::m_function::m_function() : name(), ptr(nullptr), is_general(false){}
 

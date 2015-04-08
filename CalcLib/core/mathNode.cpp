@@ -193,7 +193,7 @@ namespace mathNode
 			{
 				std::cerr << "Tree not correct, func type should have an empty second sub node";
 			}
-			return this->func(this->wrapperNode->sub1());
+			return this->func(this->wrapperNode);
 		}
 
 

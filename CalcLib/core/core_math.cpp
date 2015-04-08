@@ -1,5 +1,8 @@
 #include "core_math.h"
 #include <cmath>
+#include "core/mathNode.h"
+#include <vector>
+
 
 namespace core_math
 {
@@ -52,11 +55,107 @@ namespace core_math
 	}
 
 	
+	struct breadth_traversal_unit
+	{
+		node * n;
+		int i;
+		breadth_traversal_unit(node * node, int index) : n(node), i(index) {}
+	};
+
+	//Breadth first function for displaying the syntax tree under the node
+	double _d_displayTree(node * n)
+	{
+		std::cout << "parent node\n";
+
+		std::vector<std::vector<breadth_traversal_unit>> pvec;
+		std::vector<breadth_traversal_unit> vec;
+		vec.push_back(breadth_traversal_unit(n,1));
+		pvec.push_back(vec);
+		int level=0;
+		do
+		{
+			
+			std::vector<breadth_traversal_unit> lvec;
+			int index=1;
+			for each (breadth_traversal_unit var in pvec[level])
+			{
+				if (var.n->sub1() != nullptr)
+				{
+					lvec.push_back(breadth_traversal_unit(var.n->sub1(), index));
+				}
+				index++;
+				if (var.n->sub2() != nullptr)
+				{
+					lvec.push_back(breadth_traversal_unit(var.n->sub2(), index));
+				}
+				index++;
+			}
+
+			if (lvec.size() < 1)
+			{
+				break;
+			}
+
+			level++;
+			pvec.push_back(lvec);
+			
+		} while (true);
+		
+		int row=1;
+
+		for each (std::vector<breadth_traversal_unit> breadthvec in pvec)
+		{
+			std::cout << "Row" << row;
+			for each(breadth_traversal_unit current in breadthvec)
+			{
+				switch (current.n->data->type)
+				{
+				
+				case tree::VARIABLE:
+				{
+					mathNode::mathExpressionNode_variable* tmp = dynamic_cast<mathNode::mathExpressionNode_variable*>(current.n->data);
+					std::cout << "{Variable, " << tmp->name << "} ";
+				}break;
+				case tree::FUNCTION:
+				{
+					mathNode::mathExpressionNode_func* tmp = dynamic_cast<mathNode::mathExpressionNode_func*>(current.n->data);
+					std::cout << "{Function, " << (void*)tmp->func << "} ";
+				}break;
+				case tree::OPERATOR:
+				{
+					mathNode::mathExpressionNode_opr* tmp = dynamic_cast<mathNode::mathExpressionNode_opr*>(current.n->data);
+					std::cout << "{Operator, " << (void*)tmp->operation << "} ";
+				}break;
+				case tree::VALUE:
+				{
+					mathNode::mathExpressionNode_val* tmp = dynamic_cast<mathNode::mathExpressionNode_val*>(current.n->data);
+					std::cout << "{Value, " << tmp->value << "} ";
+				}break;
+				case tree::FUNCTION_TREE:
+				{
+					mathNode::mathExpressionNode_func_tree* tmp = dynamic_cast<mathNode::mathExpressionNode_func_tree*>(current.n->data);
+					std::cout << "{Function tree, " << (void*)tmp->func << "} ";
+				}break;
+				default:
+					std::cout << "Failed to display tree\n";
+					return 0;
+					break;
+				}
+			}
+			std::cout << "\n";
+			row++;
+		}
+
+		return 1;
+	}
+
+	
 
 
 	std::vector<math_func::m_function> lib_core_math =
 	{
 		math_func::m_function("frac", static_cast<double(*)(double)>(frac)),
-		math_func::m_function("factorial", static_cast<double(*)(double)>(factorial))
+		math_func::m_function("factorial", static_cast<double(*)(double)>(factorial)),
+		math_func::m_function("displayTree", static_cast<double(*)(node*)>(_d_displayTree))
 	};
 };
