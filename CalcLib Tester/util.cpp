@@ -1,6 +1,7 @@
 #include "main.h"
 
 #include <iostream>
+#include "core/export_lib_version.h"
 #include <string>
 namespace util
 {
@@ -9,9 +10,7 @@ namespace util
 	{
 		std::cout << "-[ Build date: " << __DATE__ << "]\n";
 		std::cout << "-[ Execution enviroment " << EXEC_ENV_STRING << "]\n";
-#ifdef GIT_COMMIT_HASH
-		std::cout  << "Version: " << git_version << "\n\n;
-#endif
+		std::cout  << "-[ Version: " << LIB_VERSION << "]\n\n";
 		std::cout << "-[DEBUG: ";
 
 #ifdef DEBUG
@@ -44,7 +43,7 @@ namespace util
 		std::getline(std::cin, input);
 		if (input == "1")
 		{
-			std::cout << "\nThis program is only meant to showcase an concept of expression handling by using tree like data structures. It in its current state it doesn't serve as an replacement for a calculator or other software as bugs and precisions problems may exist.\n\n" << "The goal of the program is to develop an expression interpretor back end to be utilized in a more advance graphical application.In its current state the application will try to evaluate any expression entered and compute an answer using floating point mathematics.\n\n" << " The expression can contain functions, variables operators and of course values in form of numbers.See the other topics in the help menu for more info.";
+			std::cout << "\nThis program is only meant to showcase an concept of expression handling by using tree like data structures. It in its current state it doesn't serve as an replacement for a calculator or other software as bugs and precisions problems may exist.\n\n" << "The goal of the program is to develop an expression interpretor backend to be utilized in a more advance graphical application.In its current state the application will try to evaluate any expression entered and compute an answer using floating point mathematics.\n\n" << " The expression can contain functions, variables operators and of course values in form of numbers.See the other topics in the help menu for more info.";
 
 			return;
 		}

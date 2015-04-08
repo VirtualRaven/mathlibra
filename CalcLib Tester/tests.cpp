@@ -23,8 +23,7 @@ void test::profileInterpreter()
 
 		//init and load func unit
 		functions.load(math_func::std_math_trig_func); // Load std_math_trig_funct into function unit
-		auto tmp = math_func::std_math_func;
-		functions.load(tmp);
+		functions.load(math_func::std_math_func);
 		functions.load(math_func::std_math_num_func);
 		functions.load(core_math::lib_core_math);
 		inter.setFunction(&functions);
