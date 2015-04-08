@@ -5,6 +5,7 @@
 #include <iostream>
 #include "exception.h"
 #include "main.h"
+#include "core/tree.h"
 namespace math_func
 {
 	struct functionOops : public exception
@@ -17,14 +18,23 @@ namespace math_func
 
 	struct m_function
 	{
+		bool is_general;
 		std::string name;
 		typedef number_type(*funcPtr)(number_type);
-		funcPtr ptr;
-
+		typedef number_type(*generalFuncPtr)(tree::node*);
+		union
+		{
+			funcPtr ptr;
+			generalFuncPtr gptr;
+		};
+		
 		m_function(std::string name, funcPtr ptr);
+		m_function(std::string name, generalFuncPtr ptr);
 		m_function();
 		~m_function();
 	};
+
+
 
 
 
@@ -38,10 +48,11 @@ namespace math_func
 		void load(std::vector< m_function>& obj);
 		void load(m_function obj);
 		bool isloaded(std::string funcName);
-		funcPtr get(std::string funcName);
+		bool isGeneral(); //Tests if the function in the cache is general
+		void * get(std::string funcName);
 		void display();
-
 	};
+	
 
 	//Vector containing basic trigometric functions form dervired from math.h
 	extern std::vector< math_func::m_function> std_math_trig_func;
