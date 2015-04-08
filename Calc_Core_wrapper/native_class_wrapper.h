@@ -1,6 +1,7 @@
 #include "Core_Includes.h"
 namespace native
 {
+	extern const char * CoreVersion ;
 	struct wrapper_exception_info
 	{
 		std::string type;
@@ -32,7 +33,7 @@ namespace native
 		void createVariable(std::string name, double value);
 		void clearVariables();
 
-		std::string getCoreVersion();
+	
 
 		
 	};

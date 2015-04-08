@@ -3,6 +3,7 @@
 #include "core/export_lib_version.h"
 namespace native
 {
+	const char * CoreVersion = LIB_VERSION;
 	core_native_wrapper::core_native_wrapper()
 	{
 		//Load functions into the function container
@@ -168,10 +169,7 @@ namespace native
 		}
 	}
 
-	std::string getCoreVersion()
-	{
-		return std::string(LIB_VERSION);
-	}
+	
 	
 };
 
