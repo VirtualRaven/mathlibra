@@ -150,8 +150,24 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 		{
 			if(expression[i] == '(')
 			{
+				int startPos = i;
+				if (tokens.size() > 0 && (tokens.back()->type == tree::VALUE || tokens.back()->type == tree::VARIABLE) && this->_operators->inArray('*')) //If priviouse value or variable is an value and an multiplication sign
+				{
+					ptr_protect<operatorToken*, false> tmp(new operatorToken(_operators->getCurrent()));
+					tmp->startPos = startPos;
+					tmp->endPos = startPos;
+					startPos += 1;
+					tmp->baseWheight += extraOperatorWheight;
+					if (tmp->baseWheight <= lowestWheight) // <= for left association && < for right association
+					{
+						lowestWheight = tmp->baseWheight;
+						this->startOperatorPos = tokens.size();
+					}
+					tokens.push_back(tmp.ptr());
+					tmp.release();
+				}
 
-				tokens.push_back(new parenthesesToken(i,i));
+				tokens.push_back(new parenthesesToken(startPos, startPos));
 				parStack.push( (parenthesesToken*)tokens.back() );
 				extraOperatorWheight+=4;
 				continue;
@@ -198,7 +214,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 					}
 					else if(expression[i2] == '-')
 					{
-						if(i2-1 > 0 && expression[i2-1] != 'e')
+						if(i2-1 >= 0 && expression[i2-1] != 'e') //If expression is > instead of >= it will fail for expressions as 0-x^2
 						{
 							break;
 						}
@@ -298,8 +314,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 			}
 			else if (isalpha(expression[i]) )
 			{
-
-
+					
 					short valueLength = 0;
 					short endPos = 0;
 					short startPos = i;
@@ -316,8 +331,26 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 					}
 					endPos = i + valueLength;
 					name = std::string(expression, startPos, valueLength +1 );
-
 					i += valueLength;
+					
+					if (tokens.size() > 0 && tokens.back()->type == tree::VALUE &&  this->_operators->inArray('*')) //If priviouse value is an value and an multiplication sign
+					{
+						ptr_protect<operatorToken*, false> tmp(new operatorToken(_operators->getCurrent()));
+						tmp->startPos = startPos;
+						tmp->endPos = startPos;
+						startPos += 1;
+						endPos += 1;
+						tmp->baseWheight += extraOperatorWheight;
+						if (tmp->baseWheight <= lowestWheight) // <= for left association && < for right association
+						{
+							lowestWheight = tmp->baseWheight;
+							this->startOperatorPos = tokens.size();
+						}
+						tokens.push_back(tmp.ptr());
+						tmp.release();
+					}
+
+
 					if (current_functions != nullptr && current_functions->isloaded(name) == true)
 					{
 						funcToken * tmp_ptr;
@@ -430,38 +463,38 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 			std::cerr << "-[Type: ";
 			switch (this->tokens[i]->type)
 			{
-				case PARENTHESES:
+			case tree::PARENTHESES:
 				{
 					std::cerr << "parantheses token]\n";
 					parenthesesToken* tmp = static_cast<parenthesesToken*>( this->tokens[i]);
 					std::cerr <<"-[Opposit token found at "  << tmp->opposit << "]\n\n";
 					break;
 				}
-				case FUNCTION:
+			case tree::FUNCTION:
 				{
 					std::cerr << "function token]\n\n";
 					break;
 				}
-				case VALUE:
+			case tree::VALUE:
 				{
 					std::cerr << "value token]\n";
 					valueToken* tmp = static_cast<valueToken*>(this->tokens[i]);
 					std::cerr << "-[Value:" << tmp->value << "]\n\n";
 					break;
 				}
-				case VARIABLE:
+				case tree::VARIABLE:
 				{
 					std::cerr << "variable token]\n\n";
 					break;
 				}
-				case OPERATOR:
+				case tree::OPERATOR:
 				{
 					std::cerr << "operator token]\n";
 					operatorToken * tmp = static_cast<operatorToken*>(this->tokens[i]);
 					std::cerr << "-[operator sign: "<< tmp->operChar << " wheight: " << tmp->baseWheight<< "]\n\n";
 					break;
 				}
-				case UNKNOWN:
+				case tree::UNKNOWN:
 				{
 					std::cerr << "unknown]\n\n";
 					break;
