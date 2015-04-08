@@ -46,14 +46,12 @@ namespace operators
 
 operators::interpreter_operator::interpreter_operator(operPtr opr, char symbol, short wheight):
   oper(opr),
-  assign(nullptr),
   operChar(symbol),
   baseWheight(wheight),
   operType(MATH)
 {}
 
 operators::interpreter_operator::interpreter_operator(assigmentPtr assigne, char symbol, short wheight):
- oper(nullptr),
  assign(assigne),
  operChar(symbol),
  baseWheight(wheight),
