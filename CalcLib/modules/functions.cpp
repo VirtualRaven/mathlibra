@@ -104,3 +104,24 @@ namespace math_func
 		};
 	
 };
+
+bool test::function_module_test1()
+{
+	math_func::function_interface func;
+	func.load(math_func::std_math_trig_func);
+	func.load(math_func::m_function("gen", (math_func::m_function::generalFuncPtr)(nullptr)));
+	if (!(func.isloaded("sin") && func.isloaded("cos") && func.isloaded("tan") && func.isloaded("gen")))
+	{
+		return false;
+	}
+	if ((math_func::m_function::generalFuncPtr)func.get("gen") != nullptr || func.get("sin") != static_cast<math_func::double_func>(sin))
+	{
+		return false;
+	}
+	func.isloaded("gen");
+	if (!func.isGeneral())
+	{
+		return false;
+	}
+
+}
