@@ -11,14 +11,9 @@
 	{
 		return false;
 	}
-	 baseToken::~baseToken()
-	{
+	 baseToken::~baseToken(){}
 
-	}
-    baseToken::baseToken() : startPos(0),
-     endPos(0),
-     type(tokenType::UNKNOWN)
-      {}
+    baseToken::baseToken() : startPos(0), endPos(0), type(tokenType::UNKNOWN){}
 
 
 
@@ -58,12 +53,11 @@
 	operatorToken::operatorToken(operators::assigmentPtr assigne, char symbol, short wheight)
 	 :baseToken(), operators::interpreter_operator(assign,symbol,wheight)
 	{
-
 		this->type = tree::OPERATOR;
 	}
 	operatorToken::operatorToken(operators::interpreter_operator opr)
 	:baseToken(), operators::interpreter_operator(opr)
-	  {
+	{
 		  this->type = tree::OPERATOR;
 	}
 
@@ -98,8 +92,6 @@
 		this->endPos = endPos;
 		this->startPos = startPos;
 		this->type = tree::PARENTHESES;
-
-
 	}
 	parenthesesToken::parenthesesToken()
     : baseToken(),
@@ -183,7 +175,6 @@
     }
    variableToken variableToken::operator=(const variableToken& val)
     {
-
         this->endPos = val.endPos;
         this->mem = val.mem;
         this->startPos = val.startPos;
