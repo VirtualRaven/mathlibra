@@ -1,6 +1,6 @@
 #include "client.h"
 namespace test
 {
-	void profileInterpreter();
-	void profileInterpreterVM();
+	void profileInterpreter(std::string& exr);
+	void profileInterpreterVM(std::string& exr);
 }

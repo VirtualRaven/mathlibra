@@ -9,7 +9,6 @@
 #include "profiling.h"
 #include "core/export_lib_version.h"
 #include "ptr_protect.h"
-#define RUN_TESTS
 #pragma comment(lib, "CalcLib.lib")
 #include "stdErr.h"
 

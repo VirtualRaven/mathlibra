@@ -1,7 +1,7 @@
 #include "tests.h"
 
 
-void test::profileInterpreter()
+void test::profileInterpreter(std::string& exr)
 {
 	try
 
@@ -29,7 +29,6 @@ void test::profileInterpreter()
 		inter.setFunction(&functions);
 		const unsigned int test_lenght = 10000;
 		std::cout << "Running test\n";
-		std::string exr = "x=(sqrt(sqrt(5*5)^2)*100)/5*(sin(PI)^2+cos(PI)^2)";
 	
 		inter.set(exr.c_str(), exr.size());
 		inter.interpret();
@@ -47,7 +46,7 @@ void test::profileInterpreter()
 		std::cout << " Description: " << e.desc() << "\n]\n";
 	}
 }
-void test::profileInterpreterVM()
+void test::profileInterpreterVM(std::string& exr)
 {
 	try
 
@@ -76,7 +75,6 @@ void test::profileInterpreterVM()
 
 		const unsigned int test_lenght = 10000;
 		std::cout << "Running test\n";
-		std::string exr = "x=(sqrt(sqrt(5*5)^2)*100)/5*(sin(PI)^2+cos(PI)^2)";
 		CoraxVM::corax_program prgm;
 		CoraxVM::Corax_program_builder_module prgm_builder(&inter);
 		CoraxVM::corax_runtime runtime;

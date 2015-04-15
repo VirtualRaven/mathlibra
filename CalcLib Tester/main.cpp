@@ -15,7 +15,7 @@
 
 bool menu(memory& mem,math_func::function_interface& func)
 {
-	std::cout << "PRINT VARIABLES [1]\nEMPTY VARIABLE TABLE[2]\nPRINT FUNCS[3]\nPRINT BUILD INFO[4]\nPRINT HELP[5]\nEXIT [6]\nMenu> ";
+	std::cout << "PRINT VARIABLES [1]\nEMPTY VARIABLE TABLE[2]\nPRINT FUNCS[3]\nPRINT BUILD INFO[4]\nPRINT HELP[5]\nRUN TESTS [6]\nEXIT [7]\nMenu> ";
 	std::string input;
 	std::getline(std::cin, input);
 	if (input == "1")
@@ -54,6 +54,19 @@ bool menu(memory& mem,math_func::function_interface& func)
 	}
 	else if (input == "6")
 	{
+		if (!test::memory_module_test1())
+		{
+			std::cin.get();
+			return false;
+		}
+		std::string exr = "x=(sqrt(sqrt(5*5)^2)*100)/5*(sin(PI)^2+cos(PI)^2)";
+		test::profileInterpreter(exr);
+		test::profileInterpreterVM(exr);
+		return false;
+	}
+	else if (input == "7")
+	{
+		
 		return true;
 	}
 	else
@@ -66,16 +79,9 @@ int main(int argc, char* argv[])
 {
 	
 
-#ifdef RUN_TESTS
-	if (!test::memory_module_test1())
-	{
-		std::cin.get();
-		return false;
-	}
-	test::profileInterpreter();
-	test::profileInterpreterVM();
-	return 0;
-#endif
+
+	
+
 
 #ifndef DEBUG
 	err_redirect err; //remove cerr stream

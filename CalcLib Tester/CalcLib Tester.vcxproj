@@ -72,7 +72,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="client.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="tests.h" />
   </ItemGroup>
   <ItemGroup>
