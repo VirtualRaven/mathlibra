@@ -16,9 +16,11 @@ namespace operators
 
     struct interpreter_operator
     {
-
-        operPtr oper;
-        assigmentPtr assign;
+		union
+		{
+			operPtr oper;
+			assigmentPtr assign;
+		};
         char operChar;
         short baseWheight;
         operationType operType;
