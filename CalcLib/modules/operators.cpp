@@ -34,6 +34,10 @@ namespace operators
 		mem->set(name,val);
 		return val;
 	}
+	number_type dummy(number_type x, number_type y)
+	{
+		return 0;
+	}
 
     vec_operators std_operators= {
         interpreter_operator(&sub,'-',1),
@@ -42,6 +46,7 @@ namespace operators
 		interpreter_operator(&divide,'/' ,2),
 		interpreter_operator(&oper_pow,'^' ,3),
         interpreter_operator(&oper_assign,'=',0),
+		interpreter_operator((operPtr)nullptr, ',', 0 )
     };
 
 operators::interpreter_operator::interpreter_operator(operPtr opr, char symbol, short wheight):

@@ -140,9 +140,18 @@ namespace mathNode
 			}
 			else
 			{
-				number_type arg1 = this->wrapperNode->sub1()->data->eval();
-				number_type arg2 = this->wrapperNode->sub2()->data->eval();
-				return this->operation(arg1, arg2);
+				if (operation != nullptr)
+				{
+					number_type arg1 = this->wrapperNode->sub1()->data->eval();
+					number_type arg2 = this->wrapperNode->sub2()->data->eval();
+					return this->operation(arg1, arg2);
+				}
+				else
+				{
+					throw mathNode::nodeOops("Tried to exectue dummy node");
+				}
+
+				
 			}
 		}
 

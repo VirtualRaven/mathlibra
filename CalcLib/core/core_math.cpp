@@ -136,6 +136,11 @@ namespace core_math
 					mathNode::mathExpressionNode_func_tree* tmp = dynamic_cast<mathNode::mathExpressionNode_func_tree*>(current.n->data);
 					std::cout << "{Function tree, " << (void*)tmp->func << "} ";
 				}break;
+
+				case tree::DUMMY:
+				{
+					std::cout << "{Dummy node} ";
+				}break;
 				default:
 					std::cout << "Failed to display tree\n";
 					return 0;

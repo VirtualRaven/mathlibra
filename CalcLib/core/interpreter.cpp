@@ -169,7 +169,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 
 				tokens.push_back(new parenthesesToken(startPos, startPos));
 				parStack.push( (parenthesesToken*)tokens.back() );
-				extraOperatorWheight+=4;
+				extraOperatorWheight+=5;
 				continue;
 			}
 			else if(expression[i] == ')')
