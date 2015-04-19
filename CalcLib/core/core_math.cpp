@@ -1,11 +1,26 @@
 #include "core_math.h"
 #include <cmath>
 #include "core/mathNode.h"
+#include "modules/function_helper.h"
 #include <vector>
+#include <stack>
+
+
+
+
 
 
 namespace core_math
 {
+	coreMathOops::coreMathOops(std::string inf)
+	{
+		info = inf;
+	}
+	const char* coreMathOops::what()
+	{
+		return "Core math exception";
+	}
+
 	typedef unsigned long long u_big_int;
 
 	u_big_int  integerReqiured(double arg) // Throws exception if not convertable to integer
@@ -61,11 +76,35 @@ namespace core_math
 		int i;
 		breadth_traversal_unit(node * node, int index) : n(node), i(index) {}
 	};
+	
+	
+	double nPr(double x, double y)
+	{
+		
+		return factorial(x) / factorial(x - y);
 
-	//Breadth first function for displaying the syntax tree under the node
+	}
+
+	double nCr(double x, double y)
+	{
+		return nPr(x, y) / factorial(y);
+	}
+
+	double nPr_wrapper(node * n)
+	{
+		return function_helper::forward<double, double>(nPr, n);
+	}
+
+	double nCr_wrapper(node *n)
+	{
+		
+		return function_helper::forward<double, double>(nCr, n);
+		
+	}
+	
 	double _d_displayTree(node * n)
 	{
-		std::cout << "parent node\n";
+		
 
 		std::vector<std::vector<breadth_traversal_unit>> pvec;
 		std::vector<breadth_traversal_unit> vec;
@@ -161,6 +200,8 @@ namespace core_math
 	{
 		math_func::m_function("frac", static_cast<double(*)(double)>(frac)),
 		math_func::m_function("factorial", static_cast<double(*)(double)>(factorial)),
-		math_func::m_function("displayTree", static_cast<double(*)(node*)>(_d_displayTree))
+		math_func::m_function("displayTree", static_cast<double(*)(node*)>(_d_displayTree)),
+		math_func::m_function("nPr", static_cast<double(*)(node*)>(nPr_wrapper)),
+		math_func::m_function("nCr", static_cast<double(*)(node*)>(nCr_wrapper))
 	};
 };

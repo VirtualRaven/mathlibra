@@ -187,7 +187,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 					parenthesesToken * tmp2 = new parenthesesToken(i,i);
 					tmp2->opposit = tmp->startPos;
 					tokens.push_back(tmp2);
-					extraOperatorWheight-=4;
+					extraOperatorWheight-=5;
 					continue;
 
 				}
