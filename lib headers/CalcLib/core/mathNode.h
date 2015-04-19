@@ -103,5 +103,37 @@ class mathExpressionNode_opr;
 		number_type eval();
 	};
 
+	namespace helper
+	{
+
+		template<typename T> struct  enum_type
+		{
+			enum{ TYPE = -1 };
+		};
+		template<> struct enum_type < mathNode::mathExpressionNode_func* >
+		{
+			enum{ TYPE = tree::FUNCTION };
+		};
+		template<> struct enum_type < mathNode::mathExpressionNode_func_tree* >
+		{
+			enum{ TYPE = tree::FUNCTION_TREE };
+		};
+		template<> struct enum_type < mathNode::mathExpressionNode_val* >
+		{
+			enum{ TYPE = tree::VALUE };
+		};
+		template<> struct enum_type < mathNode::mathExpressionNode_opr* >
+		{
+			enum{ TYPE = tree::OPERATOR };
+		};
+		template<> struct enum_type < mathNode::mathExpressionNode_variable* >
+		{
+			enum{ TYPE = tree::VARIABLE };
+		};
+
+
+
+	}
+
 }
 #endif // MATHNODE_H_INCLUDED

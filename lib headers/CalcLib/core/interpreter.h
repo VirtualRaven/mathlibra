@@ -1,8 +1,8 @@
 #ifndef interpreter_H_INCLUDED
 #define interpreter_H_INCLUDED
 #include <string>
-#include <cstring>
-#include <cstdlib>
+//#include <cstring>
+//#include <cstdlib>
 #include <iostream>
 #include <stack>
 #include <vector>
