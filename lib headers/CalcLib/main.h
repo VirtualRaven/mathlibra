@@ -12,14 +12,14 @@
 
 
 typedef double number_type;
-//#define DEBUG
+
 #ifdef DEBUG
 #define P_TEST
 //#define RUN_TESTS
 //#define LEXICAL_ANANALYSIS_DEBUG
 //#define SYNTAX_TREE_DEBUG_INFO
 //#define STRUCTUAL_INTEGRITY_TEST
-#define DEBUG_CORAX_INS
+//#define DEBUG_CORAX_INS
 #endif //DEBUG
 namespace util
 {

@@ -93,6 +93,10 @@
     <ClInclude Include="core\export_lib_version.h">
       <Filter>Header Files\core</Filter>
     </ClInclude>
+    <ClInclude Include="modules\function_helper.h">
+      <Filter>Header Files\modules</Filter>
+    </ClInclude>
+
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="modules\functions.cpp">
