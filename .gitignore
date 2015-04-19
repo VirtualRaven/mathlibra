@@ -151,3 +151,10 @@ CalcLib/lib_git_version.tmp
 *.sdf
 *.tlog
 *.idb
+*.exp
+*.ipch
+=======
+#Version file
+source/gitversion.cpp
+CalcLib/lib_git_version.h
+

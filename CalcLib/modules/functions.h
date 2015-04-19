@@ -6,6 +6,14 @@
 #include "exception.h"
 #include "main.h"
 #include "core/tree.h"
+
+
+namespace test
+{
+	bool function_module_test1();
+}
+
+
 namespace math_func
 {
 	struct functionOops : public exception
@@ -14,8 +22,10 @@ namespace math_func
 		const char* what();
 
 	};
-
-
+	
+	//The interpreter supports to different types if functions. Functions following signature double(*)(double) and double(*)(tree::node*) If possible the first signature should be used.
+	//It is recomended not to expose access to end user of libary to the second option as it gives uncontrolled access to the hole abstract tree from the node the function is at and down.
+	//A function of the second type is under no cirumstances allowed to change the tree upon execution of the function, the tre must remain unchanged.
 	struct m_function
 	{
 		bool is_general;
