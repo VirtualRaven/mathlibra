@@ -155,7 +155,10 @@ bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)
 
 
 
-
+			if (tgt->operation == nullptr && tgt->operation == nullptr)
+			{
+				tgt->type = tree::DUMMY;
+			}
 			nodeDataInterface_wrapper_access(tgt)->createSubNodes(mathNode1, mathNode2);
 			if( !buildSubNodes(mathNode1,node1) || 	!buildSubNodes(mathNode2,node2))
 			{

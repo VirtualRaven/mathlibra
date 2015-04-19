@@ -90,6 +90,7 @@ set /p t= &lt; "$(ProjectDir)lib_git_version.tmp"
     <ClInclude Include="interface\interpreter_interface.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="modules\functions.h" />
+    <ClInclude Include="modules\function_helper.h" />
     <ClInclude Include="modules\memory.h" />
     <ClInclude Include="modules\operators.h" />
     <ClInclude Include="ptr_protect.h" />

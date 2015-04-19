@@ -26,7 +26,8 @@ namespace tree
 		OPERATOR = 3,
 		VALUE = 4,
 		PARENTHESES = 5,
-		FUNCTION_TREE = 6
+		FUNCTION_TREE = 6,
+		DUMMY = 7
 	};
 
 
