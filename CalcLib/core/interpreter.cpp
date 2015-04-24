@@ -282,8 +282,46 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 				continue;
 			}
 
-			else if(this->_operators!=nullptr && this->_operators->inArray(expression[i]))
+			else if (this->_operators != nullptr && this->_operators->inArray(expression[i]))
 			{
+				if (expression[i] == '-') //Following test compensates for implicit -1 situations like -x or 2*-(2+x) which will be extended to -1*x and 2*-1*(2+x) where the multiplication sign between -1 and the other terme has an higher than usal weight
+				{
+					tree::tokenType test_type;
+					if (tokens.size() > 0)
+					{
+						test_type = tokens.back()->type;
+					}
+					else
+					{
+						test_type = tree::UNKNOWN;
+					}
+
+					if ( (i - 1 > 0 && (test_type == tree::OPERATOR || expression[i - 1] == '(')) || i == 0) 
+					{
+						if (this->_operators->inArray('*'))
+						{
+
+							ptr_protect<valueToken*, false> tmp_val(new valueToken(i, i));
+							tmp_val->value = -1;
+							tokens.push_back(tmp_val.ptr());
+							tmp_val.release();
+							ptr_protect<operatorToken *, false> tmp = new  operatorToken(_operators->getCurrent());
+							tmp->startPos = i;
+							tmp->endPos = i;
+							tmp->baseWheight += extraOperatorWheight + 5;
+							if (tmp->baseWheight <= lowestWheight) // <= for left association && < for right association
+							{
+								lowestWheight = tmp->baseWheight;
+								this->startOperatorPos = tokens.size();
+							}
+						
+							tokens.push_back(tmp.ptr());
+							tmp.release();
+							continue;
+						}
+					}
+				}
+
 				ptr_protect<operatorToken*,false> tmp(new operatorToken(_operators->getCurrent()));
 				tmp->startPos=i;
 				tmp->endPos=i;
