@@ -5,6 +5,14 @@
 #include "version.h"
 namespace calculator
 {
+
+	calc_engine_exception::calc_engine_exception(String^ desc, String^ type, bool crit)
+	{
+		this->description = desc;
+		this->type = type;
+		this->isCritical = crit;
+	}
+
 	void calc_engine::throwIfFailed()
 	{
 		if (this->wrp->exceptionOccured())
@@ -13,8 +21,7 @@ namespace calculator
 
 			String^ type = msclr::interop::marshal_as<String^>(tmp_exec.type);
 			String^ desc = msclr::interop::marshal_as<String^>(tmp_exec.desc);
-			System::Console::WriteLine(type, desc);
-			throw gcnew System::Exception(type + desc);
+			throw gcnew calculator::calc_engine_exception(desc,type,tmp_exec.isCritical);
 			return;
 		}
 	}

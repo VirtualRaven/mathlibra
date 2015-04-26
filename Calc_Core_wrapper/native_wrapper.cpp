@@ -164,6 +164,7 @@ namespace native
 		{
 			this->ex_inf.type = e.what();
 			this->ex_inf.desc = e.desc();
+			this->ex_inf.isCritical = e.critical();
 			this->exception_occurred = true;
 			return;
 		}

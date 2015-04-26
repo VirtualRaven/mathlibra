@@ -6,6 +6,7 @@ namespace native
 	{
 		std::string type;
 		std::string desc;
+		bool isCritical;
 	};
 
 	class core_native_wrapper
