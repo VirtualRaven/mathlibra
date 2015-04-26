@@ -17,8 +17,9 @@ typedef double number_type;
 
     struct nodeOops : public exception
     {
-        nodeOops(std::string inf);
+        nodeOops(std::string inf, bool isCritical);
         const char* what();
+	
     };
 
 	class mathExpressionNode : public nodeDataInterface

@@ -126,7 +126,7 @@ namespace function_helper
 		auto args = getArgs(n);
 		if (args.size() != sizeof...(argN))
 		{
-			throw core_math::coreMathOops("Function called with wrong number of argumets");
+			throw core_math::coreMathOops("Function called with wrong number of argumets",false);
 		}
 
 		parameter_package::package<argN...> pack = fillPackage<argN...>(args);
