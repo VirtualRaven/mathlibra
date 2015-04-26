@@ -94,7 +94,7 @@ namespace calculator
 	String^ calc_engine::get_Version()
 		{
 			{
-				return msclr::interop::marshal_as<String^>(version::wrapper_git_version) + "\n " + msclr::interop::marshal_as<String^>(native::CoreVersion);
+				return msclr::interop::marshal_as<String^>(version::wrapper_git_version) + "-" + msclr::interop::marshal_as<String^>(native::CoreVersion);
 			}
 		}
 	
