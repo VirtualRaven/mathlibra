@@ -5,7 +5,7 @@ namespace core_math
 {
 	struct coreMathOops : public exception
 	{
-		coreMathOops(std::string inf);
+		coreMathOops(std::string inf, bool isCritical);
 		const char* what();
 
 	};

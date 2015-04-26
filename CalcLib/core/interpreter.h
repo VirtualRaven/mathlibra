@@ -15,9 +15,8 @@ using mathNode::number_type;
 using tree::rootNode;
 struct interpreterOops : public exception
 {
-	interpreterOops(std::string inf);
+	interpreterOops(std::string inf, bool isCritical);
 	const char* what();
-
 };
 
 

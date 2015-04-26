@@ -6,13 +6,14 @@ class exception
 {
 protected:
 	std::string info;
-
+	bool _isCritical;
 public:
 
-	exception(std::string inf);
+	exception(std::string inf,bool isCritical);
 	exception();
 	virtual ~exception();
-	virtual const char * what();
+	virtual const char * what()=0;
+	bool critical();
     std::string desc();
 
 
