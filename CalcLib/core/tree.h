@@ -11,10 +11,7 @@ namespace tree
 	class TreeStructOops : public exception
 	{
 	public:
-		TreeStructOops(std::string message)
-		{
-			this->info = message;
-		}
+		TreeStructOops(std::string inf, bool isCritical);
 		const char* what();
 	};
 
