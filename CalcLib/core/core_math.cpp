@@ -12,10 +12,7 @@
 
 namespace core_math
 {
-	coreMathOops::coreMathOops(std::string inf)
-	{
-		info = inf;
-	}
+	coreMathOops::coreMathOops(std::string inf, bool isCritical) : exception(inf,isCritical){}
 	const char* coreMathOops::what()
 	{
 		return "Core math exception";

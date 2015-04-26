@@ -1,10 +1,7 @@
 #include "interpreter.h"
 #include "ptr_protect.h"
 
-interpreterOops::interpreterOops(std::string inf)
-	{
-		info = inf;
-	}
+interpreterOops::interpreterOops(std::string inf, bool isCritical) : exception(inf,isCritical){}
 
 	const char* interpreterOops::what()
 	{
@@ -48,7 +45,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
            rootNode root;
 			if (parentInterpreter->tokens.size() <= parentInterpreter->startOperatorPos)
 			{
-				throw interpreterOops("Panic: Tokens subscript operator out of bounds");
+				throw interpreterOops("Panic: Tokens subscript operator out of bounds", true);
 			}
 			mathNode::mathExpressionNode* topNode = parentInterpreter->tokens[parentInterpreter->startOperatorPos]->node(); //Create the top node out of the starting token
 
@@ -60,7 +57,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 				root.deleteSubNodes();
                 root.data->destroy();
                 root.data=0;
-                throw interpreterOops("Failed to build syntax tree");
+                throw interpreterOops("Failed to build syntax tree",false);
 			}
 			else
 			{
@@ -570,7 +567,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 			return this->root.data->eval();
 
         }
-		else throw interpreterOops("Tried to execute unfinished expresion");
+		else throw interpreterOops("Tried to execute unfinished expresion",false);
 	}
 	void interpreter::set(const char * expression, short lenght)
 	{
@@ -581,7 +578,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 			memcpy(this->expression, expression, lenght*sizeof(char));
 			this->stripSlashes();
 		}
-		else throw interpreterOops("Passed empty expression to interpreter!\n");
+		else throw interpreterOops("Passed empty expression to interpreter!\n",false);
 	}
 
 	interpreter::interpreter()
@@ -670,7 +667,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
         }
         else if(nodePtr->data->type == tokenType::UNKNOWN)
         {
-            throw interpreterOops("COMPILER FAILURE: found unknown node type");
+            throw interpreterOops("COMPILER FAILURE: found unknown node type",false);
         }
         else
         {
@@ -763,13 +760,13 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 	}
 	interpreter::interpreter(const interpreter& other)
 	{
-		throw interpreterOops("Can't copy interpreter object");
+		throw interpreterOops("Can't copy interpreter object",true);
 	}
 	interpreter& interpreter::operator=(const interpreter& other)
 	{
-		throw interpreterOops("Can't copy interpreter object");
+		throw interpreterOops("Can't copy interpreter object",true);
 	}
 	interpreter& interpreter::operator=(interpreter&& other)
 	{
-		throw interpreterOops("Can't copy interpreter object");
+		throw interpreterOops("Can't copy interpreter object", true);
 	}

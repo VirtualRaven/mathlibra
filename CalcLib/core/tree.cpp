@@ -3,6 +3,8 @@
 namespace tree
 {
 
+	TreeStructOops::TreeStructOops(std::string inf, bool isCritical): exception(inf, isCritical){}
+
 	const char* TreeStructOops::what()
 	{
 		return "TreeStructure Exception";
@@ -142,11 +144,11 @@ namespace tree
 		nodePtr2(nullptr),
 		data(nullptr)
 	{
-		throw TreeStructOops("bare node can not be copied");
+		throw TreeStructOops("bare node can not be copied",true);
 	}
 	node& node::operator=(const node&)
 	{
-		throw TreeStructOops("bare node can not be copied");
+		throw TreeStructOops("bare node can not be copied",true);
 	}
 	node& node::operator=(node&& other)
 	{
@@ -197,7 +199,7 @@ namespace tree
 		{
 
 
-			throw TreeStructOops("Uninitilized counter of copies\n");
+			throw TreeStructOops("Uninitilized counter of copies\n",true);
 		}
 	}
 	void rootNode::_copy(const rootNode& sourceNode)
@@ -208,7 +210,7 @@ namespace tree
 		if (sourceNode.copies == nullptr)
 		{
 
-			throw TreeStructOops("Unitilized copies pointer in constructor\n");
+			throw TreeStructOops("Unitilized copies pointer in constructor\n", true);
 		}
 		this->copies = sourceNode.copies;
 		(*copies)++;
@@ -218,7 +220,7 @@ namespace tree
 		}
 		else
 		{
-			throw TreeStructOops("Failed to copy Treestucture, data pointer empty");
+			throw TreeStructOops("Failed to copy Treestucture, data pointer empty",true);
 		}
 	}
 
@@ -244,7 +246,7 @@ namespace tree
 		}
 		else
 		{
-			throw TreeStructOops("Cant get context, data pointer empty");
+			throw TreeStructOops("Cant get context, data pointer empty",true);
 		}
 	}
 	rootNode::rootNode(const rootNode& sourceNode)

@@ -1,10 +1,7 @@
 #include "mathNode.h"
 namespace mathNode
 {
-        nodeOops::nodeOops(std::string inf)
-        {
-            info = inf;
-        }
+        nodeOops::nodeOops(std::string inf, bool isCritical): exception(inf,isCritical){}
 
         const char* nodeOops::what()
         {
@@ -126,7 +123,7 @@ namespace mathNode
 		{
 			if(this->wrapperNode->sub1() == nullptr || this->wrapperNode->sub2() == nullptr)
 			{
-				throw nodeOops("Panic: syntax tree has unexpected null pointer");
+				throw nodeOops("Panic: syntax tree has unexpected null pointer",true);
 			}
 			if (assignB)
 			{
@@ -136,7 +133,7 @@ namespace mathNode
 					tmp->mem->set(tmp->name,this->wrapperNode->sub2()->data->eval());
 					return static_cast<double>(tmp->mem->get(tmp->name));
 				}
-				else throw tree::TreeStructOops("Non variable token on lefthand side of assigment operator\n");
+				else throw tree::TreeStructOops("Non variable token on lefthand side of assigment operator\n",false);
 			}
 			else
 			{
@@ -148,7 +145,7 @@ namespace mathNode
 				}
 				else
 				{
-					throw mathNode::nodeOops("Tried to exectue dummy node");
+					throw mathNode::nodeOops("Tried to exectue dummy node",false);
 				}
 
 				
