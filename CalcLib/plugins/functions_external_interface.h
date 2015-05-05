@@ -26,9 +26,10 @@ namespace plugin
 	{		
 
 		//function list to be populated with plugin functions
-		std::vector<function> functions;
+		
 		friend void plugin_init(function_plugin_base* func, math_func::function_interface * function_unit);
-
+	protected:
+		std::vector<function> functions;
 	public:
 		
 		//Called before plugin initialization
