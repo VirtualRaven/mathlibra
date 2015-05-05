@@ -31,6 +31,12 @@
     <Filter Include="Source Files\interface">
       <UniqueIdentifier>{99e03e45-030e-460c-9678-438ae2c24e00}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\plugin">
+      <UniqueIdentifier>{b065a8f7-3d18-4a78-b324-810560fa6ebb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\plugin">
+      <UniqueIdentifier>{64ba16e7-b59d-4372-a4f4-6c9ece9ae0ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="exception.h">
@@ -96,6 +102,12 @@
     <ClInclude Include="modules\function_helper.h">
       <Filter>Header Files\modules</Filter>
     </ClInclude>
+    <ClInclude Include="plugins\functions_external_interface.h">
+      <Filter>Header Files\plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="plugins\plugin_loader.h">
+      <Filter>Header Files\plugin</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="modules\functions.cpp">
@@ -142,6 +154,12 @@
     </ClCompile>
     <ClCompile Include="core\version.cpp">
       <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="plugins\functions_external_interface.cpp">
+      <Filter>Source Files\plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="plugins\plugin_loader.cpp">
+      <Filter>Source Files\plugin</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

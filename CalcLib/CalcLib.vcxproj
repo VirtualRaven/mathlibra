@@ -93,6 +93,8 @@ set /p t= &lt; "$(ProjectDir)lib_git_version.tmp"
     <ClInclude Include="modules\function_helper.h" />
     <ClInclude Include="modules\memory.h" />
     <ClInclude Include="modules\operators.h" />
+    <ClInclude Include="plugins\functions_external_interface.h" />
+    <ClInclude Include="plugins\plugin_loader.h" />
     <ClInclude Include="ptr_protect.h" />
     <ClInclude Include="stdErr.h" />
     <ClInclude Include="thread_pool.h" />
@@ -113,6 +115,8 @@ set /p t= &lt; "$(ProjectDir)lib_git_version.tmp"
     <ClCompile Include="modules\functions.cpp" />
     <ClCompile Include="modules\memory.cpp" />
     <ClCompile Include="modules\operators.cpp" />
+    <ClCompile Include="plugins\functions_external_interface.cpp" />
+    <ClCompile Include="plugins\plugin_loader.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
