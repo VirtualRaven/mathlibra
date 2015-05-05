@@ -133,3 +133,8 @@ void windows_plugin_manager::load_dll(windows_plugin_manager::plugin_name_contai
  {
 	 this->unload_all_dlls();
  }
+
+plugin::plugin_manager*  plugin::get_platform_specific_manager()
+ {
+	 return new windows_plugin_manager;
+ }
