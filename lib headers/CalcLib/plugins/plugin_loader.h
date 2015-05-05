@@ -3,7 +3,7 @@
 #include <vector>
 namespace plugin
 {
-	class pluginManagerOops : exception
+	struct pluginManagerOops : public exception
 	{
 	public:
 		pluginManagerOops(std::string inf);

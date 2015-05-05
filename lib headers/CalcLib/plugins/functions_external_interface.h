@@ -1,6 +1,9 @@
+#ifndef PLUGIN_SYSTEM_INCLUDED
+#define PLUGIN_SYSTEM_INCLUDED
 #include "modules/functions.h"
 #include "../exception.h"
 #include <vector>
+
 namespace plugin
 { 
 
@@ -37,7 +40,7 @@ namespace plugin
 		virtual const char * plugin_name() = 0;
 	};
 
-	class pluginOops : exception
+	struct pluginOops : public exception
 	{
 		pluginOops(function_plugin_base* plugin, std::string inf);
 		const char* what();
@@ -45,3 +48,5 @@ namespace plugin
 
 	typedef function_plugin_base*(*plugin_constructor)();
 }
+
+#endif
