@@ -1,3 +1,5 @@
+#ifndef FUNCTION_HELPER_INCLUDED
+#define FUNCTION__HELPER_INCUDED
 #include <stack>
 #include "core/mathNode.h"
 
@@ -150,3 +152,5 @@ namespace function_helper
 	};
 
 }
+
+#endif
