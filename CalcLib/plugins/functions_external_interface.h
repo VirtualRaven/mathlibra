@@ -1,6 +1,9 @@
+#ifndef PLUGIN_SYSTEM_INCLUDED
+#define PLUGIN_SYSTEM_INCLUDED
 #include "modules/functions.h"
 #include "../exception.h"
 #include <vector>
+
 namespace plugin
 { 
 
@@ -45,3 +48,5 @@ namespace plugin
 
 	typedef function_plugin_base*(*plugin_constructor)();
 }
+
+#endif
