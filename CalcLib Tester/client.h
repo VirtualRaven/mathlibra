@@ -7,6 +7,8 @@
 #include "core/corax_virtual_machine.h"
 #include "core/core_math.h"
 #include "profiling.h"
+#include "plugins/plugin_loader.h"
+#include "plugins/functions_external_interface.h"
 #include "core/export_lib_version.h"
 #include "ptr_protect.h"
 #pragma comment(lib, "CalcLib.lib")

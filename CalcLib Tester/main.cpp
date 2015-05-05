@@ -3,6 +3,7 @@
 #include <cstring>
 
 #include "tests.h"
+
 /* TODO
 	Add function inpterpeting and execution DONE
 	Add varible interpeting and memmory system. DONE
@@ -109,6 +110,9 @@ int main(int argc, char* argv[])
 	functions.load(math_func::std_math_num_func);
 	functions.load(core_math::lib_core_math);
 	inter.setFunction(&functions);
+
+	auto my_manager = plugin::get_platform_specific_manager();
+	my_manager->loadPlugins(&functions);
 
 #if defined(CORAX_VM_EXEC)
 	CoraxVM::corax_program prgm;
