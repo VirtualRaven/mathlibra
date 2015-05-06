@@ -60,12 +60,13 @@ namespace parameter_package
 
 namespace function_helper
 {
-	//Breadth first function for displaying the syntax tree under the node
-	std::stack<node*> getArgs(node * n)
+	using tree::node_base;
+	//Breadth first function for displaying the syntax tree under the node_base
+	std::stack<tree::node_base*> getArgs(node_base * n)
 	{
-		node * current = n;
-		node * next = nullptr;
-		std::stack<node*> args;
+		node_base * current = n;
+		node_base * next = nullptr;
+		std::stack<node_base*> args;
 
 		while (current != nullptr)
 		{
@@ -101,9 +102,9 @@ namespace function_helper
 		return args;
 	}
 
-	template<typename T> T getData(node *n)
+	template<typename T> T getData(node_base *n)
 	{
-		if (n->data->type == mathNode::helper::enum_type<T>::TYPE)
+		if (n->data->type == mathnode::helper::enum_type<T>::TYPE)
 		{
 			return static_cast<T>(n->data);
 		}
@@ -112,7 +113,7 @@ namespace function_helper
 			throw core_math::coreMathOops("Wrong argument type");
 		}
 	}
-	template<> double getData<double>(node * n)
+	template<> double getData<double>(node_base * n)
 	{
 		return n->data->eval();
 	}
@@ -123,7 +124,7 @@ namespace function_helper
 		typename typedef double(*type)(argN...);
 	};
 
-	template< typename... argN> double forward(typename func_type<argN...>::type  func, node * n)
+	template< typename... argN> double forward(typename func_type<argN...>::type  func, node_base * n)
 	{
 		auto args = getArgs(n);
 		if (args.size() != sizeof...(argN))
@@ -137,14 +138,14 @@ namespace function_helper
 
 
 
-	template< typename arg0, typename arg1, typename... argN> auto fillPackage(std::stack<node*>& s) -> parameter_package::package<arg0, arg1, argN...>
+	template< typename arg0, typename arg1, typename... argN> auto fillPackage(std::stack<node_base*>& s) -> parameter_package::package<arg0, arg1, argN...>
 	{
 		auto tmp = getData<typename arg0>(s.top());
 		s.pop();
 		return parameter_package::package<arg0, arg1, argN...>(tmp, fillPackage<arg1, argN...>(s));
 
 	}
-	template< typename arg0> auto  fillPackage(std::stack<node*>& s) -> parameter_package::package<arg0>
+	template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> parameter_package::package<arg0>
 	{
 		auto tmp = getData<arg0>(s.top());
 		s.pop();

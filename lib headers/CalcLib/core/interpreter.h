@@ -7,12 +7,14 @@
 #include <stack>
 #include <vector>
 #include "build.h"
+#include "tree.h"
 #include "modules/functions.h"
 #include "interface/interpreter_interface.h"
 #include "corax_virtual_machine.h"
 
 using mathNode::number_type;
 using tree::rootNode;
+using tree::node;
 struct interpreterOops : public exception
 {
 	interpreterOops(std::string inf, bool isCritical);
