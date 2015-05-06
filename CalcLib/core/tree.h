@@ -3,11 +3,11 @@
 #include <iostream>
 #include "exception.h"
 #include "main.h"
-
+#include "tree_interface.h"
 
 namespace tree
 {
-	class node;
+	
 	class TreeStructOops : public exception
 	{
 	public:
@@ -15,54 +15,21 @@ namespace tree
 		const char* what();
 	};
 
-	enum tokenType
-	{
-		UNKNOWN = 0,
-		VARIABLE = 1,
-		FUNCTION = 2,
-		OPERATOR = 3,
-		VALUE = 4,
-		PARENTHESES = 5,
-
-		FUNCTION_TREE = 6,
-		DUMMY = 7
-
-	};
 
 
 
-	class nodeDataInterface
-	{
-	protected:
-		node * wrapperNode;
-	public:
-		friend  node * nodeDataInterface_wrapper_access(nodeDataInterface* node);
-		tokenType type;
-		//Is called every time the a root node want to make an operation on an tree
-		//By standard bind couses the node to synch their pointer to root the root with the pointer passed.
-		//Warning this behaviour must be implemented by the children of nodeDataInterface
-		virtual void bind(node * context);
-		virtual void destroy();
-		nodeDataInterface();
-		virtual ~nodeDataInterface();
-		virtual double eval()
-		{
-			return 0;
-		}
-
-	};
-
-	node * nodeDataInterface_wrapper_access(nodeDataInterface* node);
 
 
-	class node
+	node_base * nodeDataInterface_wrapper_access(nodeDataInterface* node);
+
+
+	class node : public  node_base
 	{
 	protected:
 		node * nodePtr1;
 		node * nodePtr2;
 	public:
 
-		nodeDataInterface* data;
 		void createSubNodes(nodeDataInterface* data1, nodeDataInterface* data2 = nullptr); // Creats one or two sub nodes
 #ifdef  STRUCTUAL_INTEGRITY_TEST
 		void integrityTest(int level = 0);

@@ -31,7 +31,7 @@ namespace math_func
 		bool is_general;
 		std::string name;
 		typedef number_type(*funcPtr)(number_type);
-		typedef number_type(*generalFuncPtr)(tree::node*);
+		typedef number_type(*generalFuncPtr)(tree::node_base*);
 		union
 		{
 			funcPtr ptr;
