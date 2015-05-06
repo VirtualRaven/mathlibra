@@ -69,9 +69,9 @@ namespace core_math
 	
 	struct breadth_traversal_unit
 	{
-		node * n;
+		tree::node_base * n;
 		int i;
-		breadth_traversal_unit(node * node, int index) : n(node), i(index) {}
+		breadth_traversal_unit(tree::node_base * node, int index) : n(node), i(index) {}
 	};
 	
 	
@@ -87,19 +87,19 @@ namespace core_math
 		return nPr(x, y) / factorial(y);
 	}
 
-	double nPr_wrapper(node * n)
+	double nPr_wrapper(tree::node_base * n)
 	{
 		return function_helper::forward<double, double>(nPr, n);
 	}
 
-	double nCr_wrapper(node *n)
+	double nCr_wrapper(tree::node_base *n)
 	{
 		
 		return function_helper::forward<double, double>(nCr, n);
 		
 	}
 	
-	double _d_displayTree(node * n)
+	double _d_displayTree(tree::node_base * n)
 	{
 		
 
@@ -197,8 +197,8 @@ namespace core_math
 	{
 		math_func::m_function("frac", static_cast<double(*)(double)>(frac)),
 		math_func::m_function("factorial", static_cast<double(*)(double)>(factorial)),
-		math_func::m_function("displayTree", static_cast<double(*)(node*)>(_d_displayTree)),
-		math_func::m_function("nPr", static_cast<double(*)(node*)>(nPr_wrapper)),
-		math_func::m_function("nCr", static_cast<double(*)(node*)>(nCr_wrapper))
+		math_func::m_function("displayTree", static_cast<double(*)(tree::node_base*)>(_d_displayTree)),
+		math_func::m_function("nPr", static_cast<double(*)(tree::node_base*)>(nPr_wrapper)),
+		math_func::m_function("nCr", static_cast<double(*)(tree::node_base*)>(nCr_wrapper))
 	};
 };
