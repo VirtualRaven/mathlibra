@@ -1,4 +1,5 @@
 #include "mathNode.h"
+#include "tree.h"
 namespace mathNode
 {
         nodeOops::nodeOops(std::string inf, bool isCritical): exception(inf,isCritical){}
@@ -16,7 +17,7 @@ namespace mathNode
 		{
 			type = tree::UNKNOWN;
 		}
-		void mathExpressionNode::bind(node * context)
+		void mathExpressionNode::bind(node_base * context)
 		{
 			wrapperNode = context;
 		}
@@ -199,7 +200,7 @@ namespace mathNode
 			{
 				std::cerr << "Tree not correct, func type should have an empty second sub node";
 			}
-			return this->func(static_cast<node*>(this->wrapperNode));
+			return this->func(static_cast<node_base*>(this->wrapperNode));
 		}
 
 
