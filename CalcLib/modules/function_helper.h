@@ -60,6 +60,22 @@ namespace parameter_package
 
 namespace function_helper
 {
+	struct functionHelperOops : public exception
+	{
+		functionHelperOops(std::string inf)
+		{
+			this->info = inf;
+			this->_isCritical = false;
+
+		}
+
+		const char* what()
+		{
+			return "function_helper exception";
+		}
+
+	};
+
 	using tree::node_base;
 	//Breadth first function for displaying the syntax tree under the node_base
 	std::stack<tree::node_base*> getArgs(node_base * n)
@@ -110,7 +126,7 @@ namespace function_helper
 		}
 		else
 		{
-			throw core_math::coreMathOops("Wrong argument type");
+			throw function_helper::functionHelperOops("Wrong argument type");
 		}
 	}
 	template<> double getData<double>(node_base * n)
@@ -129,7 +145,7 @@ namespace function_helper
 		auto args = getArgs(n);
 		if (args.size() != sizeof...(argN))
 		{
-			throw core_math::coreMathOops("Function called with wrong number of argumets",false);
+			throw functionHelperOops("Function called with wrong number of argumets");
 		}
 
 		parameter_package::package<argN...> pack = fillPackage<argN...>(args);
