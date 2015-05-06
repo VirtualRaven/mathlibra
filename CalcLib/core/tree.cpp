@@ -11,7 +11,7 @@ namespace tree
 	}
 
 
-	void nodeDataInterface::bind(node * context)
+	void nodeDataInterface::bind(node_base * context)
 	{
 
 	}
@@ -34,7 +34,7 @@ namespace tree
 	{}
 
 
-	node * nodeDataInterface_wrapper_access(nodeDataInterface* node)
+	node_base * nodeDataInterface_wrapper_access(nodeDataInterface* node)
 	{
 		return node->wrapperNode;
 	}
@@ -109,21 +109,23 @@ namespace tree
 
 	node::node()
 		:nodePtr1(nullptr),
-		nodePtr2(nullptr),
-		data(nullptr)
-	{}
+		nodePtr2(nullptr)
+		
+		{ data=nullptr; }
 
 	node::node(nodeDataInterface* val)
 		: nodePtr1(nullptr),
-		nodePtr2(nullptr),
-		data(val)
-	{}
+		nodePtr2(nullptr)
+	{
+		data = val;
+	}
 
 	node::node(node&& other) :
 		nodePtr1(other.nodePtr1),
-		nodePtr2(other.nodePtr2),
-		data(other.data)
+		nodePtr2(other.nodePtr2)
+		
 	{
+		data = other.data;
 		other.nodePtr1 = nullptr;
 		other.nodePtr2 = nullptr;
 		other.data = nullptr;
@@ -141,9 +143,10 @@ namespace tree
 
 	node::node(const node&)
 		:nodePtr1(nullptr),
-		nodePtr2(nullptr),
-		data(nullptr)
+		nodePtr2(nullptr)
+		
 	{
+		data = nullptr;
 		throw TreeStructOops("bare node can not be copied",true);
 	}
 	node& node::operator=(const node&)

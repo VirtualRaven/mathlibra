@@ -84,6 +84,7 @@ set /p t= &lt; "$(ProjectDir)lib_git_version.tmp"
     <ClInclude Include="core\profiling.h" />
     <ClInclude Include="core\tokens.h" />
     <ClInclude Include="core\tree.h" />
+    <ClInclude Include="core\tree_interface.h" />
     <ClInclude Include="exception.h" />
     <ClInclude Include="interface\CoraxVM_interface.h" />
     <ClInclude Include="interface\interface.h" />

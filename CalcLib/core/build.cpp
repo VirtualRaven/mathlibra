@@ -159,7 +159,8 @@ bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)
 			{
 				tgt->type = tree::DUMMY;
 			}
-			nodeDataInterface_wrapper_access(tgt)->createSubNodes(mathNode1, mathNode2);
+			auto tmp = static_cast<node*>(nodeDataInterface_wrapper_access(tgt));
+			tmp->createSubNodes(mathNode1, mathNode2);
 			if( !buildSubNodes(mathNode1,node1) || 	!buildSubNodes(mathNode2,node2))
 			{
 				return false;
@@ -207,7 +208,9 @@ bool _function_build(mathNode::mathExpressionNode_func * tgt, buildVector vec)
 	}
 
 	node1.vecOffset = result;
-	nodeDataInterface_wrapper_access(tgt)->createSubNodes(mathNode1,nullptr);
+	auto tmp = static_cast<node*>(nodeDataInterface_wrapper_access(tgt));
+
+	tmp->createSubNodes(mathNode1,nullptr);
 	if (!buildSubNodes(mathNode1, node1))
 	{
 		return false;
@@ -255,7 +258,8 @@ bool _function_build_tree(mathNode::mathExpressionNode_func_tree * tgt, buildVec
 	}
 
 	node1.vecOffset = result;
-	nodeDataInterface_wrapper_access(tgt)->createSubNodes(mathNode1, nullptr);
+	auto tmp = static_cast<node*>(nodeDataInterface_wrapper_access(tgt));
+	tmp->createSubNodes(mathNode1, nullptr);
 	if (!buildSubNodes(mathNode1, node1))
 	{
 		return false;

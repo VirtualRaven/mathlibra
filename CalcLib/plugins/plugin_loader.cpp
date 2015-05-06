@@ -50,7 +50,7 @@ void plugin::plugin_manager::loadPlugins(math_func::function_interface*  f_inter
  {
 	 //Windows specific functions
 	 typedef HINSTANCE DLL;
-	 typedef LPCTSTR plugin_name_container;
+	 typedef std::string plugin_name_container;
 	 std::vector<DLL> dlls;
 	 std::vector<plugin_name_container> plugin_names;
 	 void get_plugin_names();
@@ -89,10 +89,11 @@ void plugin::plugin_manager::loadPlugins(math_func::function_interface*  f_inter
  
 void windows_plugin_manager::load_dll(windows_plugin_manager::plugin_name_container container)
  {
-	 
-	 DLL newDll = LoadLibrary(container);
-	 if (!newDll)
+	
+	 DLL newDll = LoadLibrary( std::string(std::string(".//plugins//") + container).c_str());
+	 if (newDll == NULL)
 	 {
+		
 		 throw plugin::pluginManagerOops("Failed to load plugin");
 	 }
 	 else

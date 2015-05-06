@@ -108,6 +108,9 @@
     <ClInclude Include="plugins\plugin_loader.h">
       <Filter>Header Files\plugin</Filter>
     </ClInclude>
+    <ClInclude Include="core\tree_interface.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="modules\functions.cpp">
