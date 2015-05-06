@@ -1,3 +1,5 @@
+#ifndef TREE_INTERFACE_INCLUDED
+#define TREE_INTERFACE_INCLUDED
 namespace tree
 {
 	class node_base;
@@ -45,3 +47,5 @@ namespace tree
 
 	};
 }
+
+#endif
