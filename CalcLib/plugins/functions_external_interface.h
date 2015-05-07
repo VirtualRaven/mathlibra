@@ -41,12 +41,7 @@ namespace plugin
 		virtual const char * plugin_name() = 0;
 	};
 
-	struct pluginOops : public exception
-	{
-		pluginOops(function_plugin_base* plugin, std::string inf);
-		const char* what();
-	};
-
+	
 	typedef function_plugin_base*(*plugin_constructor)();
 }
 
