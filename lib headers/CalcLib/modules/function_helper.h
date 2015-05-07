@@ -102,7 +102,7 @@ namespace function_helper
 		}
 		catch (exception& e)
 		{
-			n->raiseException(e.info.c_str());
+			n->raiseException(e.desc().c_str());
 		}
 		catch (...)
 		{
