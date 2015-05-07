@@ -37,6 +37,8 @@ namespace tree
 #endif
 		node * sub1();
 		node * sub2();
+		std::stack<tree::node_base*> getArgs();
+		void raiseException(const char * inf);
 		void deleteSubNodes();
 		node();
 		node(nodeDataInterface* val);
