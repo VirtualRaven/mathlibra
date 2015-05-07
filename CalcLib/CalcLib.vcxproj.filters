@@ -60,9 +60,6 @@
     <ClInclude Include="core\corax_virtual_machine.h">
       <Filter>Header Files\core</Filter>
     </ClInclude>
-    <ClInclude Include="core\core_math.h">
-      <Filter>Header Files\core</Filter>
-    </ClInclude>
     <ClInclude Include="core\interpreter.h">
       <Filter>Header Files\core</Filter>
     </ClInclude>
@@ -129,9 +126,6 @@
       <Filter>Source Files\core</Filter>
     </ClCompile>
     <ClCompile Include="core\corax_virtual_machine.cpp">
-      <Filter>Source Files\core</Filter>
-    </ClCompile>
-    <ClCompile Include="core\core_math.cpp">
       <Filter>Source Files\core</Filter>
     </ClCompile>
     <ClCompile Include="core\interface.cpp">

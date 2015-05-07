@@ -26,7 +26,7 @@ void test::profileInterpreter()
 		functions.load(math_func::std_math_trig_func); // Load std_math_trig_funct into function unit
 		functions.load(math_func::std_math_func);
 		functions.load(math_func::std_math_num_func);
-		functions.load(core_math::lib_core_math);
+		
 		inter.setFunction(&functions);
 		const unsigned int test_lenght = 10000;
 		std::cout << "Running test\n";
@@ -72,7 +72,7 @@ void test::profileInterpreterVM()
 		functions.load(math_func::std_math_trig_func); // Load std_math_trig_funct into function unit
 		functions.load(math_func::std_math_func);
 		functions.load(math_func::std_math_num_func);
-		functions.load(core_math::lib_core_math);
+		
 		inter.setFunction(&functions);
 
 		const unsigned int test_lenght = 10000;
@@ -128,7 +128,7 @@ double test::argEvaluation()
 		functions.load(math_func::std_math_trig_func); // Load std_math_trig_funct into function unit
 		functions.load(math_func::std_math_func);
 		functions.load(math_func::std_math_num_func);
-		functions.load(core_math::lib_core_math);
+		
 		inter.setFunction(&functions);
 		std::string exr = "x=(sqrt(sqrt(5*5)^2)*100)/5*(sin(PI)^2+cos(PI)^2)";
 		inter.set(exr.c_str(), exr.size());

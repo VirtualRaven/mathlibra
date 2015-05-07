@@ -77,7 +77,6 @@ set /p t= &lt; "$(ProjectDir)lib_git_version.tmp"
   <ItemGroup>
     <ClInclude Include="core\build.h" />
     <ClInclude Include="core\corax_virtual_machine.h" />
-    <ClInclude Include="core\core_math.h" />
     <ClInclude Include="core\export_lib_version.h" />
     <ClInclude Include="core\interpreter.h" />
     <ClInclude Include="core\mathNode.h" />
@@ -103,7 +102,6 @@ set /p t= &lt; "$(ProjectDir)lib_git_version.tmp"
   <ItemGroup>
     <ClCompile Include="core\build.cpp" />
     <ClCompile Include="core\corax_virtual_machine.cpp" />
-    <ClCompile Include="core\core_math.cpp" />
     <ClCompile Include="core\interface.cpp" />
     <ClCompile Include="core\interpreter.cpp" />
     <ClCompile Include="core\mathNode.cpp" />
