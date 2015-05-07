@@ -302,32 +302,51 @@ namespace tree
 			y(_y)
 		{}
 	};
-	/*
-	void display_tree(rootNode tree)
-	{
-	typedef std::vector<PtrPair> levelVec;
-	std::vector<levelVec> treeVec;
-	levelVec level1Vec;
-	level1Vec.push_back(PtrPair(tree.sub1(), tree.sub2()));
-	treeVec.push_back(level1Vec);
 
-	do
-	{
-	levelVec currentVec = treeVec.back();
-	levelVec nextVec;
-	for (int i = 0; i < currentVec.size(); i++)
-	{
 
-	PtrPair xy(currentVec[i].x->sub1,currentVec[i].y->sub2);
-	if (currentVec[i].x)
-	{
 
+	void node::raiseException(const char* inf)
+	{
+		throw TreeStructOops(inf, false);
 	}
-	nextVec.push_back(xy);
-	}
-	treeVec.push_back(nextVec);
-	}
+	//Breadth first function for displaying the syntax tree under the node_base
+	std::stack<tree::node_base*> node::getArgs()
+	{
+		node_base * current = this;
+		node_base * next = nullptr;
+		std::stack<node_base*> args;
 
+		while (current != nullptr)
+		{
+			//Check second branch 
+			if (current->sub2() != nullptr)
+			{
+				if (current->sub2()->data->type == tree::DUMMY)
+				{
+					next = current->sub2();
+				}
+				else
+				{
+					args.push(current->sub2());
+				}
+			}
 
-	}*/
+			//Check first branch
+			if (current->sub1() != nullptr)
+			{
+				if (current->sub1()->data->type == tree::DUMMY)
+				{
+					next = current->sub1();
+				}
+				else
+				{
+					args.push(current->sub1());
+				}
+			}
+
+			current = next;
+			next = nullptr;
+		}
+		return args;
+	}
 }

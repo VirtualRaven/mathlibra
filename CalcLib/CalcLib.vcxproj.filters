@@ -51,9 +51,6 @@
     <ClInclude Include="stdErr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="thread_pool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="core\build.h">
       <Filter>Header Files\core</Filter>
     </ClInclude>
@@ -151,9 +148,6 @@
     </ClCompile>
     <ClCompile Include="core\version.cpp">
       <Filter>Source Files\core</Filter>
-    </ClCompile>
-    <ClCompile Include="plugins\functions_external_interface.cpp">
-      <Filter>Source Files\plugin</Filter>
     </ClCompile>
     <ClCompile Include="plugins\plugin_loader.cpp">
       <Filter>Source Files\plugin</Filter>
