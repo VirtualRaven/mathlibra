@@ -5,8 +5,7 @@
 #include <iostream>
 #include "exception.h"
 #include "main.h"
-#include "core/tree.h"
-
+#include "core/tree_interface.h"
 namespace test
 {
 	bool function_module_test1();
