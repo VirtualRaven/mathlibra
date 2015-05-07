@@ -5,9 +5,8 @@
 #include <iostream>
 #include "exception.h"
 #include "main.h"
-#include "core/tree.h"
 
-
+#include "core/tree_interface.h"
 namespace test
 {
 	bool function_module_test1();
@@ -31,7 +30,7 @@ namespace math_func
 		bool is_general;
 		std::string name;
 		typedef number_type(*funcPtr)(number_type);
-		typedef number_type(*generalFuncPtr)(tree::node*);
+		typedef number_type(*generalFuncPtr)(tree::node_base*);
 		union
 		{
 			funcPtr ptr;

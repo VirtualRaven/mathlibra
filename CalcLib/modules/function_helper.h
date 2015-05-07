@@ -1,3 +1,5 @@
+#ifndef FUNCTION_HELPER_INCLUDED
+#define FUNCTION__HELPER_INCUDED
 #include <stack>
 #include "core/mathNode.h"
 
@@ -58,59 +60,23 @@ namespace parameter_package
 
 namespace function_helper
 {
-	//Breadth first function for displaying the syntax tree under the node
-	std::stack<node*> getArgs(node * n)
+	
+
+	using tree::node_base;
+	
+
+	template<typename T> T getData(node_base *n)
 	{
-		node * current = n;
-		node * next = nullptr;
-		std::stack<node*> args;
-
-		while (current != nullptr)
-		{
-			//Check second branch 
-			if (current->sub2() != nullptr)
-			{
-				if (current->sub2()->data->type == tree::DUMMY)
-				{
-					next = current->sub2();
-				}
-				else
-				{
-					args.push(current->sub2());
-				}
-			}
-
-			//Check first branch
-			if (current->sub1() != nullptr)
-			{
-				if (current->sub1()->data->type == tree::DUMMY)
-				{
-					next = current->sub1();
-				}
-				else
-				{
-					args.push(current->sub1());
-				}
-			}
-
-			current = next;
-			next = nullptr;
-		}
-		return args;
-	}
-
-	template<typename T> T getData(node *n)
-	{
-		if (n->data->type == mathNode::helper::enum_type<T>::TYPE)
+		if (n->data->type == mathnode::helper::enum_type<T>::TYPE)
 		{
 			return static_cast<T>(n->data);
 		}
 		else
 		{
-			throw core_math::coreMathOops("Wrong argument type");
+			n->raiseException("Wrong argument type");
 		}
 	}
-	template<> double getData<double>(node * n)
+	template<> double getData<double>(node_base * n)
 	{
 		return n->data->eval();
 	}
@@ -121,28 +87,40 @@ namespace function_helper
 		typename typedef double(*type)(argN...);
 	};
 
-	template< typename... argN> double forward(typename func_type<argN...>::type  func, node * n)
+	template< typename... argN> double forward(typename func_type<argN...>::type  func, node_base * n)
 	{
-		auto args = getArgs(n);
+		auto args = n->getArgs();
 		if (args.size() != sizeof...(argN))
 		{
-			throw core_math::coreMathOops("Function called with wrong number of argumets",false);
+			n->raiseException("Function called with wrong number of argumets");
 		}
 
 		parameter_package::package<argN...> pack = fillPackage<argN...>(args);
-		return parameter_package::package_forward<double, typename func_type<argN...>::type>(func, pack);
+		try
+		{
+			return parameter_package::package_forward<double, typename func_type<argN...>::type>(func, pack);
+		}
+		catch (exception& e)
+		{
+			n->raiseException(e.info.c_str());
+		}
+		catch (...)
+		{
+			n->raiseException("Unknown exception occured in plugin function");
+		}
+		
 	}
 
 
 
-	template< typename arg0, typename arg1, typename... argN> auto fillPackage(std::stack<node*>& s) -> parameter_package::package<arg0, arg1, argN...>
+	template< typename arg0, typename arg1, typename... argN> auto fillPackage(std::stack<node_base*>& s) -> parameter_package::package<arg0, arg1, argN...>
 	{
 		auto tmp = getData<typename arg0>(s.top());
 		s.pop();
 		return parameter_package::package<arg0, arg1, argN...>(tmp, fillPackage<arg1, argN...>(s));
 
 	}
-	template< typename arg0> auto  fillPackage(std::stack<node*>& s) -> parameter_package::package<arg0>
+	template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> parameter_package::package<arg0>
 	{
 		auto tmp = getData<arg0>(s.top());
 		s.pop();
@@ -150,3 +128,5 @@ namespace function_helper
 	};
 
 }
+
+#endif

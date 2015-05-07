@@ -1,12 +1,12 @@
 #ifndef MATHNODE_H_INCLUDED
 #define MATHNODE_H_INCLUDED
-#include "tree.h"
+#include "tree_interface.h"
 #include "modules/memory.h"
 #include "modules/operators.h"
 #include "main.h"
 struct buildVector;
 struct variableToken;
-using tree::node;
+using tree::node_base;
 using tree::nodeDataInterface;
 
 namespace mathNode
@@ -26,7 +26,7 @@ typedef double number_type;
 	{
 	public:
 		mathExpressionNode();
-		void bind(node * context);
+		void bind(node_base * context);
 		void destroy();
 	};
 
@@ -97,8 +97,8 @@ class mathExpressionNode_opr;
 	class mathExpressionNode_func_tree : public mathExpressionNode
 	{
 	public:
-		number_type(*func)(tree::node*);
-		typedef number_type(*funcPtr)(tree::node*);
+		number_type(*func)(tree::node_base*);
+		typedef number_type(*funcPtr)(tree::node_base*);
 		mathExpressionNode_func_tree();
 		mathExpressionNode_func_tree(funcPtr operation);
 		number_type eval();

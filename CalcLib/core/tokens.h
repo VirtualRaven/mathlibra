@@ -2,6 +2,7 @@
 #define TOKENS_H_INCLUDED
 
 #include "mathNode.h"
+#include "tree.h"
 #include "modules/operators.h"
 #include "main.h"
 using mathNode::number_type;
@@ -75,7 +76,7 @@ struct funcToken : public baseToken
 {
 
 	typedef number_type(*funcPtr)(number_type);
-	typedef number_type(*generalFuncPtr)(tree::node*);
+	typedef number_type(*generalFuncPtr)(tree::node_base*);
 	union
 	{
 		funcPtr ptr;
