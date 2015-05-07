@@ -60,63 +60,10 @@ namespace parameter_package
 
 namespace function_helper
 {
-	struct functionHelperOops : public exception
-	{
-		functionHelperOops(std::string inf)
-		{
-			this->info = inf;
-			this->_isCritical = false;
-
-		}
-
-		const char* what()
-		{
-			return "function_helper exception";
-		}
-
-	};
+	
 
 	using tree::node_base;
-	//Breadth first function for displaying the syntax tree under the node_base
-	std::stack<tree::node_base*> getArgs(node_base * n)
-	{
-		node_base * current = n;
-		node_base * next = nullptr;
-		std::stack<node_base*> args;
-
-		while (current != nullptr)
-		{
-			//Check second branch 
-			if (current->sub2() != nullptr)
-			{
-				if (current->sub2()->data->type == tree::DUMMY)
-				{
-					next = current->sub2();
-				}
-				else
-				{
-					args.push(current->sub2());
-				}
-			}
-
-			//Check first branch
-			if (current->sub1() != nullptr)
-			{
-				if (current->sub1()->data->type == tree::DUMMY)
-				{
-					next = current->sub1();
-				}
-				else
-				{
-					args.push(current->sub1());
-				}
-			}
-
-			current = next;
-			next = nullptr;
-		}
-		return args;
-	}
+	
 
 	template<typename T> T getData(node_base *n)
 	{
@@ -126,7 +73,7 @@ namespace function_helper
 		}
 		else
 		{
-			throw function_helper::functionHelperOops("Wrong argument type");
+			n->raiseException("Wrong argument type");
 		}
 	}
 	template<> double getData<double>(node_base * n)
@@ -142,14 +89,26 @@ namespace function_helper
 
 	template< typename... argN> double forward(typename func_type<argN...>::type  func, node_base * n)
 	{
-		auto args = getArgs(n);
+		auto args = n->getArgs();
 		if (args.size() != sizeof...(argN))
 		{
-			throw functionHelperOops("Function called with wrong number of argumets");
+			n->raiseException("Function called with wrong number of argumets");
 		}
 
 		parameter_package::package<argN...> pack = fillPackage<argN...>(args);
-		return parameter_package::package_forward<double, typename func_type<argN...>::type>(func, pack);
+		try
+		{
+			return parameter_package::package_forward<double, typename func_type<argN...>::type>(func, pack);
+		}
+		catch (exception& e)
+		{
+			n->raiseException(e.desc().c_str());
+		}
+		catch (...)
+		{
+			n->raiseException("Unknown exception occured in plugin function");
+		}
+		
 	}
 
 
