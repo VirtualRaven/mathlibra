@@ -25,7 +25,6 @@ void test::profileInterpreter(std::string& exr)
 		functions.load(math_func::std_math_trig_func); // Load std_math_trig_funct into function unit
 		functions.load(math_func::std_math_func);
 		functions.load(math_func::std_math_num_func);
-		functions.load(core_math::lib_core_math);
 		inter.setFunction(&functions);
 		const unsigned int test_lenght = 10000;
 		std::cout << "Running test\n";
@@ -70,7 +69,7 @@ void test::profileInterpreterVM(std::string& exr)
 		functions.load(math_func::std_math_trig_func); // Load std_math_trig_funct into function unit
 		functions.load(math_func::std_math_func);
 		functions.load(math_func::std_math_num_func);
-		functions.load(core_math::lib_core_math);
+		
 		inter.setFunction(&functions);
 
 		const unsigned int test_lenght = 10000;
