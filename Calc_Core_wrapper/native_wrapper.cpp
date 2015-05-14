@@ -4,14 +4,14 @@
 namespace native
 {
 	const char * CoreVersion = LIB_VERSION;
-	core_native_wrapper::core_native_wrapper()
+	core_native_wrapper::core_native_wrapper() : manager(plugin::get_platform_specific_manager())
 	{
+		
 		//Load functions into the function container
 		this->functions.load(math_func::std_math_func);
 		this->functions.load(math_func::std_math_num_func);
 		this->functions.load(math_func::std_math_trig_func);
-		this->functions.load(core_math::lib_core_math);
-
+		
 		//Load the function container into interpreter
 		this->inter.setFunction(&this->functions);
 
@@ -21,7 +21,11 @@ namespace native
 		this->inter.setMemory(&this->mem);
 
 	}
-
+	core_native_wrapper::~core_native_wrapper()
+	{
+		this->manager->~plugin_manager();
+		delete this->manager;
+	}
 	void core_native_wrapper::set_arg(std::string str)
 	{
 
@@ -170,7 +174,21 @@ namespace native
 		}
 	}
 
-	
+	void core_native_wrapper::enablePlugins()
+	{
+		try
+		{
+			this->manager->loadPlugins(&this->functions);
+		}
+		catch (exception& e)
+		{
+			this->ex_inf.type = e.what();
+			this->ex_inf.desc = e.desc();
+			this->ex_inf.isCritical = e.critical();
+			this->exception_occurred = true;
+			return;
+		}
+	}
 	
 };
 

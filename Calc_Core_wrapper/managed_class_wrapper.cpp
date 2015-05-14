@@ -18,7 +18,6 @@ namespace calculator
 		if (this->wrp->exceptionOccured())
 		{
 			native::wrapper_exception_info tmp_exec = this->wrp->get_exception_info();
-
 			String^ type = msclr::interop::marshal_as<String^>(tmp_exec.type);
 			String^ desc = msclr::interop::marshal_as<String^>(tmp_exec.desc);
 			throw gcnew calculator::calc_engine_exception(desc,type,tmp_exec.isCritical);
@@ -32,6 +31,7 @@ namespace calculator
 	}
 	calc_engine::~calc_engine()
 	{
+		wrp->~core_native_wrapper();
 		delete wrp;
 		wrp = nullptr;
 	}
@@ -89,7 +89,11 @@ namespace calculator
 		this->wrp->clearVariables();
 		this->throwIfFailed();
 	}
-
+	void calc_engine::enablePlugins()
+	{
+		this->wrp->enablePlugins();
+		this->throwIfFailed();
+	}
 	
 	String^ calc_engine::get_Version()
 		{

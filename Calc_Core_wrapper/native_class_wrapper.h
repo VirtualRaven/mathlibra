@@ -15,12 +15,14 @@ namespace native
 		memory mem;
 		operators::operators_interface oper;
 		math_func::function_interface functions;
+		plugin::plugin_manager * manager;
 		bool exception_occurred;
 
 		wrapper_exception_info ex_inf;
 
 	public:
 		core_native_wrapper();
+		~core_native_wrapper();
 		void set_arg(std::string str);
 		bool interpret_arg();
 		double execute_arg();
@@ -34,7 +36,8 @@ namespace native
 		void createVariable(std::string name, double value);
 		void clearVariables();
 
-	
+		//Plugins
+		void enablePlugins();
 
 		
 	};
