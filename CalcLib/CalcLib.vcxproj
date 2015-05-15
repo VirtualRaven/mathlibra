@@ -73,6 +73,11 @@
 set /p t= &lt; "$(ProjectDir)lib_git_version.tmp"
  echo "%t%"  &gt;&gt;"$(ProjectDir)lib_git_version.h"  </Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>set /p t= &lt; "$(ProjectDir)lib_git_version.tmp"
+mkdir  "$(USERPROFILE)\Documents\build_bin\$(SolutionName)\%t%"
+xcopy /Y "$(TargetPath)" "$(USERPROFILE)\Documents\build_bin\$(SolutionName)\%t%"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="core\build.h" />
