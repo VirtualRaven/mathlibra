@@ -69,6 +69,18 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <PreBuildEvent>
+      <Command>
+setlocal &amp; echo| set /p = "#define GIT_SHA_COMMIT " &gt; "$(ProjectDir)git_version.h"
+"C:\Program Files (x86)\Git\cmd\git.exe" rev-parse HEAD &gt;  "$(ProjectDir)git_version.tmp"
+set /p t= &lt; "$(ProjectDir)git_version.tmp"
+ echo "%t%"  &gt;&gt;"$(ProjectDir)git_version.h"  </Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>set /p t= &lt; "$(ProjectDir)git_version.tmp"
+mkdir  "$(USERPROFILE)\Documents\build_bin\$(SolutionName)\"%t%
+xcopy /Y "$(TargetPath)" "$(USERPROFILE)\Documents\build_bin\$(SolutionName)\"%t%</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="client.h" />
