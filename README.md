@@ -9,7 +9,7 @@ C# Interface DLL
 
 * This wrapper class is further extended by the managed class with wrapped it in a C# compatible interface and takes care of exception handling such automatically to expose an easy interface to the end user.
 
-*Needs to be linked against the static core calculator library
+* Needs to be linked against the static core calculator library
 
 ###Setup ###
 This library is only tested for windows and support for other platforms is unknown. It requires support for managed c++ and c++11  to compile.
