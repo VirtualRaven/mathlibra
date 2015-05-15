@@ -18,10 +18,27 @@ Solution files for VS 2013 are included into the repo. These have build scripts 
 
 ### Contribution guidelines ###
 
-* Writing tests
-* Code review
-* Other guidelines
+
+
+Style
+Try to follow the overall code style of the project
+
+brackets are expanded in all contexts
+example
+
+Correct:
+if(statement)
+{
+   do_work();
+}
+
+Incorrect
+if(statement){
+ do_work();
+}
+
 
 ### Who do I talk to? ###
-owner
+
+Owner
 l dot rahmn [at] gmail dotcom
