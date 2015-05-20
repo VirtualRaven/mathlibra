@@ -17,7 +17,7 @@ namespace calculator
 	{
 		if (this->wrp->exceptionOccured())
 		{
-			native::wrapper_exception_info tmp_exec = this->wrp->get_exception_info();
+			interface::wrapper_exception_info tmp_exec = this->wrp->get_exception_info();
 			String^ type = msclr::interop::marshal_as<String^>(tmp_exec.type);
 			String^ desc = msclr::interop::marshal_as<String^>(tmp_exec.desc);
 			throw gcnew calculator::calc_engine_exception(desc,type,tmp_exec.isCritical);

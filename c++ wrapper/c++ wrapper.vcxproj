@@ -11,10 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{3E105F89-471C-4655-9748-B8948B9CFCD7}</ProjectGuid>
+    <ProjectGuid>{5ED37EDE-CCC8-4BDF-ACFE-B6EFE804CA26}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Calc_Core_Wrapper</RootNamespace>
-    <ProjectName>C sharp wrapper</ProjectName>
+    <RootNamespace>cwrapper</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -22,7 +21,6 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <CLRSupport>true</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -30,7 +28,6 @@
     <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <CLRSupport>true</CLRSupport>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -44,42 +41,35 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)lib headers\CalcLib;$(SolutionDir);$(ProjectDir);$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib/debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)lib headers\CalcLib;$(SolutionDir);$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutiondDir)/lib/Debug/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)lib headers\CalcLib;$(SolutionDir);$(ProjectDir);$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib/release;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)lib headers\CalcLib;$(SolutionDir);$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)/lib/Release/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;CALC_CORE_WRAPPER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;CWRAPPER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <PreBuildEvent />
-    <PreBuildEvent>
-      <Command>setlocal &amp; echo| set /p = "#define GIT_SHA_COMMIT " &gt; "$(ProjectDir)git_version.h"
-"C:\Program Files (x86)\Git\cmd\git.exe" rev-parse HEAD &gt;  "$(ProjectDir)git_version.tmp"
-set /p t= &lt; "$(ProjectDir)git_version.tmp"
- echo "%t%"  &gt;&gt;"$(ProjectDir)git_version.h"  </Command>
-    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;CALC_CORE_WRAPPER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;CWRAPPER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -88,37 +78,33 @@ set /p t= &lt; "$(ProjectDir)git_version.tmp"
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
-    <PreBuildEvent />
-    <PreBuildEvent>
-      <Command>setlocal &amp; echo| set /p = "#define GIT_SHA_COMMIT " &gt; "$(ProjectDir)git_version.h"
-"C:\Program Files (x86)\Git\cmd\git.exe" rev-parse HEAD &gt;  "$(ProjectDir)git_version.tmp"
-set /p t= &lt; "$(ProjectDir)git_version.tmp"
- echo "%t%"  &gt;&gt;"$(ProjectDir)git_version.h"  </Command>
-    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Calc_Core_Wrapper.rc" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClInclude Include="..\Core_Includes.h" />
+    <ClInclude Include="..\main_wrapper.h" />
     <ClInclude Include="..\native_class_wrapper.h" />
-    <ClInclude Include="Calc_Core_wrapper.h" />
-    <ClInclude Include="Core_Includes.h" />
-    <ClInclude Include="git_version.h" />
-    <ClInclude Include="managed_class_wrapper.h" />
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="export.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="version.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\native_wrapper.cpp" />
-    <ClCompile Include="Calc_Core_Wrapper.cpp" />
-    <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="managed_class_wrapper.cpp" />
-    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="c++ wrapper.cpp" />
+    <ClCompile Include="dllmain.cpp">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

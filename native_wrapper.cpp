@@ -87,10 +87,10 @@ namespace native
 		}
 	}
 
-	wrapper_exception_info core_native_wrapper::get_exception_info()
+	interface::wrapper_exception_info core_native_wrapper::get_exception_info()
 	{
 		this->exception_occurred = false;
-		wrapper_exception_info tmp = ex_inf;
+		interface::wrapper_exception_info tmp = ex_inf;
 		ex_inf.desc.clear();
 		ex_inf.desc.clear();
 		return tmp;

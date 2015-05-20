@@ -1,6 +1,6 @@
 #ifndef CORE_INCLUDED
 #define CORE_INCLUDED
-#include "stdafx.h"
+
 #include "core/interpreter.h" //Class containing the interpreter object
 #include "core/export_lib_version.h"
 #include "modules/functions.h" //The function container for interpreter
