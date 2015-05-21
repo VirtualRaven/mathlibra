@@ -1,5 +1,8 @@
 #include"plugins/plugin_loader.h"
+
+#ifdef WINDOWS
 #include <Windows.h>
+#endif //WINDOWS
 
 plugin::pluginManagerOops::pluginManagerOops(std::string inf)
 {
@@ -15,7 +18,7 @@ const char* plugin::pluginManagerOops::what()
 void plugin::plugin_manager::loadPlugins(math_func::function_interface*  f_interface)
 {
 	this->nativeLoadPlugin();
-	for each (plugin::function_plugin_base * current_plugin in this->loaded_plugins)
+	for(plugin::function_plugin_base * current_plugin : this->loaded_plugins)
 	{
 		plugin::plugin_init(current_plugin, f_interface);
 	}
@@ -24,7 +27,7 @@ void plugin::plugin_manager::loadPlugins(math_func::function_interface*  f_inter
 
  plugin::plugin_manager::~plugin_manager()
 {
-	for each (plugin::function_plugin_base * plugin in this->loaded_plugins)
+	for(plugin::function_plugin_base * plugin : this->loaded_plugins)
 	{
 		delete plugin;
 		plugin = nullptr;
@@ -36,14 +39,14 @@ void plugin::plugin_manager::loadPlugins(math_func::function_interface*  f_inter
 	
 	 std::vector<math_func::m_function> __funcs;
 	 __funcs.reserve(func->functions.size());
-	 for each (plugin::function func in func->functions)
+	 for(plugin::function func_tmp : func->functions)
 	 {
-		 __funcs.push_back(math_func::m_function(func.name, func.ptr));
+		 __funcs.push_back(math_func::m_function(func_tmp.name, func_tmp.ptr));
 	 }
 	 function_unit->load(__funcs);
  }
 
-
+#ifdef WINDOWS
  //Following code is windows specific
  //Plugin manager for windows
  class windows_plugin_manager : public plugin::plugin_manager
@@ -135,7 +138,17 @@ void windows_plugin_manager::load_dll(windows_plugin_manager::plugin_name_contai
 	 this->unload_all_dlls();
  }
 
+#endif //WINDOWS
+
+
 plugin::plugin_manager*  plugin::get_platform_specific_manager()
  {
+#ifdef WINDOWS	 
 	 return new windows_plugin_manager;
+#else
+return nullptr;
+#endif	 
  }
+ 
+ 
+ 

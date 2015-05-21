@@ -65,7 +65,6 @@ operators::interpreter_operator::interpreter_operator(assigmentPtr assigne, char
 
 operators::interpreter_operator::interpreter_operator():
  oper(nullptr),
- assign(nullptr),
  operChar(0),
  baseWheight(0),
  operType(NOT_SET)

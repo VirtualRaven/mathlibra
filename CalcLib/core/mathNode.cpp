@@ -77,8 +77,10 @@ namespace mathNode
 
 		mathExpressionNode_variable::mathExpressionNode_variable(std::string var, memory* mem, bool b)
 		:mem(mem),
-		name(var),
-		_stack(b)
+		
+		_stack(b),
+		name(var)
+		
 
 		{
 			this->type = tree::VARIABLE;

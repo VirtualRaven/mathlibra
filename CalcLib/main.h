@@ -5,7 +5,7 @@
 #if EXEC_ENV == 1
 #define SYNTAX_TREE_EXEC
 #define EXEC_ENV_STRING "abstract syntax tree"
-#else if EXEC_ENV == 2
+#elif EXEC_ENV == 2
 #define CORAX_VM_EXEC
 #define EXEC_ENV_STRING "Corax virtual machine"
 #endif

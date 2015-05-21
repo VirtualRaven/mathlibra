@@ -15,10 +15,10 @@ namespace math_func
 	typedef double(*double_func)(double);
 
 
-	math_func::m_function::m_function(std::string name, funcPtr ptr) :name(name), ptr(ptr), is_general(false) {}
-	math_func::m_function::m_function(std::string name, generalFuncPtr ptr) : name(name), gptr(ptr), is_general(true) {}
+	math_func::m_function::m_function(std::string name, funcPtr ptr) :is_general(false),name(name), ptr(ptr) {}
+	math_func::m_function::m_function(std::string name, generalFuncPtr ptr) : is_general(true), name(name), gptr(ptr) {}
 	math_func::m_function::~m_function(){}
-	math_func::m_function::m_function() : name(), ptr(nullptr), is_general(false){}
+	math_func::m_function::m_function() :is_general(false), name(), ptr(nullptr){}
 
 
 
@@ -51,7 +51,7 @@ namespace math_func
 		{
 			if (cache.name == funcName)
 			{
-				return cache.ptr;
+				return reinterpret_cast<void*>(cache.ptr);
 			}
 			else
 			{
@@ -60,7 +60,7 @@ namespace math_func
 				{
 					if (funcs[i].name == funcName)
 					{
-						return funcs[i].ptr;
+						return reinterpret_cast<void*>(funcs[i].ptr);
 					}
 				}
 				return nullptr;
@@ -123,5 +123,5 @@ bool test::function_module_test1()
 	{
 		return false;
 	}
-
+	return false;
 }
