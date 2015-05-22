@@ -22,7 +22,7 @@ default: git $(LIB_NAME) client
 
 client: CFLAGS=$(SCXXF) 
 client:   $(SOURCE_FILES)  	
-	$(CC)   $(CFLAGS) $? -L . -l$(LIB_SHORT_NAME) -o$(EXECUTABLE).elf  
+	$(CC)   $(CFLAGS) $? -L . -l$(LIB_SHORT_NAME) -ldl -o$(EXECUTABLE).elf  
 
 git: 
 	echo "const char *GIT_SHA_COMMIT = \"$(shell git rev-parse HEAD)\";" > $(VERSION_FILE)
