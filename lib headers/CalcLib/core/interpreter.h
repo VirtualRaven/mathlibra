@@ -6,6 +6,7 @@
 #include <iostream>
 #include <stack>
 #include <vector>
+#include <cstring>
 #include "build.h"
 #include "tree.h"
 #include "modules/functions.h"
