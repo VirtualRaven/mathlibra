@@ -1,6 +1,7 @@
 #ifndef LIB_INTERFACE_INCLUED
 #define LIB_INTERFACE_INCLUED
 #include <vector>
+#include <string>
 namespace interface
 {
 
