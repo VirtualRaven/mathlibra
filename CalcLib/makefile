@@ -20,20 +20,21 @@ default: git  libary
 
 
 libary: CFLAGS=$(SCXXF) 
-libary:  $(CORE_FILES) $(SOURCE_FILES) $(INTERFACE_FILES) 		
-	$(CC) -shared  $(CFLAGS) $? -o$(LIBARY).so 
+libary:  $(SOURCE_FILES)  		
+	ar -cvq $(LIBARY).a   $?  
 
 git: 
 	echo "const char *GIT_SHA_COMMIT = \"$(shell git rev-parse HEAD)\";" > $(VERSION_FILE)
 
-.so: libary
+
 
 .cpp.o: 
 	@echo $*
-	$(CC) $(CFLAGS) -c  $*.cpp -o $*.o
+	$(CC) $(CFLAGS) -DLINUX -c  $*.cpp  -o $*.o
+
 
 clean:
-	-rm $(LIBARY).so
+	-rm $(LIBARY).a
 	-rm $(SOURCE_FILES)
 	-rm $(VERSION_FILE)
 
