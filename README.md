@@ -3,7 +3,9 @@
 
 ### What is this repository for? ###
 
-C# Interface DLL 
+This repository contains to main project
+C# Wrapper Shared library
+C++ Wrapper Shared library
 
 * Provides an wrapper for the native calculator library exposing an mostly stable api. It provides all the functions from core in the form of one single class. This class manages all other helper classes from the core and takes care of the library initializations. 
 
