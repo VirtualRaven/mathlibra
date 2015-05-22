@@ -10,7 +10,9 @@
 #include "plugins/plugin_loader.h"
 #include "core/export_lib_version.h"
 #include "ptr_protect.h"
+#ifdef WINDOWS
 #pragma comment(lib, "CalcLib.lib")
+#endif //WINDOWS
 #include "stdErr.h"
 
 #endif // CLIENT_H_INCLUDED

@@ -1,3 +1,4 @@
+
 #pragma once
 #include <utility>
 #include <chrono>
@@ -10,7 +11,7 @@ template<unsigned int TEST_LENGHT,typename func, typename... argN> double func_p
 	start = std::chrono::high_resolution_clock::now();
 	for (unsigned int i = 0; i < TEST_LENGHT; i++)
 	{
-		function(std::forward<func>(args));
+		function(std::forward<func>(args...));
 	}
 	end = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> elapsed_seconds = end - start;

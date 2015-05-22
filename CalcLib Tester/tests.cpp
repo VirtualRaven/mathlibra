@@ -83,7 +83,7 @@ void test::profileInterpreterVM(std::string& exr)
 		prgm_builder = CoraxVM::Corax_program_builder_module(&inter2);
 
 		auto test1 = [&](){ return inter2.exec(); };
-		auto test2 = [&](){inter2.interpret(); };
+		//auto test2 = [&](){inter2.interpret(); };
 		auto test3 = [&](){ prgm_builder.create_program(&prgm); };
 		auto test4 = [&](){ runtime.run(&prgm); };
 
