@@ -1,5 +1,5 @@
 #ifndef FUNCTION_HELPER_INCLUDED
-#define FUNCTION__HELPER_INCUDED
+#define FUNCTION_HELPER_INCUDED
 #include <stack>
 #include "core/mathNode.h"
 
@@ -100,14 +100,16 @@ namespace function_helper
 		{
 			return parameter_package::package_forward<double, typename func_type<argN...>::type>(func, pack);
 		}
-		catch (exception& e)
+
+		catch (std::exception& e)
 		{
-			n->raiseException(e.desc().c_str());
+			n->raiseException(e.what());
 		}
 		catch (...)
 		{
 			n->raiseException("Unknown exception occured in plugin function");
 		}
+		return 0;
 		
 	}
 

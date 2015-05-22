@@ -5,7 +5,6 @@
 #include <iostream>
 #include "exception.h"
 #include "main.h"
-
 #include "core/tree_interface.h"
 namespace test
 {
