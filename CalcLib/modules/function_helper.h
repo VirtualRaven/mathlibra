@@ -84,9 +84,23 @@ namespace function_helper
 
 	template <typename... argN> struct func_type
 	{
-		typename typedef double(*type)(argN...);
+		 typedef double(*type)(argN...);
 	};
 
+	template< typename arg0, typename arg1, typename... argN> auto fillPackage(std::stack<node_base*>& s) -> parameter_package::package<arg0, arg1, argN...>
+	{
+		auto tmp = getData<typename arg0>(s.top());
+		s.pop();
+		return parameter_package::package<arg0, arg1, argN...>(tmp, fillPackage<arg1, argN...>(s));
+
+	}
+	template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> parameter_package::package<arg0>
+	{
+		auto tmp = getData<arg0>(s.top());
+		s.pop();
+		return parameter_package::package<arg0>(tmp);
+	};
+	
 	template< typename... argN> double forward(typename func_type<argN...>::type  func, node_base * n)
 	{
 		auto args = n->getArgs();
@@ -114,19 +128,7 @@ namespace function_helper
 
 
 
-	template< typename arg0, typename arg1, typename... argN> auto fillPackage(std::stack<node_base*>& s) -> parameter_package::package<arg0, arg1, argN...>
-	{
-		auto tmp = getData<typename arg0>(s.top());
-		s.pop();
-		return parameter_package::package<arg0, arg1, argN...>(tmp, fillPackage<arg1, argN...>(s));
-
-	}
-	template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> parameter_package::package<arg0>
-	{
-		auto tmp = getData<arg0>(s.top());
-		s.pop();
-		return parameter_package::package<arg0>(tmp);
-	};
+	
 
 }
 
