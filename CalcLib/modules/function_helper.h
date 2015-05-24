@@ -67,7 +67,7 @@ namespace function_helper
 
 	template<typename T> T getData(node_base *n)
 	{
-		if (n->data->type == mathnode::helper::enum_type<T>::TYPE)
+		if (n->data->type == mathNode::helper::enum_type<T>::TYPE)
 		{
 			return static_cast<T>(n->data);
 		}
