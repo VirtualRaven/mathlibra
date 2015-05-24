@@ -150,7 +150,7 @@ void windows_plugin_manager::load_dll(windows_plugin_manager::plugin_name_contai
 #ifdef LINUX
 class linux_plugin_manager : public plugin::plugin_manager
  {
-	 //Windows specific functions
+	 //Linux specific functions
 	 typedef void* Lib;
 	 typedef std::string plugin_name_container;
 	 std::vector<Lib> libs;
@@ -233,9 +233,13 @@ class linux_plugin_manager : public plugin::plugin_manager
 
 plugin::plugin_manager*  plugin::get_platform_specific_manager()
  {
-#ifdef WINDOWS	 
+
+#if defined(WINDOWS)	 
 	 return new windows_plugin_manager;
+#elif defined(LINUX)
+	return new linux_plugin_manager;
 #else
+#warning "No platform specific plugin manager available\n Plugins dissabled"
 return nullptr;
 #endif	 
  }

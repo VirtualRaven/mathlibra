@@ -30,7 +30,7 @@ git:
 
 .cpp.o: 
 	@echo $*
-	$(CC) $(CFLAGS) -DLINUX -c  $*.cpp  -o $*.o
+	$(CC) $(CFLAGS) -DLINUX=true -c  $*.cpp  -o $*.o
 
 
 clean:
