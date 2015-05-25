@@ -1,10 +1,11 @@
 # README #
 
 ### What is this repository for? ###
-Math core is the core static library for the calculator software which all other products are built upon.
-It provides the basic functionality of the calculator software. It is a framework for the calculator which implements core functions as as lexical analysis, abstract syntax tree construction and tree evaluation and exposes an plug-in api to extend functions 
+Math core is the core static library for the calculator software which all other products are built upon. It provides the basic functionality of the calculator software. It is a framework for the calculator which implements core functions as as lexical analysis, abstract syntax tree construction and tree evaluation and exposes an plug-in api to extend functions 
 
-Math core is further split into some submodules. 
+ 
+### Math core is further split into some submodules.###
+
 * Core, the most basic code. Implements the lexcial ananalysis, tree construction, tree evaluation, and defines data structures.
 * Modules, functionality as variables, runtime functions and operators are provided by the modules. These modules can be switched and serves as internal plug-ins
 * Plug-ins, To expose the functionality of the function module to other users the plug-in subsystem defines ways of loading external dynamic libraries. The plug-in subsystem is also responsible for plug-in meta-data and  version handling. 
@@ -31,6 +32,15 @@ Try to follow the overall code style of the project
 
 brackets are expanded in all context. After an if statement or function definition a newline is to be used. Do not add ad an opening bracket on the same line.
 When using brackets indent the code using one tab.
+
+```
+#!c++
+if(true)
+{
+do_work();
+}
+
+```
 
 ### Who do I talk to? ###
 
