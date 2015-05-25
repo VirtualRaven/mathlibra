@@ -5,9 +5,9 @@ Math core is the core static library for the calculator software which all other
 It provides the basic functionality of the calculator software. It is a framework for the calculator which implements core functions as as lexical analysis, abstract syntax tree construction and tree evaluation and exposes an plug-in api to extend functions 
 
 Math core is further split into some submodules. 
-#Core, the most basic code. Implements the lexcial ananalysis, tree construction, tree evaluation, and defines data structures.
-#Modules, functionality as variables, runtime functions and operators are provided by the modules. These modules can be switched and serves as internal plug-ins
-#Plug-ins, To expose the functionality of the function module to other users the plug-in subsystem defines ways of loading external dynamic libraries. The plug-in subsystem is also responsible for plug-in meta-data and  version handling. 
+* Core, the most basic code. Implements the lexcial ananalysis, tree construction, tree evaluation, and defines data structures.
+* Modules, functionality as variables, runtime functions and operators are provided by the modules. These modules can be switched and serves as internal plug-ins
+* Plug-ins, To expose the functionality of the function module to other users the plug-in subsystem defines ways of loading external dynamic libraries. The plug-in subsystem is also responsible for plug-in meta-data and  version handling. 
 
 
 ### How do I get set up? ###
