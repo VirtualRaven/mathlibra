@@ -31,16 +31,28 @@ Style
 Try to follow the overall code style of the project
 
 brackets are expanded in all context. After an if statement or function definition a newline is to be used. Do not add ad an opening bracket on the same line.
-When using brackets indent the code using one tab.
+When using brackets indent the code using one tab. 
 
+Example
+
+* Correct
 ```
 #!c++
 if(true)
 {
-do_work();
+   do_work();
 }
 
 ```
+
+* Incorrect
+```
+#!c++
+if(true){
+   do_work();
+}
+```
+
 
 ### Who do I talk to? ###
 
