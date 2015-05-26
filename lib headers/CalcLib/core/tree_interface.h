@@ -47,7 +47,7 @@ namespace tree
 		virtual node_base * sub2()=0;
 		virtual std::stack<tree::node_base*> getArgs() = 0;
 		virtual void raiseException(const char * inf)=0;
-		virtual ~node_base()=0;
+		
 	};
 }
 
