@@ -47,11 +47,11 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 			{
 				throw interpreterOops("Panic: Tokens subscript operator out of bounds", true);
 			}
-			mathNode::mathExpressionNode* topNode = parentInterpreter->tokens[parentInterpreter->startOperatorPos]->node(); //Create the top node out of the starting token
+			tree::nodeDataInterface* topNode = parentInterpreter->tokens[parentInterpreter->startOperatorPos]->node(); //Create the top node out of the starting token
 
 			root.set(topNode); // Put the node into the root of the tree
 			buildVector build(0, parentInterpreter->tokens.size(), parentInterpreter->startOperatorPos,&parentInterpreter->tokens); //Fill the build vector
-			if (!buildSubNodes(static_cast<mathNode::mathExpressionNode*>(root.data),build)) //Build the sub node acording to the build vector
+			if (!buildSubNodes(static_cast<tree::nodeDataInterface*>(root.data), build)) //Build the sub node acording to the build vector
 			{
 
 				root.deleteSubNodes();

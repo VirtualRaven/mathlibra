@@ -239,7 +239,7 @@ plugin::plugin_manager*  plugin::get_platform_specific_manager()
 #elif defined(LINUX)
 	return new linux_plugin_manager;
 #else
-#warning "No platform specific plugin manager available\n Plugins dissabled"
+#error "No platform specific plugin manager available\n Plugins dissabled"
 return nullptr;
 #endif	 
  }

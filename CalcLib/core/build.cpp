@@ -118,7 +118,7 @@ bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)
 				return false;
 			}
 
-			mathNode::mathExpressionNode* mathNode1;
+			tree::nodeDataInterface* mathNode1;
 			if(vec.vecPtr->operator[](result)->hasNode())
 			{
 				mathNode1 = vec.vecPtr->operator[](result)->node();
@@ -139,7 +139,7 @@ bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)
 				return false;
 			}
 
-			mathNode::mathExpressionNode* mathNode2;
+			tree::nodeDataInterface* mathNode2;
 
 			if (vec.vecPtr->operator[](result)->hasNode())
 			{
@@ -196,7 +196,7 @@ bool _function_build(mathNode::mathExpressionNode_func * tgt, buildVector vec)
 	{
 		return false;
 	}
-	mathNode::mathExpressionNode* mathNode1;
+	tree::nodeDataInterface* mathNode1;
 	if (vec.vecPtr->operator[](result)->hasNode())
 	{
 		mathNode1 = vec.vecPtr->operator[](result)->node();
@@ -246,7 +246,7 @@ bool _function_build_tree(mathNode::mathExpressionNode_func_tree * tgt, buildVec
 	{
 		return false;
 	}
-	mathNode::mathExpressionNode* mathNode1;
+	tree::nodeDataInterface* mathNode1;
 	if (vec.vecPtr->operator[](result)->hasNode())
 	{
 		mathNode1 = vec.vecPtr->operator[](result)->node();
@@ -271,7 +271,7 @@ bool _function_build_tree(mathNode::mathExpressionNode_func_tree * tgt, buildVec
 
 
 
-bool buildSubNodes(mathNode::mathExpressionNode * target, buildVector vec)
+bool buildSubNodes(tree::nodeDataInterface * target, buildVector vec)
 {
 
 	switch (target->type)

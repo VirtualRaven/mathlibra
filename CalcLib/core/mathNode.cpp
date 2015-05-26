@@ -13,51 +13,40 @@ namespace mathNode
 
 		
 
-		mathExpressionNode::mathExpressionNode()
-		{
-			type = tree::UNKNOWN;
-		}
 		
-		mathExpressionNode::~mathExpressionNode()
-		{
-			
-		}
 		
-		void mathExpressionNode::bind(node_base * context)
-		{
-			wrapperNode = context;
-		}
 
-		void mathExpressionNode::destroy() //Here goes nothing, fingers crossed
-		{
-			#ifdef SYNTAX_TREE_DEBUG_INFO
-				std::cerr << "Delete signal received, self destruct!\n";
-			#endif
-			delete this;
-		}
-		number_type mathExpressionNode::eval()
-		{
-			return 0;
-		}
-
-
+		
 
 
 		mathExpressionNode_val::mathExpressionNode_val()
-		:value(0)
 		{
+			this->value = 0;
 			this->type = tree::VALUE;
 		}
 
 		mathExpressionNode_val::mathExpressionNode_val(number_type val)
-		:value(val)
 		{
+			this->value = val;
 			this->type = tree::VALUE;
+		}
+		mathExpressionNode_val::~mathExpressionNode_val()
+		{
+
 		}
 		number_type mathExpressionNode_val::eval()
 		{
 			return value;
 		}
+		void  mathExpressionNode_val::bind(node_base * context)
+		{
+			this->wrapperNode = context;
+		}
+		void  mathExpressionNode_val::destroy()
+		{
+			delete this;
+		}
+		
 
 
 
@@ -83,16 +72,16 @@ namespace mathNode
                 return *this;
         }
 
+		mathExpressionNode_variable::~mathExpressionNode_variable()
+		{
 
+		}
 
 		mathExpressionNode_variable::mathExpressionNode_variable(std::string var, memory* mem, bool b)
-		:mem(mem),
-		
-		_stack(b),
-		name(var)
-		
-
 		{
+			this->mem = mem;
+			this->_stack = b;
+			this->name = var;
 			this->type = tree::VARIABLE;
 		}
 		number_type mathExpressionNode_variable::eval()
@@ -105,32 +94,42 @@ namespace mathNode
 		}
 
 
-
+		void mathExpressionNode_variable::bind(node_base* context)
+		{
+			wrapperNode = context;
+		}
+		void  mathExpressionNode_variable::destroy()
+		{
+			delete this;
+		}
 
 
 
 		mathExpressionNode_opr::mathExpressionNode_opr()
-		:operation(nullptr),
-		assignB(false)
 		{
+			this->operation =nullptr;
+			this->assignB=false;
 			this->type = tree::OPERATOR;
 
 		}
 
 		mathExpressionNode_opr::mathExpressionNode_opr(operators::operPtr operation)
-		:operation(operation),
-		assignB(false)
 		{
+			this->operation = operation;
+			this->assignB = false;
 			this->type = tree::OPERATOR;
 		}
 		mathExpressionNode_opr::mathExpressionNode_opr(operators::assigmentPtr assign)
-		:assign(assign),
-		assignB(true)
 		{
+			this->assign =assign;
+			this->assignB=true;
 			this->type = tree::OPERATOR;
 
 		}
+		mathExpressionNode_opr:: ~mathExpressionNode_opr()
+		{
 
+		}
 
 		number_type mathExpressionNode_opr::eval()
 		{
@@ -165,24 +164,35 @@ namespace mathNode
 			}
 		}
 
-
+		void mathExpressionNode_opr::bind(node_base* context)
+		{
+			wrapperNode = context;
+		}
+		void  mathExpressionNode_opr::destroy()
+		{
+			delete this;
+		}
 
 
 
 		mathExpressionNode_func::mathExpressionNode_func()
-        :func(nullptr)
+        
 		{
-
+			this->func = nullptr;
 			this->type = tree::FUNCTION;
 		}
 
 		mathExpressionNode_func::mathExpressionNode_func(funcPtr operation)
-		:func(operation)
+		
 		{
+			this->func = operation;
 			this->type = tree::FUNCTION;
 
 		}
+		mathExpressionNode_func::~mathExpressionNode_func()
+		{
 
+		}
 		number_type mathExpressionNode_func::eval()
 		{
 			if(this->wrapperNode->sub2())
@@ -191,21 +201,31 @@ namespace mathNode
 			}
 			return this->func(this->wrapperNode->sub1()->data->eval());
 		}
+		void mathExpressionNode_func::bind(node_base* context)
+		{
+			wrapperNode = context;
+		}
+		void  mathExpressionNode_func::destroy()
+		{
+			delete this;
+		}
 		
 		mathExpressionNode_func_tree::mathExpressionNode_func_tree()
-			:func(nullptr)
 		{
-
+			this->func = nullptr;
 			this->type = tree::FUNCTION_TREE;
 		}
 
 		mathExpressionNode_func_tree::mathExpressionNode_func_tree(funcPtr operation)
-			:func(operation)
 		{
+			this->func = operation;
 			this->type = tree::FUNCTION_TREE;
 
 		}
+		mathExpressionNode_func_tree:: ~mathExpressionNode_func_tree()
+		{
 
+		}
 		number_type mathExpressionNode_func_tree::eval()
 		{
 			if (this->wrapperNode->sub2())
@@ -214,10 +234,16 @@ namespace mathNode
 			}
 			return this->func(static_cast<node_base*>(this->wrapperNode));
 		}
+		void mathExpressionNode_func_tree::bind(node_base* context)
+		{
+			wrapperNode = context;
+		}
+		void  mathExpressionNode_func_tree::destroy()
+		{
+			delete this;
+		}
 
-
-
-void displayToken( mathNode::mathExpressionNode* t)
+		void displayToken(tree::nodeDataInterface* t)
 {
     std::cerr << "Data type "<< t->type<< "\n";
 }

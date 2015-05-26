@@ -3,10 +3,7 @@
 
 
 
-	 mathNode::mathExpressionNode* baseToken::node()
-	{
-		return  new mathNode::mathExpressionNode();
-	}
+
 	 bool  baseToken::hasNode()
 	{
 		return false;
@@ -18,7 +15,7 @@
 
 
 
-	mathNode::mathExpressionNode * operatorToken::node()
+	tree::nodeDataInterface * operatorToken::node()
 	{
 		switch (operType)
 		{
@@ -85,6 +82,10 @@
 	{
 		return false;
 	}
+	tree::nodeDataInterface* parenthesesToken::node()
+	{
+		return nullptr;
+	}
 	parenthesesToken::parenthesesToken(short startPos, short endPos)
 	: baseToken(),
     opposit(0)
@@ -104,7 +105,7 @@
 	}
 
 
-	mathNode::mathExpressionNode* valueToken::node()
+	tree::nodeDataInterface* valueToken::node()
 	{
 		return new mathNode::mathExpressionNode_val(value);
 	}
@@ -133,7 +134,7 @@
 
 
 
-	mathNode::mathExpressionNode* variableToken::node()
+	tree::nodeDataInterface* variableToken::node()
 	{
 		if (mem == nullptr)
 		{
@@ -184,7 +185,7 @@
     }
 
 
-	mathNode::mathExpressionNode* funcToken::node()
+   tree::nodeDataInterface* funcToken::node()
 	{
 		if (ptr == nullptr)
 		{
