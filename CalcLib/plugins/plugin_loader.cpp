@@ -177,7 +177,12 @@ class linux_plugin_manager : public plugin::plugin_manager
 
     	while ((dirp = readdir(dp)) != NULL) 
 		{
-        	plugin_names.push_back(std::string(dirp->d_name));
+			std::string name = dirp->d_name;
+			if(name != ".." && name != ".")
+			{
+				plugin_names.push_back();	
+			}
+        	
     	}
     	closedir(dp);
    
