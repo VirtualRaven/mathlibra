@@ -1,7 +1,7 @@
 #ifndef FUNCTION_HELPER_INCLUDED
 #define FUNCTION_HELPER_INCUDED
 #include <stack>
-#include "core/mathNode.h"
+#include "core/mathNode_interface.h"
 
 namespace parameter_package
 {
