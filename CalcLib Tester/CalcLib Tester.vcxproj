@@ -78,8 +78,8 @@ set /p t= &lt; "$(ProjectDir)git_version.tmp"
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>set /p t= &lt; "$(ProjectDir)git_version.tmp"
-mkdir  "$(USERPROFILE)\Documents\build_bin\$(SolutionName)\"%t%
-xcopy /Y "$(TargetPath)" "$(USERPROFILE)\Documents\build_bin\$(SolutionName)\"%t%</Command>
+mkdir  "$(USERPROFILE)\dropbox\binaries\$(SolutionName)\"%t%
+xcopy /Y "$(TargetPath)" "$(USERPROFILE)\dropbox\binaries\$(SolutionName)\"%t%</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
