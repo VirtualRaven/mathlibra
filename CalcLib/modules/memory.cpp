@@ -81,7 +81,7 @@
 		if (mem_it == mem.end())
 		{
 			throw memoryOops("requested variable not found");
-			return false;
+			return nullptr;
 
 		}
 		else return &mem_it->second.value;

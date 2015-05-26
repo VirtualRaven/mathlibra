@@ -1,3 +1,4 @@
+
 #ifndef PLUGIN_SYSTEM_INCLUDED
 #define PLUGIN_SYSTEM_INCLUDED
 #include "modules/functions.h"
@@ -39,6 +40,7 @@ namespace plugin
 		virtual const char * version_minor()=0; 
 		virtual const char * version_major()=0;
 		virtual const char * plugin_name() = 0;
+		virtual ~function_plugin_base()=0;
 	};
 
 	

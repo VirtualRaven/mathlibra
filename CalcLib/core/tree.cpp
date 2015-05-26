@@ -11,29 +11,6 @@ namespace tree
 	}
 
 
-	void nodeDataInterface::bind(node_base * context)
-	{
-
-	}
-
-	void nodeDataInterface::destroy()
-	{
-
-
-	}
-
-	nodeDataInterface::~nodeDataInterface()
-	{
-
-
-	}
-
-	nodeDataInterface::nodeDataInterface()
-		:wrapperNode(nullptr),
-		type(UNKNOWN)
-	{}
-
-
 	node_base * nodeDataInterface_wrapper_access(nodeDataInterface* node)
 	{
 		return node->wrapperNode;
