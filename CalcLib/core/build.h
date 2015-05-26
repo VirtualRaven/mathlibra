@@ -18,6 +18,6 @@ struct buildVector
 
 };
 
-bool buildSubNodes(mathNode::mathExpressionNode * target, buildVector vec);
+bool buildSubNodes(tree::nodeDataInterface * target, buildVector vec);
 
 
