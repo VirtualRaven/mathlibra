@@ -25,16 +25,10 @@ namespace tree
 		tokenType type;
 		//Is called every time the a root node want to make an operation on an tree
 		//By standard bind couses the node to synch their pointer to root the root with the pointer passed.
-		//Warning this behaviour must be implemented by the children of nodeDataInterface
-		virtual void bind(node_base * context);
-		virtual void destroy();
-		nodeDataInterface();
-		virtual ~nodeDataInterface();
-		virtual double eval()
-		{
-			return 0;
-		}
-		
+		virtual void bind(node_base * context)=0;
+		virtual void destroy()=0;
+		//Evaluate node, calculates an value based upon node children
+		virtual double eval()=0;
 
 	};
 
@@ -43,10 +37,13 @@ namespace tree
 	public:
 
 		nodeDataInterface* data;
-
+		//First branch of tree
 		virtual node_base * sub1()=0;
+		//Second bracnh of tree
 		virtual node_base * sub2()=0;
+		//Crates an stack of the arguments provided to the function
 		virtual std::stack<tree::node_base*> getArgs() = 0;
+		//Raises an exception in the interpreter
 		virtual void raiseException(const char * inf)=0;
 		
 	};

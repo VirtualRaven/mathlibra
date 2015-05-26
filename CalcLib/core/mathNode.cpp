@@ -11,12 +11,18 @@ namespace mathNode
 
 
 
-
+		
 
 		mathExpressionNode::mathExpressionNode()
 		{
 			type = tree::UNKNOWN;
 		}
+		
+		mathExpressionNode::~mathExpressionNode()
+		{
+			
+		}
+		
 		void mathExpressionNode::bind(node_base * context)
 		{
 			wrapperNode = context;
@@ -28,6 +34,10 @@ namespace mathNode
 				std::cerr << "Delete signal received, self destruct!\n";
 			#endif
 			delete this;
+		}
+		number_type mathExpressionNode::eval()
+		{
+			return 0;
 		}
 
 

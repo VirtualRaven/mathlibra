@@ -28,6 +28,8 @@ typedef double number_type;
 		mathExpressionNode();
 		void bind(node_base * context);
 		void destroy();
+		virtual number_type eval();
+		virtual ~mathExpressionNode();
 	};
 
 
