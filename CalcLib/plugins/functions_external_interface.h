@@ -35,12 +35,12 @@ namespace plugin
 		
 		//Called before plugin initialization
 		virtual void plugin_init_event() = 0;
-
+		virtual void plugin_destruction_event() = 0;
 		//Plugin functions
 		virtual const char * version_minor()=0; 
 		virtual const char * version_major()=0;
 		virtual const char * plugin_name() = 0;
-		virtual ~function_plugin_base()=0;
+	
 	};
 
 	
