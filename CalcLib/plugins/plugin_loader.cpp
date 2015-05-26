@@ -180,7 +180,7 @@ class linux_plugin_manager : public plugin::plugin_manager
 			std::string name = dirp->d_name;
 			if(name != ".." && name != ".")
 			{
-				plugin_names.push_back();	
+				plugin_names.push_back(name);	
 			}
         	
     	}
