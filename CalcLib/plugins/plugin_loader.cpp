@@ -36,7 +36,7 @@ void plugin::plugin_manager::loadPlugins(math_func::function_interface*  f_inter
 {
 	for(plugin::function_plugin_base * plugin : this->loaded_plugins)
 	{
-		delete plugin;
+		plugin->plugin_destruction_event();
 		plugin = nullptr;
 	}
 }
