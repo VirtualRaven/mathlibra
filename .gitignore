@@ -193,3 +193,4 @@ ModelManifest.xml
 *.o
 *.elf
 *.a
+lib_git_version.h
