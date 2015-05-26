@@ -112,7 +112,8 @@ int main(int argc, char* argv[])
 	inter.setFunction(&functions);
 
 	auto my_manager = plugin::get_platform_specific_manager();
-
+	if(my_manager != nullptr)
+	{
 	try
 	{	my_manager->loadPlugins(&functions);
 
@@ -122,6 +123,7 @@ int main(int argc, char* argv[])
 
 		std::cout << "[\n Exception: " << e.what() << "\n";
 		std::cout << " Description: " << e.desc() << "\n]\n";
+	}
 	}
 #if defined(CORAX_VM_EXEC)
 	CoraxVM::corax_program prgm;

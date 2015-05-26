@@ -41,7 +41,7 @@ namespace tree
 		void deleteSubNodes();
 		node();
 		node(nodeDataInterface* val);
-		~node();
+		virtual ~node();
 		void set(nodeDataInterface* data);
 		node(const node&);
 		node(node&&);
@@ -71,6 +71,7 @@ namespace tree
 		rootNode& operator=(const rootNode& sourceNode);
 		rootNode(rootNode&& sourceNode);
 		rootNode& operator=(rootNode&& sourceNode);
+		
 	};
 
 	void display_tree(rootNode tree);
