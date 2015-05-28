@@ -1,7 +1,9 @@
 #ifndef MAIN_H_INCLUDED
 #define MAI_H_INCLUDED
 #define EXEC_ENV 1
-
+/**
+ * Main include file. This file contains global macors and defines.
+ */
 #if EXEC_ENV == 1
 #define SYNTAX_TREE_EXEC
 #define EXEC_ENV_STRING "abstract syntax tree"

@@ -1,6 +1,9 @@
 #include <iostream>
 #include <sstream>
 #include "main.h"
+/**
+ * err_redirect redirects the cerr. 
+ */
 class err_redirect {
 
 	std::stringstream stream;

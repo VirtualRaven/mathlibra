@@ -1,12 +1,17 @@
+/**
+ * Defines helper templates to convert node_base pointers to function arguments.
+ */
 #ifndef FUNCTION_HELPER_INCLUDED
 #define FUNCTION_HELPER_INCUDED
 #include <stack>
 #include "core/mathNode_interface.h"
-
+/**
+* @namespace parameter_package Functions for creating packages of function arguments of different types
+*/ 
 namespace parameter_package
 {
 
-
+	
 	template<typename... argN>
 	class package{};
 
@@ -58,14 +63,21 @@ namespace parameter_package
 	}
 
 }
-
+/**
+ * @namespace function_helper Contains functions automatic function forwarding.
+ */
 namespace function_helper
 {
 
 
 	using tree::node_base;
 
-
+	/** 
+	 * Extract data of Type T from the node_base.
+	 * getData tries to interpret the data in the node as an type T, if unsuccessful an exception is raised.
+	 * @param n Pointer to the node to extract data from.
+	 * @tparam T, the type to interpret the data as. It can be an double or any non abstract type inheriting for nodeDataInterface.
+	 */
 	template<typename T> T getData(node_base *n)
 	{
 		if (n->data->type == mathNode::helper::enum_type<T>::TYPE)
@@ -87,7 +99,10 @@ namespace function_helper
 	{
 		 typedef double(*type)(argN...);
 	};
-
+/**
+ * Fills the and parameter package with data. It uses the getData() function to exctract data from the nodes an fills the parameter_package wiith it.
+ * @param s An stack of node_base* to use to fill the parameter_package.
+ */
 template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> parameter_package::package<arg0>
 	{
 		auto tmp = getData<typename arg0>(s.top());
@@ -102,8 +117,18 @@ template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> paramet
 		return parameter_package::package<arg0, arg1, argN...>(tmp, fillPackage< arg1, argN...>(s));
 
 	}
-
-
+	/**
+	 * 
+	 * @function Forward function call. 
+	 * If the arguments required for the call can not be exctracted from the node_base an exception will be raised in the core.
+	 * @param func An pointer to an function of the type double f(vars...) where vars is an variable number of arguments
+	 * @param n Pointer to the node to use to extract requested data.
+	 * @tparam argN An list of the arguments  accepted by func.
+	 * @note Any exceptions thrown by func will be caought an automatically forwarded to the core, so feel free to throw any exception.
+	 * 
+	 *
+	 */
+	
 	template< typename... argN> double forward(typename func_type<argN...>::type  func, node_base * n)
 	{
 		auto args = n->getArgs();
