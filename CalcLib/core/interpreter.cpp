@@ -11,11 +11,11 @@ interpreterOops::interpreterOops(std::string inf, bool isCritical) : exception(i
 
 
 
-bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i)
+	bool PNegativeDigit(std::vector<token::baseToken*>& tokens, char ** expression, short i)
 {
 	if (!tokens.empty())
 	{
-		baseToken * token = tokens.back();
+		token::baseToken * token = tokens.back();
 		if (token->type == tree::PARENTHESES)
 		{
 			return ((*expression)[i - 1] == '(');
@@ -89,7 +89,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 		unsigned int size=this->tokens.size();
 		for (unsigned int i = 0; i < size; i++)
 		{
-			delete	(baseToken*)this->tokens[i];
+			delete	(token::baseToken*)this->tokens[i];
 			this->tokens[i] = nullptr;
 		}
 		tokens.clear();
@@ -142,7 +142,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 		short extraOperatorWheight =0;
 		this->startOperatorPos = 0;
 		short lowestWheight = 9999;
-		std::stack<parenthesesToken *> parStack;
+		std::stack<token::parenthesesToken *> parStack;
 		for(int i = 0; i< expressionLength; i++)
 		{
 			if(expression[i] == '(')
@@ -150,7 +150,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 				int startPos = i;
 				if (tokens.size() > 0 && (tokens.back()->type == tree::VALUE || tokens.back()->type == tree::VARIABLE) && this->_operators->inArray('*')) //If priviouse value or variable is an value and an multiplication sign
 				{
-					ptr_protect<operatorToken*, false> tmp(new operatorToken(_operators->getCurrent()));
+					ptr_protect<token::operatorToken*, false> tmp(new token::operatorToken(_operators->getCurrent()));
 					tmp->startPos = startPos;
 					tmp->endPos = startPos;
 					startPos += 1;
@@ -164,8 +164,8 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 					tmp.release();
 				}
 
-				tokens.push_back(new parenthesesToken(startPos, startPos));
-				parStack.push( (parenthesesToken*)tokens.back() );
+				tokens.push_back(new token::parenthesesToken(startPos, startPos));
+				parStack.push((token::parenthesesToken*)tokens.back());
 				extraOperatorWheight+=5;
 				continue;
 			}
@@ -178,10 +178,10 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 				}
 				else
 				{
-					parenthesesToken* tmp = parStack.top();
+					token::parenthesesToken* tmp = parStack.top();
 					parStack.pop();
 					tmp->opposit=i;
-					parenthesesToken * tmp2 = new parenthesesToken(i,i);
+					token::parenthesesToken * tmp2 = new token::parenthesesToken(i, i);
 					tmp2->opposit = tmp->startPos;
 					tokens.push_back(tmp2);
 					extraOperatorWheight-=5;
@@ -191,7 +191,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 			}
 			else if(isdigit(expression[i]))
 			{
-				ptr_protect<valueToken*,false> tmp(new valueToken(i,0));
+				ptr_protect<token::valueToken*, false> tmp(new token::valueToken(i, 0));
 				short valueLength=0;
 				for(int i2 =i+1; i2 < expressionLength; i2++)
 				{
@@ -236,7 +236,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 			}
 			else if (expression[i] == '-' && PNegativeDigit(tokens, &expression,i) &&i + 1 < expressionLength && isdigit(expression[i+1]) )
 			{
-				ptr_protect<valueToken*,false> tmp(new valueToken(i, 0));
+				ptr_protect<token::valueToken*, false> tmp(new token::valueToken(i, 0));
 				short valueLength = 0;
 				for (int i2 = i + 1; i2 < expressionLength; i2++)
 				{
@@ -298,11 +298,11 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 						if (this->_operators->inArray('*'))
 						{
 
-							ptr_protect<valueToken*, false> tmp_val(new valueToken(i, i));
+							ptr_protect<token::valueToken*, false> tmp_val(new token::valueToken(i, i));
 							tmp_val->value = -1;
 							tokens.push_back(tmp_val.ptr());
 							tmp_val.release();
-							ptr_protect<operatorToken *, false> tmp = new  operatorToken(_operators->getCurrent());
+							ptr_protect<token::operatorToken *, false> tmp = new  token::operatorToken(_operators->getCurrent());
 							tmp->startPos = i;
 							tmp->endPos = i;
 							tmp->baseWheight += extraOperatorWheight + 5;
@@ -319,7 +319,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 					}
 				}
 
-				ptr_protect<operatorToken*,false> tmp(new operatorToken(_operators->getCurrent()));
+				ptr_protect<token::operatorToken*, false> tmp(new token::operatorToken(_operators->getCurrent()));
 				tmp->startPos=i;
 				tmp->endPos=i;
 				tmp->baseWheight +=extraOperatorWheight;
@@ -339,7 +339,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 					else
 					{
 						//token is going to be used in an asigment and should thus not be bushed to the stack
-						static_cast<variableToken*>(tokens.back())->_stack =false;
+						static_cast<token::variableToken*>(tokens.back())->_stack = false;
 					}
 				}
 				tokens.push_back(tmp.ptr());
@@ -370,7 +370,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 					
 					if (tokens.size() > 0 && tokens.back()->type == tree::VALUE &&  this->_operators->inArray('*')) //If priviouse value is an value and an multiplication sign
 					{
-						ptr_protect<operatorToken*, false> tmp(new operatorToken(_operators->getCurrent()));
+						ptr_protect<token::operatorToken*, false> tmp(new token::operatorToken(_operators->getCurrent()));
 						tmp->startPos = startPos;
 						tmp->endPos = startPos;
 						startPos += 1;
@@ -388,17 +388,17 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 
 					if (current_functions != nullptr && current_functions->isloaded(name) == true)
 					{
-						funcToken * tmp_ptr;
+						token::funcToken * tmp_ptr;
 						if (current_functions->isGeneral())
 						{
-							tmp_ptr = new funcToken(startPos, endPos, (funcToken::generalFuncPtr)current_functions->get(name));
+							tmp_ptr = new token::funcToken(startPos, endPos, (token::funcToken::generalFuncPtr)current_functions->get(name));
 						}
 						else
 						{
-							tmp_ptr = new funcToken(startPos, endPos, (funcToken::funcPtr)current_functions->get(name));
+							tmp_ptr = new token::funcToken(startPos, endPos, (token::funcToken::funcPtr)current_functions->get(name));
 						}
 
-						ptr_protect<funcToken *,false> tmp(tmp_ptr);
+						ptr_protect<token::funcToken *, false> tmp(tmp_ptr);
 						
 						tmp->baseWheight += extraOperatorWheight;
 						if (tmp->baseWheight <= lowestWheight) // <= for left association && < for right association
@@ -411,7 +411,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 					}
 					else if (mem != nullptr)
 					{
-						variableToken * tmp = new variableToken(startPos, endPos, mem);
+						token::variableToken * tmp = new token::variableToken(startPos, endPos, mem);
 						tmp->variableName = name;
 						tokens.push_back(tmp);
 					}
@@ -473,7 +473,7 @@ bool PNegativeDigit(std::vector<baseToken*>& tokens, char ** expression, short i
 
 
 
-	void interpreter::setMemory(memory* mem)
+	void interpreter::setMemory(memory::memory* mem)
 	{
 		this->mem = mem;
 	}

@@ -4,18 +4,18 @@
 
 
 
-	 bool  baseToken::hasNode()
+	 bool  token::baseToken::hasNode()
 	{
 		return false;
 	}
-	 baseToken::~baseToken(){}
+	 token::baseToken::~baseToken(){}
 
-    baseToken::baseToken() : startPos(0), endPos(0), type(tokenType::UNKNOWN){}
-
-
+	 token::baseToken::baseToken() : startPos(0), endPos(0), type(tokenType::UNKNOWN){}
 
 
-	tree::nodeDataInterface * operatorToken::node()
+
+
+	 tree::nodeDataInterface * token::operatorToken::node()
 	{
 		switch (operType)
 		{
@@ -37,35 +37,35 @@
 		}
 
 	}
-	bool  operatorToken::hasNode()
+	 bool  token::operatorToken::hasNode()
 	{
 		return true;
 	}
-	operatorToken::operatorToken(operators::operPtr opr, char symbol, short wheight)
+	 token::operatorToken::operatorToken(operators::operPtr opr, char symbol, short wheight)
 	 :baseToken(),
 	 operators::interpreter_operator( opr, symbol,wheight)
 	{
 		this->type = tree::OPERATOR;
 	}
-	operatorToken::operatorToken(operators::assigmentPtr assigne, char symbol, short wheight)
+	 token::operatorToken::operatorToken(operators::assigmentPtr assigne, char symbol, short wheight)
 	 :baseToken(), operators::interpreter_operator(assign,symbol,wheight)
 	{
 		this->type = tree::OPERATOR;
 	}
-	operatorToken::operatorToken(operators::interpreter_operator opr)
+	 token::operatorToken::operatorToken(operators::interpreter_operator opr)
 	:baseToken(), operators::interpreter_operator(opr)
 	{
 		  this->type = tree::OPERATOR;
 	}
 
-	operatorToken::operatorToken()
+	 token::operatorToken::operatorToken()
     :baseToken(),operators::interpreter_operator()
     {
 		this->type = tree::OPERATOR;
     }
 
 
-	bool parenthesesToken::isOppening()
+	 bool token::parenthesesToken::isOppening()
 	{
 		if (startPos < opposit)
 		{
@@ -78,15 +78,15 @@
 		}
 		else return false;
 	}
-	bool parenthesesToken::hasNode()
+	 bool token::parenthesesToken::hasNode()
 	{
 		return false;
 	}
-	tree::nodeDataInterface* parenthesesToken::node()
+	 tree::nodeDataInterface* token::parenthesesToken::node()
 	{
 		return nullptr;
 	}
-	parenthesesToken::parenthesesToken(short startPos, short endPos)
+	 token::parenthesesToken::parenthesesToken(short startPos, short endPos)
 	: baseToken(),
     opposit(0)
 	{
@@ -94,7 +94,7 @@
 		this->startPos = startPos;
 		this->type = tree::PARENTHESES;
 	}
-	parenthesesToken::parenthesesToken()
+	 token::parenthesesToken::parenthesesToken()
     : baseToken(),
     opposit(0)
 	{
@@ -105,15 +105,15 @@
 	}
 
 
-	tree::nodeDataInterface* valueToken::node()
+	 tree::nodeDataInterface* token::valueToken::node()
 	{
 		return new mathNode::mathExpressionNode_val(value);
 	}
-	bool  valueToken::hasNode()
+	 bool token::valueToken::hasNode()
 	{
 		return true;
 	}
-	valueToken::valueToken(short startPos, short endPos)
+	 token::valueToken::valueToken(short startPos, short endPos)
 	:baseToken(),
 	value(0)
 	{
@@ -123,7 +123,7 @@
 		this->type = tree::VALUE;
 	}
 
-	valueToken::valueToken()
+	 token::valueToken::valueToken()
 	:baseToken(),
 	value(0)
 	{
@@ -134,19 +134,19 @@
 
 
 
-	tree::nodeDataInterface* variableToken::node()
+	 tree::nodeDataInterface* token::variableToken::node()
 	{
 		if (mem == nullptr)
 		{
-			throw memoryOops("Tried to create node variable without assigning memoryblock");
+			throw memory::memoryOops("Tried to create node variable without assigning memoryblock");
 		}
 		return new mathNode::mathExpressionNode_variable(variableName,mem,_stack);
 	}
-	bool  variableToken::hasNode()
+	 bool  token::variableToken::hasNode()
 	{
 		return true;
 	}
-	variableToken::variableToken(short startPos, short endPos,memory* mem)
+	 token::variableToken::variableToken(short startPos, short endPos, memory::memory* mem)
 	:baseToken(),
 	variableName(""),
 	mem(mem),
@@ -157,7 +157,7 @@
 		this->type = tree::VARIABLE;
 	}
 
-	variableToken::variableToken()
+	 token::variableToken::variableToken()
 	:baseToken(),
 	variableName(""),
 	mem(nullptr),
@@ -165,7 +165,7 @@
 	{
 		this->type = tree::VARIABLE;
 	}
-    variableToken::variableToken(const variableToken& val)
+	 token::variableToken::variableToken(const token::variableToken& val)
     :variableName(val.variableName),
     mem(val.mem),
 	_stack(val._stack)
@@ -174,7 +174,7 @@
         this->startPos = val.startPos;
         this->type = val.type;
     }
-   variableToken variableToken::operator=(const variableToken& val)
+	 token::variableToken token::variableToken::operator=(const token::variableToken& val)
     {
         this->endPos = val.endPos;
         this->mem = val.mem;
@@ -185,11 +185,11 @@
     }
 
 
-   tree::nodeDataInterface* funcToken::node()
+	 tree::nodeDataInterface* token::funcToken::node()
 	{
 		if (ptr == nullptr)
 		{
-			throw memoryOops("Function node missing pointer to actual function");
+			throw memory::memoryOops("Function node missing pointer to actual function");
 		}
 		if (_is_general)
 		{
@@ -201,11 +201,11 @@
 		}
 		
 	}
-	bool  funcToken::hasNode()
+	 bool  token::funcToken::hasNode()
 	{
 		return true;
 	}
-	funcToken::funcToken(short startPos, short endPos, funcPtr ptr)
+	 token::funcToken::funcToken(short startPos, short endPos, funcPtr ptr)
 	:ptr(ptr),
 	baseWheight(4),
 	_is_general(false)
@@ -214,7 +214,7 @@
 		this->startPos = startPos;
 		this->type = tree::FUNCTION;
 	}
-	funcToken::funcToken(short startPos, short endPos, generalFuncPtr ptr)
+	 token::funcToken::funcToken(short startPos, short endPos, generalFuncPtr ptr)
 		:gptr(ptr),
 		baseWheight(4),
 		_is_general(true)
@@ -223,7 +223,7 @@
 		this->startPos = startPos;
 		this->type = tree::FUNCTION;
 	}
-	funcToken::funcToken()
+	 token::funcToken::funcToken()
 	:ptr(nullptr),
 	baseWheight(4)
 	{

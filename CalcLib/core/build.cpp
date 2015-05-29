@@ -2,7 +2,7 @@
 
 using tree::rootNode;
 
-	buildVector::buildVector(short lowLimit, short hiLimit, short vecOffset, std::vector<baseToken*>* vecPtr)
+buildVector::buildVector(short lowLimit, short hiLimit, short vecOffset, std::vector<token::baseToken*>* vecPtr)
 	:lowLimit(lowLimit),
 	hiLimit(hiLimit),
 	vecOffset(vecOffset),
@@ -21,20 +21,20 @@ using tree::rootNode;
 		short nextOperation = -2;
 		short lenght = 0;
 		short values = 0;
-		baseToken* basePtr = nullptr;
+		token::baseToken* basePtr = nullptr;
 		for (int i = lowLimit; i < hiLimit; i++)
 		{
 			 
 			basePtr = vecPtr->operator[](i);
-			if (basePtr->type == tree::OPERATOR && static_cast<operatorToken*>(basePtr)->baseWheight <= lowWheight)  //Check for next least important operator
+			if (basePtr->type == tree::OPERATOR && static_cast<token::operatorToken*>(basePtr)->baseWheight <= lowWheight)  //Check for next least important operator
 			{
-				lowWheight = static_cast<operatorToken*>(basePtr)->baseWheight;
+				lowWheight = static_cast<token::operatorToken*>(basePtr)->baseWheight;
 				nextOperation = i;
 				lenght++;
 			}
-			else if (basePtr->type == tree::FUNCTION && static_cast<funcToken*>(basePtr)->baseWheight <= lowWheight)  //Check for next least important operator
+			else if (basePtr->type == tree::FUNCTION && static_cast<token::funcToken*>(basePtr)->baseWheight <= lowWheight)  //Check for next least important operator
 			{
-				lowWheight = static_cast<funcToken*>(basePtr)->baseWheight;
+				lowWheight = static_cast<token::funcToken*>(basePtr)->baseWheight;
 				nextOperation = i;
 				lenght++;
 			}

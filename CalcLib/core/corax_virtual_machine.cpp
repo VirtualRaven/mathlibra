@@ -48,7 +48,7 @@ namespace CoraxVM
             corax_runtime::_operators = operators;
         }
 
-        void corax_runtime::setMemory(memory* mem)
+		void corax_runtime::setMemory(memory::memory* mem)
         {
             corax_runtime::_mem = mem;
         }
@@ -263,7 +263,7 @@ namespace CoraxVM
             _pr2(nullptr)
         {};
 
-        corax_runtime::corax_runtime(operators::operators_interface* operators,memory* mem,math_func::function_interface* functions) :
+		corax_runtime::corax_runtime(operators::operators_interface* operators, memory::memory* mem, math_func::function_interface* functions) :
             _operators(operators),
             _mem(mem),
             _functions(functions),

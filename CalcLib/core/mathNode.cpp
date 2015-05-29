@@ -77,7 +77,7 @@ namespace mathNode
 
 		}
 
-		mathExpressionNode_variable::mathExpressionNode_variable(std::string var, memory* mem, bool b)
+		mathExpressionNode_variable::mathExpressionNode_variable(std::string var, memory::memory* mem, bool b)
 		{
 			this->mem = mem;
 			this->_stack = b;

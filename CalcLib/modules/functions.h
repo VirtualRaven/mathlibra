@@ -14,6 +14,9 @@ namespace test
 	bool function_module_test1();
 }
 
+/**
+ * @namespace math_func Contains the function module
+*/
 namespace math_func
 {
 	/**

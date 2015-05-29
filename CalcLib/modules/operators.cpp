@@ -29,7 +29,7 @@ namespace operators
 		return pow(x,y);
 	}
 
-	number_type oper_assign(memory* mem,std::string name, double val)
+	number_type oper_assign(memory::memory* mem, std::string name, double val)
 	{
 		mem->set(name,val);
 		return val;

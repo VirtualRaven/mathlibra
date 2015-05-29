@@ -1,28 +1,28 @@
 #include "modules/memory.h"
 #include <iostream>
-	memoryOops::memoryOops(std::string info)
+memory::memoryOops::memoryOops(std::string info)
 	{
 		this->info = info;
 	}
-	const char* memoryOops::what()
+const char* memory::memoryOops::what()
 	{
 		return "Memory exception";
 	}
 
 
-	memoryObject::memoryObject(std::string name, number_type value, bool constant):
+	memory::memoryObject::memoryObject(std::string name, number_type value, bool constant):
 	    name(name),
 	    value(value),
 	    constant(constant)
 	    {}
-	memoryObject::memoryObject() :
+	memory::memoryObject::memoryObject() :
 		name(""),
 		value(0),
 		constant(false)
 	{}
 
 
-	number_type memory::get(std::string var)
+	number_type memory::memory::get(std::string var)
 	{
 		mem_it = mem.find(var);
 		if (mem_it == mem.end())
@@ -33,7 +33,7 @@
 		}
 		else return mem_it->second.value;
 	}
-	bool memory::set(std::string var,number_type value, bool allocateIfNotFound , bool constant )
+	bool memory::memory::set(std::string var, number_type value, bool allocateIfNotFound, bool constant)
 	{
 		mem_it =mem.find(var);
 		if (mem_it == mem.end())
@@ -58,7 +58,7 @@
 				return true;
 	}
 	
-	std::vector<std::string> memory::allVars()
+	std::vector<std::string> memory::memory::allVars()
 	{
 		std::vector<std::string> re;
 		re.resize(mem.size()); //Save a lot of reallocations
@@ -70,12 +70,12 @@
 		}
 		return re;
 	}
-	void memory::empty()
+	void memory::memory::empty()
 	{
 		this->mem.clear();
 	}
 	 
-	number_type* memory::raw_ptr(std::string var)
+	number_type* memory::memory::raw_ptr(std::string var)
 	{
 		mem_it = mem.find(var);
 		if (mem_it == mem.end())
@@ -93,8 +93,8 @@
 		try
 		{
 
-			memory mem1;
-			memory mem2;
+			memory::memory mem1;
+			memory::memory mem2;
 			if (!mem1.set("1", 4242) || !mem1.set("he1", 4242) || !mem1.set("he2", 1111, true, true))
 			{
 				std::cout << "Failed to allocate test range\n";
@@ -117,13 +117,13 @@
 				std::cout << "Failed to protect const\n";
 				return false;
 			}
-			catch (memoryOops& e)
+			catch (memory::memoryOops& e)
 			{
 
 				
 			}
 
-			memory* mem_ptr = &mem1;
+			memory::memory* mem_ptr = &mem1;
 
 			number_type* x = mem_ptr->raw_ptr("he2");
 			if (*x != 1111)
@@ -158,7 +158,7 @@
 				return false;
 			}
 		}
-		catch (memoryOops& e)
+		catch (memory::memoryOops& e)
 		{
 			std::cout << "Test failed, exception occured " << e.what()<< " " << e.desc() << "\n\n";
 			return false;

@@ -10,6 +10,10 @@ struct variableToken;
 using tree::node_base;
 using tree::nodeDataInterface;
 
+/**
+ * @namespace mathNode Contains all nodeDataInterface data types
+ */
+
 namespace mathNode
 {
 
@@ -44,12 +48,12 @@ class mathExpressionNode_opr;
 	{
 
 	private:
-		memory* mem;
+		memory::memory* mem;
 		bool _stack;
 		friend mathExpressionNode_opr;
 	public:
 		
-		mathExpressionNode_variable(std::string var, memory* mem, bool b);
+		mathExpressionNode_variable(std::string var, memory::memory* mem, bool b);
 		virtual ~mathExpressionNode_variable();
 		number_type eval();
 		bool is_pushable();
