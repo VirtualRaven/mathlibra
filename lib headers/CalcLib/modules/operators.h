@@ -7,11 +7,13 @@
 #include <vector>
 
 struct variableToken; //Forward declared from core
-
+/**
+ * @namespace operators Contains the operator module.
+*/
 namespace operators
 {
     typedef number_type(*operPtr)(number_type,number_type);
-    typedef number_type(*assigmentPtr)(memory* mem,std::string name, number_type);
+    typedef number_type(*assigmentPtr)(memory::memory* mem,std::string name, number_type);
     enum operationType{NOT_SET,ASSIGN,MATH};
 
     struct interpreter_operator
