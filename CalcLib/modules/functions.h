@@ -12,6 +12,10 @@ namespace test
 }
 
 
+/**
+ * @namespace math_func Contains the function module
+*/
+
 namespace math_func
 {
 	struct functionOops : public exception

@@ -1,7 +1,7 @@
 #ifndef FUNCTION_HELPER_INCLUDED
 #define FUNCTION_HELPER_INCUDED
 #include <stack>
-#include "core/mathNode.h"
+#include "core/mathNode_interface.h"
 
 namespace parameter_package
 {
@@ -14,10 +14,11 @@ namespace parameter_package
 	class package<arg0, argN...> : public package<argN...>
 	{
 	public:
+		arg0 tail;
 		package(arg0 arg, argN... args) : tail(arg), package<argN...>(args...){};
 		package() : package<argN...>(){};
-		package(arg0 arg, package<argN...> pack) : tail(arg), package<argN...>(pack){};
-		arg0 tail;
+		package(arg0 arg, package<argN...> pack) :  package<argN...>(pack), tail(arg){};
+
 
 	};
 
@@ -31,10 +32,10 @@ namespace parameter_package
 
 	};
 
-	template<typename Return_value, typename Func, typename arg0, typename ... argN, typename... argN2>
-	Return_value package_forward(Func func, package<arg0, argN...> pack, argN2... args)
+	template<typename Return_value, typename Func, typename arg0, typename arg1, typename ... argN, typename... argN2>
+	Return_value package_forward(Func func, package<arg0,arg1, argN...> pack, argN2... args)
 	{
-		return package_forward<Return_value>(func, (package<argN...>)pack, args..., pack.tail);
+		return package_forward<Return_value>(func, (package<arg1, argN...>)pack, args..., pack.tail);
 	}
 
 	template<typename Return_value, typename Func, typename arg0, typename... argN2>
@@ -60,14 +61,14 @@ namespace parameter_package
 
 namespace function_helper
 {
-	
+
 
 	using tree::node_base;
-	
+
 
 	template<typename T> T getData(node_base *n)
 	{
-		if (n->data->type == mathnode::helper::enum_type<T>::TYPE)
+		if (n->data->type == mathNode::helper::enum_type<T>::TYPE)
 		{
 			return static_cast<T>(n->data);
 		}
@@ -84,8 +85,24 @@ namespace function_helper
 
 	template <typename... argN> struct func_type
 	{
-		typename typedef double(*type)(argN...);
+		 typedef double(*type)(argN...);
 	};
+
+template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> parameter_package::package<arg0>
+	{
+		auto tmp = getData<typename arg0>(s.top());
+		s.pop();
+		return parameter_package::package<arg0>(tmp);
+	};
+
+	template< typename arg0, typename arg1, typename... argN> auto fillPackage(std::stack<node_base*>& s) -> parameter_package::package<arg0, arg1, argN...>
+	{
+		auto tmp = getData<arg0>(s.top());
+		s.pop();
+		return parameter_package::package<arg0, arg1, argN...>(tmp, fillPackage< arg1, argN...>(s));
+
+	}
+
 
 	template< typename... argN> double forward(typename func_type<argN...>::type  func, node_base * n)
 	{
@@ -110,24 +127,12 @@ namespace function_helper
 			n->raiseException("Unknown exception occured in plugin function");
 		}
 		return 0;
-		
-	}
-
-
-
-	template< typename arg0, typename arg1, typename... argN> auto fillPackage(std::stack<node_base*>& s) -> parameter_package::package<arg0, arg1, argN...>
-	{
-		auto tmp = getData<typename arg0>(s.top());
-		s.pop();
-		return parameter_package::package<arg0, arg1, argN...>(tmp, fillPackage<arg1, argN...>(s));
 
 	}
-	template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> parameter_package::package<arg0>
-	{
-		auto tmp = getData<arg0>(s.top());
-		s.pop();
-		return parameter_package::package<arg0>(tmp);
-	};
+
+
+
+
 
 }
 
