@@ -1,7 +1,7 @@
 #ifndef CORE_INCLUDED
 #define CORE_INCLUDED
 
-#include "core/interpreter.h" /n/Class containing the interpreter object
+#include "core/interpreter.h" //Class containing the interpreter object
 #include "core/export_lib_version.h"
 #include "modules/functions.h" //The function container for interpreter
 #include "modules/memory.h"		//The memory container for the interpreter
