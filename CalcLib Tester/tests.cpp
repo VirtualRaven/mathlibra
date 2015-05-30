@@ -9,7 +9,7 @@ void test::profileInterpreter(std::string& exr)
 		interpreter inter;
 		std::string expression = "";
 
-		memory mem; //Create memory unit
+		memory::memory mem; //Create memory unit
 		operators::operators_interface oper;
 		math_func::function_interface functions; //Create function unit
 
@@ -53,7 +53,7 @@ void test::profileInterpreterVM(std::string& exr)
 		interpreter inter;
 		std::string expression = "";
 
-		memory mem; //Create memory unit
+		memory::memory mem; //Create memory unit
 		operators::operators_interface oper;
 		math_func::function_interface functions; //Create function unit
 

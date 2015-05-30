@@ -14,7 +14,7 @@
 */
 
 
-bool menu(memory& mem,math_func::function_interface& func)
+bool menu(memory::memory& mem,math_func::function_interface& func)
 {
 	std::cout << "PRINT VARIABLES [1]\nEMPTY VARIABLE TABLE[2]\nPRINT FUNCS[3]\nPRINT BUILD INFO[4]\nPRINT HELP[5]\nRUN TESTS [6]\nEXIT [7]\nMenu> ";
 	std::string input;
@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
 	interpreter inter; 
 	std::string expression = "";
 	
-	memory mem; //Create memory unit
+	memory::memory mem; //Create memory unit
 	operators::operators_interface oper;
 	math_func::function_interface functions; //Create function unit
 
