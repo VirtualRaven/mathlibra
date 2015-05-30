@@ -10,8 +10,8 @@ struct buildVector
 	short lowLimit;
 	short hiLimit;
 	unsigned short vecOffset;
-	std::vector<baseToken*>* vecPtr;
-	buildVector(short lowLimit, short hiLimit, short vecOffset, std::vector<baseToken*>* vecPtr);
+	std::vector<token::baseToken*>* vecPtr;
+	buildVector(short lowLimit, short hiLimit, short vecOffset, std::vector<token::baseToken*>* vecPtr);
 	buildVector();
 	//Return types, -1 error, >0 next operator index
 	short calculateNextOperation(short lowLimit, short hiLimit);

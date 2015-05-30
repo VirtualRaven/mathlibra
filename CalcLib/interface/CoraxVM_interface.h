@@ -23,7 +23,7 @@ namespace interface
     {
     public:
      virtual void setOperator(operators::operators_interface* operators) =0;
-     virtual void setMemory(memory* mem)=0;
+	 virtual void setMemory(memory::memory* mem) = 0;
      virtual void setFunction(math_func::function_interface* functions)=0;
      virtual number_type run(interface::corax_program * prgm_)=0;
 

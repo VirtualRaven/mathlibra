@@ -158,3 +158,4 @@ CalcLib/lib_git_version.tmp
 source/gitversion.cpp
 CalcLib/lib_git_version.h
 
+CalcLib/doc/

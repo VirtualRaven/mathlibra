@@ -5,6 +5,9 @@
 #include "modules/memory.h"
 #include "modules/operators.h"
 #include "interface/CoraxVM_interface.h"
+/**
+ * @namespace interface Contains abstract interface classes for different functions.
+*/
 namespace interface
 {
 
@@ -15,14 +18,13 @@ namespace interface
 		/*
 			Following functions sets the pointers to modules that the interpreter can use.
 			All are modules are optional but for basic functionality a operator_interface should be specified
-			The client of the libary is responsible for implementing all modules, a reference implementation
-			is provided under modules.
+			
 
 			Warning: interpreter does not copy the modules so the pointers provided must be valid during the lifetime
 			of the interpreterm object.
 			*/
 		//Functions for
-		virtual void setMemory(memory* mem) = 0;
+		virtual void setMemory(memory::memory* mem) = 0;
 		virtual void setFunction(math_func::function_interface* functions) = 0;
 		virtual void setOperator(operators::operators_interface* operators) = 0;
 
