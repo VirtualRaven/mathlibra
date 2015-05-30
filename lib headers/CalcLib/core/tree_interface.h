@@ -1,19 +1,26 @@
 #ifndef TREE_INTERFACE_INCLUDED
 #define TREE_INTERFACE_INCLUDED
 #include <stack>
+/**
+ *@namespace tree Contains the tree classes. Provides the data types to orgenize data in a tree structure.
+ */
 namespace tree
 {
 	class node_base;
+
+	/**
+	 * The different types an token can have.
+	 */
 	enum tokenType
 	{
-		UNKNOWN = 0,
-		VARIABLE = 1,
-		FUNCTION = 2,
-		OPERATOR = 3,
-		VALUE = 4,
-		PARENTHESES = 5,
-		FUNCTION_TREE = 6,
-		DUMMY = 7
+		UNKNOWN = 0,  /**< Token type unset. If an node has this type it will be treated as an error*/
+		VARIABLE = 1, /**< Variable type*/
+		FUNCTION = 2, /**< Function type*/
+		OPERATOR = 3, /**<Operator type*/
+		VALUE = 4,	/**<Value type*/
+		PARENTHESES = 5, /*< Paratheses type. Can not exist as an node.*/
+		FUNCTION_TREE = 6, /**< An node that is an function that takes an variable number of arguments. @see math_func::m_function */
+		DUMMY = 7 /**< An node that is an comma sign.  @note This type is only used to create multi argument functions, calling eval on a dummy node results in an exception.*/
 	};
 
 	class nodeDataInterface
@@ -32,6 +39,11 @@ namespace tree
 		virtual double eval()=0;
 
 	};
+
+	
+	/**
+	 * The interface for the tree nodes. The abstract syntax tree is built up of several node_base to form a tree. Each node_base also contains an nodeDataInterface. @see nodeDataInterface. 
+	 */
 
 	class node_base
 	{
