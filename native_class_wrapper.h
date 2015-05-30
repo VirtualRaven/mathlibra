@@ -1,15 +1,11 @@
 #include "Core_Includes.h"
+#include "main_wrapper.h"
 namespace native
 {
 	extern const char * CoreVersion ;
-	struct wrapper_exception_info
-	{
-		std::string type;
-		std::string desc;
-		bool isCritical;
-	};
+	
 
-	class core_native_wrapper
+	class core_native_wrapper : public interface::calc_lib_interface
 	{
 		interpreter inter;
 		memory mem;
@@ -18,7 +14,7 @@ namespace native
 		plugin::plugin_manager * manager;
 		bool exception_occurred;
 
-		wrapper_exception_info ex_inf;
+		interface::wrapper_exception_info ex_inf;
 
 	public:
 		core_native_wrapper();
@@ -26,7 +22,7 @@ namespace native
 		void set_arg(std::string str);
 		bool interpret_arg();
 		double execute_arg();
-		wrapper_exception_info get_exception_info();
+		interface::wrapper_exception_info get_exception_info();
 		bool exceptionOccured();
 
 		//Memroy unit 
