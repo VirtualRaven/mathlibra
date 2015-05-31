@@ -8,7 +8,7 @@ namespace native
 	class core_native_wrapper : public interface::calc_lib_interface
 	{
 		interpreter inter;
-		memory mem;
+		memory::memory mem;
 		operators::operators_interface oper;
 		math_func::function_interface functions;
 		plugin::plugin_manager * manager;

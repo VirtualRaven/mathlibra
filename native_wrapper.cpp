@@ -23,7 +23,6 @@ namespace native
 	}
 	core_native_wrapper::~core_native_wrapper()
 	{
-		this->manager->~plugin_manager();
 		delete this->manager;
 	}
 	void core_native_wrapper::set_arg(std::string str)
