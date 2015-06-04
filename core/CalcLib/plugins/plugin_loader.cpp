@@ -32,13 +32,18 @@ void plugin::plugin_manager::loadPlugins(math_func::function_interface*  f_inter
 	
 }
 
- plugin::plugin_manager::~plugin_manager()
+void plugin::plugin_manager::unloadPlugins()
 {
-	for(plugin::function_plugin_base * plugin : this->loaded_plugins)
+	for (plugin::function_plugin_base * plugin : this->loaded_plugins)
 	{
 		plugin->plugin_destruction_event();
 		plugin = nullptr;
 	}
+}
+
+ plugin::plugin_manager::~plugin_manager()
+{
+
 }
 
  void plugin::plugin_init(function_plugin_base* func,math_func::function_interface * function_unit)
@@ -125,6 +130,7 @@ void windows_plugin_manager::load_dll(windows_plugin_manager::plugin_name_contai
  
  void  windows_plugin_manager::unload_all_dlls()
  {
+	 this->unloadPlugins();
 	 for each (DLL current_dll in this->dlls)
 	 {
 		 FreeLibrary(current_dll);
@@ -215,6 +221,7 @@ class linux_plugin_manager : public plugin::plugin_manager
 	
 	void  linux_plugin_manager::unload_all_lib()
 	{
+		this->unloadPlugins();
 		for(Lib current_lib : libs)
 		{
 			dlclose(current_lib);
