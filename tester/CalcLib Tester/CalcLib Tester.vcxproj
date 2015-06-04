@@ -13,6 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{EF6FD405-D431-4E7A-A3D3-EC8DD0C8110E}</ProjectGuid>
     <RootNamespace>CalcLibTester</RootNamespace>
+    <ProjectName>tester</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -39,12 +40,14 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir);$(SolutionDir)lib headers/CalcLib;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib/Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)core\CalcLib\;$(ProjectDir);$(IncludePath)</IncludePath>
+    <LibraryPath>$(OutputDir);$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)bin/$(Configuration)</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)lib headers/CalcLib;$(ProjectDir);$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib/Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)core\CalcLib\;$(ProjectDir);$(IncludePath)</IncludePath>
+    <LibraryPath>$(OutputDir);$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)bin/$(Configuration)</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -93,6 +96,11 @@ xcopy /Y "$(TargetPath)" "$(USERPROFILE)\dropbox\binaries\$(SolutionName)\"%t%</
     <ClCompile Include="stdErr.cpp" />
     <ClCompile Include="tests.cpp" />
     <ClCompile Include="util.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\core\CalcLib\CalcLib.vcxproj">
+      <Project>{9b6812ef-50bf-46b6-8691-bb35afe1b6f4}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

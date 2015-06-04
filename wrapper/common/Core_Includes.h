@@ -8,7 +8,4 @@
 #include "modules/operators.h"	//The operetor container for the inrpreter
 #include "plugins/plugin_loader.h" //Plugin interface for loading external plugin into core
 #include "exception.h"
-#ifdef WINDOWS
-#pragma comment(lib, "CalcLib")
-#endif //WINDOWS
 #endif //CORE_INCLUDED

@@ -42,15 +42,15 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)lib headers\CalcLib;$(SolutionDir);$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)core\CalcLib\;$(ProjectDir)..\common\;$(ProjectDir);$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)/lib/Debug/;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)bin/$(Configuration)_$(ProjectName)\</OutDir>
+    <OutDir>$(SolutionDir)bin/$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)lib headers\CalcLib;$(SolutionDir);$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)core\CalcLib\;$(ProjectDir)..\common\;$(ProjectDir);$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)/lib/Release/;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)bin/$(Configuration)_$(ProjectName)\</OutDir>
+    <OutDir>$(SolutionDir)bin/$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -83,9 +83,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="..\Core_Includes.h" />
     <ClInclude Include="..\main_wrapper.h" />
     <ClInclude Include="..\native_class_wrapper.h" />
@@ -94,7 +91,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\native_wrapper.cpp" />
+    <ClCompile Include="..\common\native_wrapper.cpp" />
     <ClCompile Include="c_wrapper.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
@@ -108,6 +105,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\core\CalcLib\CalcLib.vcxproj">
+      <Project>{9b6812ef-50bf-46b6-8691-bb35afe1b6f4}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

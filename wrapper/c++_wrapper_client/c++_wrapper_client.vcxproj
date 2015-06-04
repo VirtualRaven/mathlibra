@@ -41,14 +41,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir);C:\Users\lukas\Documents\Visual Studio 2013\Projects\Calc_Core_wrapper\lib headers\CalcLib;$(SolutionDir)/"lib headers/CalcLib/";$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)bin/$(Configuration)_$(ProjectName)\</OutDir>
+    <IncludePath>$(ProjectDir)..\;$(ProjectDir)..\common\;$(SolutionDir);$(SolutionDir)/core/CalcLib/;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)bin/$(Configuration)\</OutDir>
     <LibraryPath>$(SolutionDir)/lib/Debug/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir);C:\Users\lukas\Documents\Visual Studio 2013\Projects\Calc_Core_wrapper\lib headers\CalcLib;$(SolutionDir)/"lib headers/CalcLib/";$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)bin/$(Configuration)_$(ProjectName)\</OutDir>
+    <IncludePath>$(ProjectDir)..\;$(ProjectDir)..\common\;$(SolutionDir);$(SolutionDir)/core/CalcLib/;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)bin/$(Configuration)\</OutDir>
     <LibraryPath>$(SolutionDir)/lib/Release/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

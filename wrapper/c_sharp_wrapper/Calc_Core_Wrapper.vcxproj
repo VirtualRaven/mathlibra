@@ -44,15 +44,15 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)lib headers\CalcLib;$(SolutionDir);$(ProjectDir);$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\;$(ProjectDir)..\common\;$(SolutionDir)core\CalcLib;$(SolutionDir);$(ProjectDir);$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib/debug;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)bin/$(Configuration)_$(ProjectName)\</OutDir>
+    <OutDir>$(SolutionDir)bin/$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)lib headers\CalcLib;$(SolutionDir);$(ProjectDir);$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\;$(ProjectDir)..\common\;$(SolutionDir)core\CalcLib;$(SolutionDir);$(ProjectDir);$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib/release;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)bin/$(Configuration)_$(ProjectName)\</OutDir>
+    <OutDir>$(SolutionDir)bin/$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -105,26 +105,25 @@ xcopy /Y "$(TargetPath)" "$(USERPROFILE)\dropbox\binaries\$(SolutionName)\"%t%</
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Calc_Core_Wrapper.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\native_class_wrapper.h" />
+    <ClInclude Include="..\common\Core_Includes.h" />
+    <ClInclude Include="..\common\native_class_wrapper.h" />
     <ClInclude Include="Calc_Core_wrapper.h" />
     <ClInclude Include="git_version.h" />
     <ClInclude Include="managed_class_wrapper.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\native_wrapper.cpp" />
+    <ClCompile Include="..\common\native_wrapper.cpp" />
     <ClCompile Include="Calc_Core_Wrapper.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="managed_class_wrapper.cpp" />
     <ClCompile Include="stdafx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\core\CalcLib\CalcLib.vcxproj">
+      <Project>{9b6812ef-50bf-46b6-8691-bb35afe1b6f4}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

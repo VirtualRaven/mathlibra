@@ -5,3 +5,12 @@
 *.exe
 *.dll
 
+*.tlog
+*.tmp
+*.idb
+*.opensdf
+*.ipch
+*.metagen
+*.sdf
+tester/CalcLib Tester/git_version.h
+core/CalcLib/lib_git_version.h

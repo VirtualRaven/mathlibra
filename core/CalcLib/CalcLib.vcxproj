@@ -13,6 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9B6812EF-50BF-46B6-8691-BB35AFE1B6F4}</ProjectGuid>
     <RootNamespace>CalcLib</RootNamespace>
+    <ProjectName>core</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -40,9 +41,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
+    <ExecutablePath>$(SolutionDir)bin/$(Configuration);$(ExecutablePath)</ExecutablePath>
+    <OutDir>$(SolutionDir)bin/$(Configuration)</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
+    <ExecutablePath>$(SolutionDir)bin/$(Configuration);$(ExecutablePath)</ExecutablePath>
+    <OutDir>$(SolutionDir)bin/$(Configuration)</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -54,6 +59,12 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>setlocal &amp; echo| set /p = "#define GIT_SHA_COMMIT " &gt; "$(ProjectDir)lib_git_version.h"
+"C:\Program Files (x86)\Git\cmd\git.exe" rev-parse HEAD &gt;  "$(ProjectDir)lib_git_version.tmp"
+set /p t= &lt; "$(ProjectDir)lib_git_version.tmp"
+ echo "%t%"  &gt;&gt;"$(ProjectDir)lib_git_version.h"  </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
