@@ -1,11 +1,12 @@
 # README #
  
 
-### What is this repository for? ###
+### What does this folder contain ###
 
 This repository contains to main project
-C# Wrapper Shared library
-C++ Wrapper Shared library
+* C# Wrapper Shared librar - A windwos only CLI wrapper for C# 
+* C++ Wrapper Shared library - A platform independet api layer to expose mathlibra functionality
+* C++ wrapper tester - A tester program that runs unit tests on the c++ wrapper. High level unit tests should be implemented in this project
 
 * Provides an wrapper for the native calculator library exposing an mostly stable api. It provides all the functions from core in the form of one single class. This class manages all other helper classes from the core and takes care of the library initializations. 
 
