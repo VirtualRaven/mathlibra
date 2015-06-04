@@ -1,1 +1,0 @@
-const char *GIT_SHA_COMMIT = "e58a69b6a5547861c949abac1599d7ff83d5af53";
