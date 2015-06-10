@@ -17,9 +17,11 @@ namespace plugin
 	protected:
 		std::vector < plugin::function_plugin_base*> loaded_plugins;
 		virtual void nativeLoadPlugin() = 0;
+		void unloadPlugins();
 	public:
 		
 		void loadPlugins(math_func::function_interface*  f_interface);
+		
 		virtual ~plugin_manager();
 	};
 
