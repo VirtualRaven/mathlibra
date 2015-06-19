@@ -21,6 +21,9 @@ namespace interface
 		virtual wrapper_exception_info get_exception_info() = 0;
 		virtual bool exceptionOccured() = 0;
 
+		//Function unit
+		virtual std::vector<std::string> getFunctionNames() = 0;
+
 		//Memroy unit 
 		virtual std::vector<std::string> getVariableNames() = 0;
 		virtual double getVariableValue(std::string  name) = 0;
