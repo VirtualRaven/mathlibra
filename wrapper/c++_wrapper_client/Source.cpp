@@ -30,6 +30,11 @@ int run_test()
 	{
 		return false;
 	}
+	auto names = calc->getFunctionNames();
+	for (auto name : names)
+	{
+		std::cout << name << std::endl;
+	}
 	for (std::string expr : tests)
 	{
 		calc->set_arg(expr);
@@ -55,6 +60,7 @@ int run_test()
 
 int main()
 {
-	return run_test();
+	std::cout << "Test successfull:" << run_test();
+	std::cin.get();
 	
 }
