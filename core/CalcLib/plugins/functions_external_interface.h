@@ -33,7 +33,7 @@ namespace plugin
 	{		
 		friend void plugin_init(function_plugin_base* func, math_func::function_interface * function_unit);
 	protected:
-		const unsigned int function_size;
+		virtual const unsigned int function_size();
 		function* functions;/**< Pointer to a list of the functions the plug-in provides*/
 	public:
 		
