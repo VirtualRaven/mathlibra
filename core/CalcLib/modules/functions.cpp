@@ -78,6 +78,16 @@ namespace math_func
 
 		}
 
+		std::vector<std::string> function_interface::getFunctionNames()
+		{
+			std::vector<std::string> vec;
+			vec.reserve(this->funcs.size());
+			for (unsigned int i = 0; i < funcs.size(); i++)
+			{
+				vec.push_back(this->funcs[i].name);
+			}
+			return vec;
+		}
 	
 
 

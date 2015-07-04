@@ -24,6 +24,8 @@ namespace native
 		double execute_arg();
 		interface::wrapper_exception_info get_exception_info();
 		bool exceptionOccured();
+		//Fúnction unit
+		std::vector<std::string> getFunctionNames();
 
 		//Memroy unit 
 		std::vector<std::string> getVariableNames();

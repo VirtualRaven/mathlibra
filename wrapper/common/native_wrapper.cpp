@@ -188,6 +188,21 @@ namespace native
 			return;
 		}
 	}
+	std::vector<std::string> core_native_wrapper::getFunctionNames()
+	{
+		try
+		{
+			return this->functions.getFunctionNames();
+		}
+		catch (exception& e)
+		{
+			this->ex_inf.type = e.what();
+			this->ex_inf.desc = e.desc();
+			this->ex_inf.isCritical = e.critical();
+			this->exception_occurred = true;
+			return std::vector<std::string>();
+		}
+	}
 	
 };
 

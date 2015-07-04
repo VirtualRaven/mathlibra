@@ -69,6 +69,7 @@ namespace math_func
 		bool isGeneral(); /**< @return True if function last specified in isloaded() is of type generalFuncPtr. @note the last string to be sent to isloaded() is cached which this function works upon. */
 		void * get(std::string funcName); /**< Gets the an function pointer. @param funcName A string naming the function to search for. @return an void pointer to the funcName. @note The return needs to be converted to either an funcPtr or generalFuncPtr using an reinterpret_cast. */
 		void display(); /**< Outputs an list of loaded functions to cout. */
+		std::vector<std::string> getFunctionNames();
 	};
 	
 

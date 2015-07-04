@@ -50,10 +50,10 @@ void plugin::plugin_manager::unloadPlugins()
  {
 	
 	 std::vector<math_func::m_function> __funcs;
-	 __funcs.reserve(func->functions.size());
-	 for(plugin::function func_tmp : func->functions)
+	 __funcs.reserve(func->function_size);
+	 for (unsigned int i = 0; i < func->function_size; i++)
 	 {
-		 __funcs.push_back(math_func::m_function(func_tmp.name, func_tmp.ptr));
+		 __funcs.push_back(math_func::m_function(func->functions[i].name, func->functions[i].ptr));
 	 }
 	 function_unit->load(__funcs);
  }
