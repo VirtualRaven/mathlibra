@@ -29,6 +29,7 @@ namespace mathNode
 
 	public:
 		std::string name;
+		virtual void set(number_type) = 0; /**<Sets the value of the variable*/
 		virtual number_type eval()=0;
 		virtual bool is_pushable()=0; /**< @return True if variable can be pushed to the stack of the virtual machine. */
 

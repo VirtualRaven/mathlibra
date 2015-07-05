@@ -57,6 +57,7 @@ class mathExpressionNode_opr;
 		virtual ~mathExpressionNode_variable();
 		number_type eval();
 		bool is_pushable();
+		void set(number_type);
 		mathExpressionNode_variable(const mathExpressionNode_variable&);
 		mathExpressionNode_variable operator=(const mathExpressionNode_variable&);
 		void bind(node_base * context);
