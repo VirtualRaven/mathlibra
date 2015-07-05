@@ -87,7 +87,12 @@ namespace function_helper
 		else
 		{
 			n->raiseException("Wrong argument type");
+			return nullptr;
 		}
+	}
+	template<> nodeDataInterface* getData<nodeDataInterface*>(node_base * n)
+	{
+		return n->data;
 	}
 	template<> double getData<double>(node_base * n)
 	{

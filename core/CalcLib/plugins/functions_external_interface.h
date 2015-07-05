@@ -1,8 +1,7 @@
 
 #ifndef PLUGIN_SYSTEM_INCLUDED
 #define PLUGIN_SYSTEM_INCLUDED
-#include "modules/functions.h"
-#include "../exception.h"
+
 #include <vector>
 /**
  * @namespace plugin Contains all plugin related functions
@@ -10,11 +9,7 @@
 namespace plugin
 { 
 
-	typedef math_func::m_function::generalFuncPtr function_pointer;
-	class function_plugin_base;
-	
-	void plugin_init(function_plugin_base* func, math_func::function_interface * function_unit); /**<Called on all plugins to initilze and load them.*/
-
+	typedef number_type(*function_pointer)(tree::node_base*);
 	struct function
 	{
 		
@@ -31,13 +26,9 @@ namespace plugin
 	*/
 	class function_plugin_base
 	{		
-		friend void plugin_init(function_plugin_base* func, math_func::function_interface * function_unit);
-	protected:
-		virtual const unsigned int function_size()=0;
-		function* functions;/**< Pointer to a list of the functions the plug-in provides*/
 	public:
-		
-		
+		virtual const unsigned int function_size() = 0;
+		virtual function* get_funcs() = 0;/**< @return Pointer to a list of the functions the plug-in provides*/
 		virtual void plugin_init_event() = 0; /**< Called when before the plug-in is loaded. Can be used to initilize memory storage or similar*/
 		virtual void plugin_destruction_event() = 0; /**< Called when the plug-in is about to be unloaded. Must finish with "destroy this" */
 		//Plugin functions

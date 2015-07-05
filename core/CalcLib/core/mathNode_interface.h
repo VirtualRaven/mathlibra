@@ -1,14 +1,26 @@
 #ifndef MATHNODE_INTERFACE_H_INCLUDED
 #define MATHNODE_INTERFACE_H_INCLUDED
 #include "tree_interface.h"
-#include "modules/operators.h"
+
 
 using tree::node_base;
 using tree::nodeDataInterface;
 
+namespace memory
+{
+	class memory;
+}
+
+namespace operators
+{
+	typedef number_type(*operPtr)(number_type, number_type);
+	typedef number_type(*assigmentPtr)(memory::memory* mem, std::string name, number_type);
+}
+
 namespace mathNode
 {
 
+	
 
 	typedef double number_type;
 
