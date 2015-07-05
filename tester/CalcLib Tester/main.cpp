@@ -1,7 +1,7 @@
 //#define DEBUG
 #include <iostream>
 #include <cstring>
-
+#include <iomanip> 
 #include "tests.h"
 
 /* TODO
@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
 #ifndef DEBUG
 	err_redirect err; //remove cerr stream
 #endif
-
+	std::cout << std::setprecision(20);
 	
 	interpreter inter; 
 	std::string expression = "";

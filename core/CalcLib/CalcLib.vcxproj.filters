@@ -102,10 +102,10 @@
     <ClInclude Include="plugins\plugin_loader.h">
       <Filter>Header Files\plugin</Filter>
     </ClInclude>
-    <ClInclude Include="core\tree_interface.h">
+    <ClInclude Include="core\mathNode_interface.h">
       <Filter>Header Files\core</Filter>
     </ClInclude>
-    <ClInclude Include="core\mathNode_interface.h">
+    <ClInclude Include="core\tree_interface.h">
       <Filter>Header Files\core</Filter>
     </ClInclude>
   </ItemGroup>

@@ -79,7 +79,7 @@ namespace mathNode
 
 		void mathExpressionNode_variable::set(number_type x)
 		{
-			this->mem->set(this->name, x, false);
+			this->mem->set(this->name, x);
 		}
 
 		mathExpressionNode_variable::mathExpressionNode_variable(std::string var, memory::memory* mem, bool b)
