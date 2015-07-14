@@ -161,8 +161,6 @@ template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> paramet
 
 
 
-
-
 }
 
 #endif

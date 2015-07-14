@@ -3,7 +3,7 @@ namespace interface
 {
 
 
-
+#ifdef ENABLE_CORAX
     corax_program::~corax_program()
     {
 
@@ -12,6 +12,6 @@ namespace interface
     {
     //dtor
     }
-
+#endif // ENABLE_CORAX
 
 }

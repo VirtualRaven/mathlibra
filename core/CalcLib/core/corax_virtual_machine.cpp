@@ -1,3 +1,4 @@
+#ifdef ENABLE_CORAX
 #include "corax_virtual_machine.h"
 
 namespace CoraxVM
@@ -293,3 +294,4 @@ namespace CoraxVM
 
 }
 
+#endif

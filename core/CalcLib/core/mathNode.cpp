@@ -112,25 +112,18 @@ namespace mathNode
 
 		mathExpressionNode_opr::mathExpressionNode_opr()
 		{
-			this->operation =nullptr;
-			this->assignB=false;
+			this->ptr =nullptr;
 			this->type = tree::OPERATOR;
 
 		}
 
-		mathExpressionNode_opr::mathExpressionNode_opr(operators::operPtr operation)
+		mathExpressionNode_opr::mathExpressionNode_opr(operators::generic_oper_ptr operation)
 		{
-			this->operation = operation;
-			this->assignB = false;
+			this->ptr = operation;
+			
 			this->type = tree::OPERATOR;
 		}
-		mathExpressionNode_opr::mathExpressionNode_opr(operators::assigmentPtr assign)
-		{
-			this->assign =assign;
-			this->assignB=true;
-			this->type = tree::OPERATOR;
-
-		}
+		
 		mathExpressionNode_opr:: ~mathExpressionNode_opr()
 		{
 
@@ -142,23 +135,11 @@ namespace mathNode
 			{
 				throw nodeOops("Panic: syntax tree has unexpected null pointer",true);
 			}
-			if (assignB)
-			{
-				if (this->wrapperNode->sub1()->data->type == tree::VARIABLE)
-				{
-					mathExpressionNode_variable* tmp = dynamic_cast<mathExpressionNode_variable*>(this->wrapperNode->sub1()->data);
-					tmp->mem->set(tmp->name,this->wrapperNode->sub2()->data->eval());
-					return static_cast<double>(tmp->mem->get(tmp->name));
-				}
-				else throw tree::TreeStructOops("Non variable token on lefthand side of assigment operator\n",false);
-			}
 			else
 			{
-				if (operation != nullptr)
+				if (ptr != nullptr)
 				{
-					number_type arg1 = this->wrapperNode->sub1()->data->eval();
-					number_type arg2 = this->wrapperNode->sub2()->data->eval();
-					return this->operation(arg1, arg2);
+					return this->ptr(this);
 				}
 				else
 				{

@@ -71,8 +71,7 @@ class mathExpressionNode_opr;
 	{
 	public:
 
-		mathExpressionNode_opr(operators::operPtr operation);
-		mathExpressionNode_opr(operators::assigmentPtr assign);
+		mathExpressionNode_opr(operators::generic_oper_ptr ptr);
         mathExpressionNode_opr(void);
 		virtual  ~mathExpressionNode_opr();
 		number_type eval();

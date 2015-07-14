@@ -3,6 +3,7 @@
 
 #include "main.h"
 #include "modules/memory.h"
+#include "core/tree_interface.h"
 #include <cmath>
 #include <vector>
 
@@ -12,22 +13,15 @@ struct variableToken; //Forward declared from core
 */
 namespace operators
 {
-    typedef number_type(*operPtr)(number_type,number_type);
-    typedef number_type(*assigmentPtr)(memory::memory* mem,std::string name, number_type);
-    enum operationType{NOT_SET,ASSIGN,MATH};
+	typedef number_type(*generic_oper_ptr)(tree::nodeDataInterface*);
+
 
     struct interpreter_operator
     {
-		union
-		{
-			operPtr oper;
-			assigmentPtr assign;
-		};
+		generic_oper_ptr ptr;
         char operChar;
         short baseWheight;
-        operationType operType;
-        interpreter_operator(operPtr opr, char symbol, short wheight);
-        interpreter_operator(assigmentPtr assign, char symbol, short wheight);
+        interpreter_operator(generic_oper_ptr opr, char symbol, short wheight);
         interpreter_operator();
     };
 

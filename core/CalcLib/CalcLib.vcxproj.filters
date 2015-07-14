@@ -87,9 +87,6 @@
     <ClInclude Include="interface\interface.h">
       <Filter>Header Files\interface</Filter>
     </ClInclude>
-    <ClInclude Include="interface\interpreter_interface.h">
-      <Filter>Header Files\interface</Filter>
-    </ClInclude>
     <ClInclude Include="core\export_lib_version.h">
       <Filter>Header Files\core</Filter>
     </ClInclude>
@@ -107,6 +104,12 @@
     </ClInclude>
     <ClInclude Include="core\tree_interface.h">
       <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\internal_helper.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\interpreter_interface.h">
+      <Filter>Header Files\modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

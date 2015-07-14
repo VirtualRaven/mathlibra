@@ -17,41 +17,20 @@
 
 	 tree::nodeDataInterface * token::operatorToken::node()
 	{
-		switch (operType)
-		{
-		case operators::ASSIGN:
-		{
-					   return new mathNode::mathExpressionNode_opr(assign);
-		}
-			break;
-		case operators::MATH:
-		{
-			return new mathNode::mathExpressionNode_opr(oper);
-		}
-			break;
-		default:
-		{
-			return nullptr;
-		}
-			break;
-		}
+		return new mathNode::mathExpressionNode_opr(this->ptr);
 
 	}
 	 bool  token::operatorToken::hasNode()
 	{
 		return true;
 	}
-	 token::operatorToken::operatorToken(operators::operPtr opr, char symbol, short wheight)
+	 token::operatorToken::operatorToken(operators::generic_oper_ptr opr, char symbol, short wheight)
 	 :baseToken(),
 	 operators::interpreter_operator( opr, symbol,wheight)
 	{
 		this->type = tree::OPERATOR;
 	}
-	 token::operatorToken::operatorToken(operators::assigmentPtr assigne, char symbol, short wheight)
-	 :baseToken(), operators::interpreter_operator(assign,symbol,wheight)
-	{
-		this->type = tree::OPERATOR;
-	}
+
 	 token::operatorToken::operatorToken(operators::interpreter_operator opr)
 	:baseToken(), operators::interpreter_operator(opr)
 	{

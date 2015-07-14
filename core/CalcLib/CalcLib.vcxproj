@@ -97,6 +97,7 @@ xcopy /Y "$(TargetPath)" "$(USERPROFILE)\dropbox\binaries\$(SolutionName)\"%t%
     <ClInclude Include="core\build.h" />
     <ClInclude Include="core\corax_virtual_machine.h" />
     <ClInclude Include="core\export_lib_version.h" />
+    <ClInclude Include="core\internal_helper.h" />
     <ClInclude Include="core\interpreter.h" />
     <ClInclude Include="core\mathNode.h" />
     <ClInclude Include="core\mathNode_interface.h" />

@@ -37,6 +37,7 @@ class interpreter;
 /** 
  * @namespace CoraxVM Virtual machine name-space.  Contains functions and classes related to the virtual machine runtime environment. 
  */
+#ifdef ENABLE_CORAX
 namespace CoraxVM
 {
 	/**
@@ -54,7 +55,7 @@ namespace CoraxVM
 		Corax_program_builder_module(interpreter * ptr); /**< Constructor for the helper class. @param ptr Pointer to the interpreter object which tree shall be used for the compilation. */
 	};
 };
-
+#endif //ENABLE_CORAX
 rootNode buildEntry1(interpreter * parentInterpreter);
 
 /**
@@ -65,7 +66,9 @@ rootNode buildEntry1(interpreter * parentInterpreter);
 class interpreter : public interface::interpreter_interface
 {
     friend rootNode buildEntry1(interpreter * parentInterpreter);
+#ifdef ENABLE_CORAX
 	friend CoraxVM::Corax_program_builder_module;
+#endif //ENABLE_CORAX
 	char * expression;
 	unsigned short expressionLength;
 	unsigned short startOperatorPos; //contains the index in the tokens array where the starting operator is located

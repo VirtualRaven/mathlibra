@@ -62,7 +62,7 @@ bool menu(memory::memory& mem,math_func::function_interface& func)
 		}
 		std::string exr = "x=(sqrt(sqrt(5*5)^2)*100)/5*(sin(PI)^2+cos(PI)^2)";
 		test::profileInterpreter(exr);
-		test::profileInterpreterVM(exr);
+//		test::profileInterpreterVM(exr);
 		return false;
 	}
 	else if (input == "7")

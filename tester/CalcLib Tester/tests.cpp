@@ -45,6 +45,8 @@ void test::profileInterpreter(std::string& exr)
 		std::cout << " Description: " << e.desc() << "\n]\n";
 	}
 }
+
+#ifdef ENABLE_CORAX
 void test::profileInterpreterVM(std::string& exr)
 {
 	try
@@ -74,6 +76,7 @@ void test::profileInterpreterVM(std::string& exr)
 
 		const unsigned int test_lenght = 10000;
 		std::cout << "Running test\n";
+		#ifdef ENABLE_CORAX
 		CoraxVM::corax_program prgm;
 		CoraxVM::Corax_program_builder_module prgm_builder(&inter);
 		CoraxVM::corax_runtime runtime;
@@ -101,3 +104,5 @@ void test::profileInterpreterVM(std::string& exr)
 		std::cout << " Description: " << e.desc() << "\n]\n";
 	}
 }
+#endif
+#endif //ENABLE_CORAX

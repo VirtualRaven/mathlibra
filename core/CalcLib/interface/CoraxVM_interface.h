@@ -1,4 +1,5 @@
- #ifndef CORAXVM_INTERFACE_INCLUDED
+#ifdef ENABLE_CORAX
+#ifndef CORAXVM_INTERFACE_INCLUDED
  #define CORAXVM_INTERFACE_INCLUDED
   #include "modules/functions.h"
   #include "modules/memory.h"
@@ -32,3 +33,4 @@ namespace interface
     };
 }
  #endif // CORAXVM_INTERFACE_INCLUDED
+#endif //ENABLE_CORAX

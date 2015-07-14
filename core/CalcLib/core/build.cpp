@@ -155,7 +155,7 @@ bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)
 
 
 
-			if (tgt->operation == nullptr && tgt->operation == nullptr)
+			if (tgt->ptr == nullptr)
 			{
 				tgt->type = tree::DUMMY;
 			}

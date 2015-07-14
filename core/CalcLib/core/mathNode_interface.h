@@ -13,8 +13,7 @@ namespace memory
 
 namespace operators
 {
-	typedef number_type(*operPtr)(number_type, number_type);
-	typedef number_type(*assigmentPtr)(memory::memory* mem, std::string name, number_type);
+	typedef number_type(*generic_oper_ptr)(tree::nodeDataInterface*);
 }
 
 namespace mathNode
@@ -54,12 +53,9 @@ namespace mathNode
 	{
 	public:
 
-		union{ //Saves memory as these pointers will never be used at the same time
-
-			operators::operPtr operation;
-			operators::assigmentPtr assign;
-		};
+		operators::generic_oper_ptr ptr;
 		bool assignB; /**< True if the currently contained function in the node is of assigmentPtr type, else false. */
+		
 		virtual number_type eval()=0;
 
 	};

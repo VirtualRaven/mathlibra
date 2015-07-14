@@ -7,8 +7,8 @@
 extern "C"
 {
 extern interface::interpreter_interface* create_interpreter();
-extern interface::corax_runtime_interface* create_corax_runtime();
-extern interface::corax_program* create_corax_program();
+//extern interface::corax_runtime_interface* create_corax_runtime();
+//extern interface::corax_program* create_corax_program();
 
 }
 

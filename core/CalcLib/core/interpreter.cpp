@@ -608,7 +608,7 @@ interpreterOops::interpreterOops(std::string inf, bool isCritical) : exception(i
 	{
 		this->current_functions = functions;
 	}
-
+#ifdef ENABLE_CORAX
 	void CoraxVM::Corax_program_builder_module::_rpn(node * nodePtr, CoraxVM::corax_program * prgm )
 	{
 	    if(nodePtr == nullptr)
@@ -730,7 +730,7 @@ interpreterOops::interpreterOops(std::string inf, bool isCritical) : exception(i
 
 	}
 	CoraxVM::Corax_program_builder_module::Corax_program_builder_module(interpreter* ptr) : _ptr(ptr){}
-
+#endif //ENABLE_CORAX
 	/*
 			char * expression;
 	unsigned short expressionLength;

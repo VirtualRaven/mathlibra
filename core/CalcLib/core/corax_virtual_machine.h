@@ -1,4 +1,5 @@
-#ifndef CORAX_VIRTUAL_MACHINE_H_INCLUDED
+#ifdef ENABLE_CORAX
+#ifndef CORAX_VIRTUAL_MACHINE_H_INCLUDED 
 #define CORAX_VIRTUAL_MACHINE_H_INCLUDED
 #include <cstdint>
 #include <string>
@@ -128,3 +129,4 @@ namespace CoraxVM
 
 }
 #endif // CORAX_VIRTUAL_MACHINE_H_INCLUDED
+#endif //ENABLE_CORAX 
