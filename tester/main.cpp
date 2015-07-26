@@ -41,7 +41,7 @@ bool menu(memory::memory& mem,math_func::function_interface& func)
 	else if (input == "3")
 	{
 		func.display();
-		return false;
+
 	}
 	else if (input == "4")
 	{
@@ -110,7 +110,6 @@ int main(int argc, char* argv[])
 	functions.load(math_func::std_math_num_func);
 	
 	inter.setFunction(&functions);
-
 	auto my_manager = plugin::get_platform_specific_manager();
 	if(my_manager != nullptr)
 	{

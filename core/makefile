@@ -5,7 +5,7 @@ SDXXF =  -g -fPIC -Wall -std=c++11 -I ./ -fexceptions
 
 
 LIBARY= libcalc
-OUT_DIR = "../../bin/"
+OUT_DIR = "../bin/"
 RAW_SOURCE = $(shell find ./*cpp */*.cpp)
 SOURCE_FILES	=$(patsubst %.cpp,%.o,$(RAW_SOURCE))
 
