@@ -5,6 +5,7 @@
 #define FUNCTION_HELPER_INCUDED
 #include <stack>
 #include "core/mathNode_interface.h"
+#include <iostream>
 /**
 * @namespace parameter_package Functions for creating packages of function arguments of different types
 */ 
@@ -110,7 +111,7 @@ namespace function_helper
  */
 template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> parameter_package::package<arg0>
 	{
-		auto tmp = getData<typename arg0>(s.top());
+		auto tmp = getData<arg0>(s.top());
 		s.pop();
 		return parameter_package::package<arg0>(tmp);
 	};

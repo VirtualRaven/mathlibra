@@ -1,7 +1,7 @@
 CC=g++
 
-SCXXF = -Wall -fPIC -std=c++11 -I ./ -I ../ -I ../common/ -I ../../core/CalcLib/ -fexceptions
-SDXXF =  -g -fPIC -Wall -std=c++11 -I ./ -I ../ -I ../common/ -I ../../core/CalcLib/ -fexceptions
+SCXXF = -Wall -fPIC -std=c++11 -I ./ -I ../ -I ../common/ -I ../../core/ -fexceptions
+SDXXF =  -g -fPIC -Wall -std=c++11 -I ./ -I ../ -I ../common/ -I ../../core/ -fexceptions
 
 EXECUTABLE=test.elf
 LIBARY= libcalcwrapper

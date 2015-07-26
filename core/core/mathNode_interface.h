@@ -98,27 +98,27 @@ namespace mathNode
 			/**
 			 * Contains the tokenType of T.
 			 */
-			enum{ TYPE = -1 };
+		 	static const tree::tokenType TYPE = tree::UNKNOWN;
 		};
 		template<> struct enum_type < mathNode::mathExpressionNode_func_interface* >
 		{
-			enum{ TYPE = tree::FUNCTION };
+			static const tree::tokenType TYPE = tree::FUNCTION;
 		};
 		template<> struct enum_type < mathNode::mathExpressionNode_func_tree_interface* >
 		{
-			enum{ TYPE = tree::FUNCTION_TREE };
+			static const tree::tokenType TYPE = tree::FUNCTION_TREE;
 		};
 		template<> struct enum_type < mathNode::mathExpressionNode_val_interface* >
 		{
-			enum{ TYPE = tree::VALUE };
+			static const tree::tokenType TYPE = tree::VALUE;
 		};
 		template<> struct enum_type < mathNode::mathExpressionNode_opr_interface* >
 		{
-			enum{ TYPE = tree::OPERATOR };
+			static const tree::tokenType TYPE = tree::OPERATOR;
 		};
 		template<> struct enum_type < mathNode::mathExpressionNode_variable_interface* >
 		{
-			enum{ TYPE = tree::VARIABLE };
+			static const tree::tokenType  TYPE = tree::VARIABLE;
 		};
 
 

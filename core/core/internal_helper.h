@@ -1,4 +1,5 @@
 #include "core/mathNode_interface.h"
+#include "core/tree.h"
 #include "modules/function_helper.h"
 namespace internal_helper
 {

@@ -1,12 +1,12 @@
 CC=g++
 
-SCXXF = -Wall  -std=c++11 -I ./ -I ../../core/CalcLib -fexceptions
-SDXXF =  -g  -Wall -std=c++11 -I ./ -I ../../core/CalcLib -fexceptions
+SCXXF = -Wall  -std=c++11 -I ./ -I ../core/ -fexceptions
+SDXXF =  -g  -Wall -std=c++11 -I ./ -I ../core/ -fexceptions
 
 
 EXECUTABLE=calc
 
-BIN_DIR = ../../bin/
+BIN_DIR = ../bin/
 RAW_SOURCE = $(shell find ./*cpp )
 SOURCE_FILES	=$(patsubst %.cpp,%.o,$(RAW_SOURCE))
 LIB_SHORT_NAME = calc
