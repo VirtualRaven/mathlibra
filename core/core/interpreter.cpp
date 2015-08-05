@@ -11,7 +11,7 @@ interpreterOops::interpreterOops(std::string inf, bool isCritical) : exception(i
 
 
 
-	bool PNegativeDigit(std::vector<token::baseToken*>& tokens, char ** expression, short i)
+	bool PNegativeDigit(std::vector<token::baseToken*>& tokens, char ** expression, unsigned short i)
 {
 	if (!tokens.empty())
 	{
@@ -100,7 +100,7 @@ interpreterOops::interpreterOops(std::string inf, bool isCritical) : exception(i
 	{
 		ptr_protect<char*,true> tmp_buffer = safe_alloc<char>(expressionLength);
 		short tmp_buffer_index =0;
-		for(int i = 0; i < expressionLength; i++)
+		for(unsigned int i = 0; i < expressionLength; i++)
 		{
 			if(expression[i] != ' ' )
 			{
@@ -141,13 +141,13 @@ interpreterOops::interpreterOops(std::string inf, bool isCritical) : exception(i
 		tokens.reserve(expressionLength); 
 		short extraOperatorWheight =0;
 		this->startOperatorPos = 0;
-		short lowestWheight = 9999;
+		size_t lowestWheight = 9999;
 		std::stack<token::parenthesesToken *> parStack;
-		for(int i = 0; i< expressionLength; i++)
+		for(unsigned short i = 0; i< expressionLength; i++)
 		{
 			if(expression[i] == '(')
 			{
-				int startPos = i;
+				short startPos = i;
 				if (tokens.size() > 0 && (tokens.back()->type == tree::VALUE || tokens.back()->type == tree::VARIABLE) && this->_operators->inArray('*')) //If priviouse value or variable is an value and an multiplication sign
 				{
 					ptr_protect<token::operatorToken*, false> tmp(new token::operatorToken(_operators->getCurrent()));
@@ -193,7 +193,7 @@ interpreterOops::interpreterOops(std::string inf, bool isCritical) : exception(i
 			{
 				ptr_protect<token::valueToken*, false> tmp(new token::valueToken(i, 0));
 				short valueLength=0;
-				for(int i2 =i+1; i2 < expressionLength; i2++)
+				for(unsigned int i2 =i+1; i2 < expressionLength; i2++)
 				{
 					if( !isdigit(expression[i2]) && expression[i2] !='.' && expression[i2] != 'e' && expression[i2] != '-' )
 					{
@@ -238,7 +238,7 @@ interpreterOops::interpreterOops(std::string inf, bool isCritical) : exception(i
 			{
 				ptr_protect<token::valueToken*, false> tmp(new token::valueToken(i, 0));
 				short valueLength = 0;
-				for (int i2 = i + 1; i2 < expressionLength; i2++)
+				for (unsigned int i2 = i + 1; i2 < expressionLength; i2++)
 				{
 					if (!isdigit(expression[i2]) && expression[i2] != '.' && expression[i2] != 'e' && expression[i2] != '-')
 					{
@@ -354,7 +354,7 @@ interpreterOops::interpreterOops(std::string inf, bool isCritical) : exception(i
 					short endPos = 0;
 					short startPos = i;
 					std::string name;
-					for (int i2 = i + 1; i2 < expressionLength; i2++)
+					for (unsigned short i2 = i + 1; i2 < expressionLength; i2++)
 					{
 
 						if (!isalpha(expression[i2]))
@@ -473,9 +473,9 @@ interpreterOops::interpreterOops(std::string inf, bool isCritical) : exception(i
 
 
 
-	void interpreter::setMemory(memory::memory* mem)
+	void interpreter::setMemory(memory::memory* mem_)
 	{
-		this->mem = mem;
+		this->mem = mem_;
 	}
 	void interpreter::setOperator(operators::operators_interface* operators)
 	{
@@ -569,13 +569,13 @@ interpreterOops::interpreterOops(std::string inf, bool isCritical) : exception(i
         }
 		else throw interpreterOops("Tried to execute unfinished expresion",false);
 	}
-	void interpreter::set(const char * expression, short lenght)
+	void interpreter::set(const char * expression_, unsigned short lenght)
 	{
 		if (lenght > 0)
 		{
 
 			allocExpression(lenght);
-			memcpy(this->expression, expression, lenght*sizeof(char));
+			memcpy(this->expression, expression_, lenght*sizeof(char));
 			this->stripSlashes();
 		}
 		else throw interpreterOops("Passed empty expression to interpreter!\n",false);
@@ -764,9 +764,9 @@ interpreterOops::interpreterOops(std::string inf, bool isCritical) : exception(i
 	}
 	interpreter& interpreter::operator=(const interpreter& other)
 	{
-		throw interpreterOops("Can't copy interpreter object",true);
+		return *this;
 	}
 	interpreter& interpreter::operator=(interpreter&& other)
 	{
-		throw interpreterOops("Can't copy interpreter object", true);
+		return *this;
 	}

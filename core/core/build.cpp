@@ -2,7 +2,7 @@
 
 using tree::rootNode;
 
-buildVector::buildVector(short lowLimit, short hiLimit, short vecOffset, std::vector<token::baseToken*>* vecPtr)
+buildVector::buildVector(size_t lowLimit, size_t hiLimit, size_t vecOffset, std::vector<token::baseToken*>* vecPtr)
 	:lowLimit(lowLimit),
 	hiLimit(hiLimit),
 	vecOffset(vecOffset),
@@ -15,14 +15,14 @@ buildVector::buildVector(short lowLimit, short hiLimit, short vecOffset, std::ve
 	vecPtr(nullptr)
 	{}
 	//Return types, -1 error, >0 next operator index
-	short buildVector::calculateNextOperation(short lowLimit, short hiLimit)
+	size_t buildVector::calculateNextOperation(size_t lowLimit, size_t hiLimit)
 	{
-		short lowWheight = 9999;
-		short nextOperation = -2;
-		short lenght = 0;
-		short values = 0;
+		size_t lowWheight = 9999;
+		size_t nextOperation = -2;
+		size_t lenght = 0;
+		size_t values = 0;
 		token::baseToken* basePtr = nullptr;
-		for (int i = lowLimit; i < hiLimit; i++)
+		for (size_t i = lowLimit; i < hiLimit; i++)
 		{
 			 
 			basePtr = vecPtr->operator[](i);
@@ -60,7 +60,7 @@ buildVector::buildVector(short lowLimit, short hiLimit, short vecOffset, std::ve
 		}
 		else if (values == 1 && lenght == 1)	//There is nothing more to do, a value is the only member of the interval
 		{
-			for (int i = lowLimit; i < hiLimit; i++)
+			for (size_t i = lowLimit; i < hiLimit; i++)
 			{
 				basePtr = vecPtr->operator[](i);
 				if (basePtr->type == tree::VALUE || basePtr->type == tree::VARIABLE)
@@ -112,7 +112,7 @@ bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)
 
 			//Create first sub branche
 
-			short result = node1.calculateNextOperation(node1.lowLimit, node1.hiLimit);
+			size_t result = node1.calculateNextOperation(node1.lowLimit, node1.hiLimit);
 			if(result < 0)
 			{
 				return false;
@@ -181,7 +181,7 @@ bool _function_build(mathNode::mathExpressionNode_func * tgt, buildVector vec)
 		std::cerr << "Excpected parentheses after function name";
 		return false;
 	}
-	for (int i = vec.lowLimit; i < vec.vecOffset; i++)
+	for (size_t i = vec.lowLimit; i < vec.vecOffset; i++)
 	{
 		if (vec.vecPtr->operator[](i)->type != tree::PARENTHESES)
 		{
@@ -191,7 +191,7 @@ bool _function_build(mathNode::mathExpressionNode_func * tgt, buildVector vec)
 	}
 	buildVector node1(vec.vecOffset + 1, vec.hiLimit, 0, vec.vecPtr);
 	//Create first sub branche
-	short result = node1.calculateNextOperation(node1.lowLimit, node1.hiLimit);
+	size_t result = node1.calculateNextOperation(node1.lowLimit, node1.hiLimit);
 	if (result < 0)
 	{
 		return false;
@@ -231,7 +231,7 @@ bool _function_build_tree(mathNode::mathExpressionNode_func_tree * tgt, buildVec
 		std::cerr << "Excpected parentheses after function name";
 		return false;
 	}
-	for (int i = vec.lowLimit; i < vec.vecOffset; i++)
+	for (unsigned int i = vec.lowLimit; i < vec.vecOffset; i++)
 	{
 		if (vec.vecPtr->operator[](i)->type != tree::PARENTHESES)
 		{
@@ -241,7 +241,7 @@ bool _function_build_tree(mathNode::mathExpressionNode_func_tree * tgt, buildVec
 	}
 	buildVector node1(vec.vecOffset + 1, vec.hiLimit, 0, vec.vecPtr);
 	//Create first sub branche
-	short result = node1.calculateNextOperation(node1.lowLimit, node1.hiLimit);
+	size_t result = node1.calculateNextOperation(node1.lowLimit, node1.hiLimit);
 	if (result < 0)
 	{
 		return false;

@@ -20,7 +20,7 @@ namespace operators
     {
 		generic_oper_ptr ptr;
         char operChar;
-        short baseWheight;
+        size_t baseWheight;
         interpreter_operator(generic_oper_ptr opr, char symbol, short wheight);
         interpreter_operator();
     };

@@ -109,7 +109,7 @@ struct funcToken : public baseToken
 		funcPtr ptr;
 		generalFuncPtr gptr;
 	};
-	short baseWheight; /**< Weight of the operator. Higher weight means higher execution priority.  */
+	unsigned short baseWheight; /**< Weight of the operator. Higher weight means higher execution priority.  */
 	tree::nodeDataInterface* node();
 	bool  hasNode();
 	funcToken(short startPos, short endPos, funcPtr ptr);
