@@ -1,3 +1,4 @@
-#include "lib_git_version.h"
+#include "GIT_VERSION.h"
 
-const char * LIB_VERSION = GIT_SHA_COMMIT;
+const char * LIB_VERSION = GIT_NAME;
+const char * LIB_SHA = GIT_SHA;

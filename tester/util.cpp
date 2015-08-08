@@ -10,7 +10,8 @@ namespace util
 	{
 		std::cout << "-[ Build date: " << __DATE__ << "]\n";
 		std::cout << "-[ Execution enviroment " << EXEC_ENV_STRING << "]\n";
-		std::cout  << "-[ Version: " << LIB_VERSION << "]\n\n";
+		std::cout << "-[ Version: " << LIB_VERSION << " ]\n";
+		std::cout << "-[SHA: "<< LIB_SHA <<" ]\n\n";
 		std::cout << "-[DEBUG: ";
 
 #ifdef DEBUG

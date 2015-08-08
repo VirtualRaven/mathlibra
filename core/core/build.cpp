@@ -1,6 +1,23 @@
 #include "build.h"
-
+#include "ptr_protect.h"
 using tree::rootNode;
+
+struct build_exception : exception
+{
+	const char* what()
+	{
+		return "expression interpetation failure";
+	}
+	
+	build_exception(std::string inf)
+	{
+		this->info = inf;
+		this->_isCritical = false;
+	}
+
+};
+
+
 
 buildVector::buildVector(size_t lowLimit, size_t hiLimit, size_t vecOffset, std::vector<token::baseToken*>* vecPtr)
 	:lowLimit(lowLimit),
@@ -73,7 +90,7 @@ buildVector::buildVector(size_t lowLimit, size_t hiLimit, size_t vecOffset, std:
 
 		//Find error if program comes here
 		std::cerr << "-[ Unknown error ]\n";
-		return -2;
+		throw build_exception("Unknow error in syntax interpetation");
 	}
 
 bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)
@@ -118,7 +135,8 @@ bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)
 				return false;
 			}
 
-			tree::nodeDataInterface* mathNode1;
+			tree::nodeDataInterface* mathNode1=nullptr;
+			ptr_protect<nodeDataInterface*, false> mathNode1_guard(mathNode1);
 			if(vec.vecPtr->operator[](result)->hasNode())
 			{
 				mathNode1 = vec.vecPtr->operator[](result)->node();
@@ -139,8 +157,8 @@ bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)
 				return false;
 			}
 
-			tree::nodeDataInterface* mathNode2;
-
+			tree::nodeDataInterface* mathNode2=nullptr;
+			ptr_protect<nodeDataInterface*, false> mathNode2_guard(mathNode2);
 			if (vec.vecPtr->operator[](result)->hasNode())
 			{
 				mathNode2 = vec.vecPtr->operator[](result)->node();
@@ -161,6 +179,10 @@ bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)
 			}
 			auto tmp = static_cast<tree::node*>(nodeDataInterface_wrapper_access(tgt));
 			tmp->createSubNodes(mathNode1, mathNode2);
+			
+			mathNode1_guard.release();
+			mathNode2_guard.release();
+			
 			if( !buildSubNodes(mathNode1,node1) || 	!buildSubNodes(mathNode2,node2))
 			{
 				return false;

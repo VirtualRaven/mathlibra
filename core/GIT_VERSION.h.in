@@ -1,2 +1,2 @@
-#define GIT_NAME	@VERSION_NAME@
-#define GIT_SHA		@VERSION_SHA@
+#define GIT_NAME	"@VERSION_NAME@"
+#define GIT_SHA		"@VERSION_SHA@"
