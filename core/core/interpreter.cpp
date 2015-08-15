@@ -1,5 +1,6 @@
 #include "interpreter.h"
 #include "ptr_protect.h"
+#include "function_obj.h"
 
 interpreterOops::interpreterOops(std::string inf, bool isCritical) : exception(inf,isCritical){}
 
@@ -79,8 +80,11 @@ interpreterOops::interpreterOops(std::string inf, bool isCritical) : exception(i
 	    if(!rootEmpty)
         {
             root.deleteSubNodes();
-            root.data->destroy();
-            root.data=nullptr;
+			if (root.data != nullptr)
+			{
+				root.data->destroy();
+				root.data = nullptr;
+			}
             rootEmpty=true;
         }
 	}
@@ -564,7 +568,9 @@ interpreterOops::interpreterOops(std::string inf, bool isCritical) : exception(i
             this->root.integrityTest();
 #endif
 			this->root.TakeContext();
-			return this->root.data->eval();
+			math_func::interpreted_func obj( &this->root,this->mem);
+			return obj.exec(2);
+			//return this->root.data->eval();
 
         }
 		else throw interpreterOops("Tried to execute unfinished expresion",false);

@@ -28,12 +28,13 @@ namespace tree
 	 *The interface is further extended with functions for deletion and creation of new child branches.
 	 *node also contains move constructors.
 	 */
-
+	class rootNode;
 	class node : public  node_base
 	{
 	protected:
 		node * nodePtr1;
 		node * nodePtr2;
+		friend rootNode;
 	public:
 
 		void createSubNodes(nodeDataInterface* data1, nodeDataInterface* data2 = nullptr); /**< Construct one or two sub nodes to the current node. @param data1 Data to add to the first child branch. @param data2 Data to add to the second child branch, if data2 == nullptr no second child-branch will be created. */
@@ -76,7 +77,8 @@ namespace tree
 		rootNode& operator=(const rootNode& sourceNode);
 		rootNode(rootNode&& sourceNode);
 		rootNode& operator=(rootNode&& sourceNode);
-		
+		rootNode& operator=(node&& sourceNode);
+		rootNode(node&& sourceNode);
 	};
 
 	void display_tree(rootNode tree);

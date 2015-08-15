@@ -106,7 +106,6 @@ public:
 	void set(const char * expression_, unsigned short lenght); /**< Sets the expression to interpret. @param expression_ Pointer to an c-style string. @param lenght the lenght of the string excluding any termination characters.*/
 	interpreter();
 	interpreter(interpreter&& other);
-	
 
 	~interpreter();
 	
