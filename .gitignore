@@ -12,6 +12,7 @@
 *.ipch
 *.metagen
 *.sdf
+*.pyc
 tester/CalcLib Tester/git_version.h
 core/CalcLib/lib_git_version.h
 *.zip
