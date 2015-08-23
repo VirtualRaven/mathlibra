@@ -1,0 +1,10 @@
+cmake_minimum_required(VERSION 3.2)
+include_directories(common)
+include_directories(${CMAKE_SOURCE_DIR}/core)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+add_subdirectory(c++_wrapper)
+add_subdirectory(c++_wrapper_client)
+if(WIN32 AND C_SHARP_LIB)
+	add_subdirectory(c_sharp_wrapper)
+endif()
+

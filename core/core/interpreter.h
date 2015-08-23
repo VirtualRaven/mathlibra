@@ -70,8 +70,8 @@ class interpreter : public interface::interpreter_interface
 	friend CoraxVM::Corax_program_builder_module;
 #endif //ENABLE_CORAX
 	char * expression;
-	unsigned short expressionLength;
-	unsigned short startOperatorPos; //contains the index in the tokens array where the starting operator is located
+	size_t expressionLength;
+	size_t startOperatorPos; //contains the index in the tokens array where the starting operator is located
 	operators::operators_interface* _operators;
 
 
@@ -91,22 +91,23 @@ class interpreter : public interface::interpreter_interface
 	bool lexicalAnalys();
 	bool buildSyntaxTree();
 	
-
+	interpreter(const interpreter& other);
+	interpreter& operator=(const interpreter& other);
+	interpreter& operator=(interpreter&& other);
 
 public:
 	/*Warning the interpeter does not copy the memory object.
 	Therefore must the pointer remain valid throug the lifetime of the interpreter object*/
 	void setOperator(operators::operators_interface* operators); /**< Load operator module. @param operators Pointer to the  operator module to load. @note does not copy the module, therefore the pointer must remain valid through the lifetime of the interpeter. */
-	void setMemory(memory::memory* mem); /**< Load memory module. @param operators Pointer to the module to load. @note does not copy the module, therefore the pointer must remain valid through the lifetime of the interpeter. */
+	void setMemory(memory::memory* mem_); /**< Load memory module. @param mem_ Pointer to the module to load. @note does not copy the module, therefore the pointer must remain valid through the lifetime of the interpeter. */
 	void setFunction(math_func::function_interface* functions); /**< Load function module. @param operators Pointer to the  module to load. @note does not copy the module, therefore the pointer must remain valid through the lifetime of the interpeter. */
 	bool interpret(); /**< Construct the abstract syntax tree. @return True if tree construction was successful. @note The tree remains until the next call to interpret() or the destructor. Thus several calls can be made to exec cheaply after the construction.*/
 	number_type exec(); /**< Evaluate the abstract syntax tree. @return The result of the tree evaluation. */
-	void set(const char * expression, short lenght); /**< Sets the expression to interpret. @param expression Pointer to an c-style string. @param lenght the lenght of the string excluding any termination characters.*/
+	void set(const char * expression_, unsigned short lenght); /**< Sets the expression to interpret. @param expression_ Pointer to an c-style string. @param lenght the lenght of the string excluding any termination characters.*/
 	interpreter();
 	interpreter(interpreter&& other);
-	interpreter(const interpreter& other);
-	interpreter& operator=(const interpreter& other);
-	interpreter& operator=(interpreter&& other);
+	
+
 	~interpreter();
 	
 };

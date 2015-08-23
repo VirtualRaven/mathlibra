@@ -75,6 +75,7 @@ bool menu(memory::memory& mem,math_func::function_interface& func)
 		std::cout << "Unkown input, try again\n";
 		return menu(mem,func);
 	}
+	return false;
 }
 int main(int argc, char* argv[])
 {

@@ -1,11 +1,11 @@
-#include "stdafx.h"
 #include "native_class_wrapper.h"
 #include "core/export_lib_version.h"
 namespace native
 {
 	const char * CoreVersion = LIB_VERSION;
-	core_native_wrapper::core_native_wrapper() : manager(plugin::get_platform_specific_manager())
+	core_native_wrapper::core_native_wrapper() : manager(plugin::get_platform_specific_manager()) , exception_occurred(false)
 	{
+
 		
 		//Load functions into the function container
 		this->functions.load(math_func::std_math_func);

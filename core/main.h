@@ -30,8 +30,6 @@ namespace util
 	void help();
 	
 }
-#ifdef GIT_COMMIT_HASH
-extern const char * git_version;
-#endif //GIT_COMMIT_HASH
+
 #endif
 

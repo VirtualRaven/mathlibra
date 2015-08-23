@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.2)
+file(GLOB_RECURSE TESTER_SRC ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
+include_directories(${CMAKE_SOURCE_DIR}/core)
+add_executable(tester ${TESTER_SRC})
+target_link_libraries(tester core_lib)
