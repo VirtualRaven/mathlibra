@@ -233,4 +233,4 @@ namespace mathNode
 {
     std::cerr << "Data type "<< t->type<< "\n";
 }
-};
+}

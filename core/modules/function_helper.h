@@ -114,7 +114,7 @@ template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> paramet
 		auto tmp = getData<arg0>(s.top());
 		s.pop();
 		return parameter_package::package<arg0>(tmp);
-	};
+	}
 
 	template< typename arg0, typename arg1, typename... argN> auto fillPackage(std::stack<node_base*>& s) -> parameter_package::package<arg0, arg1, argN...>
 	{

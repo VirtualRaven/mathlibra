@@ -42,5 +42,5 @@ namespace interface
 
 	};
 
-};
+}
 #endif // INTERPRETER_INTERFACE_H_INCLUDED

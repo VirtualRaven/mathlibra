@@ -38,5 +38,5 @@ namespace interface
 		virtual ~calc_lib_interface(){};
 
 	};
-};
+}
 #endif

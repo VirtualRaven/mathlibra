@@ -29,7 +29,7 @@ interpreterOops::interpreterOops(std::string inf, bool isCritical) : exception(i
 
 	}
 	else return true;
-};
+}
 
 
 

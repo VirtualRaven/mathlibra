@@ -81,5 +81,5 @@ namespace math_func
 	extern std::vector<math_func::m_function> std_math_num_func;
 
 	
-};
+}
 #endif

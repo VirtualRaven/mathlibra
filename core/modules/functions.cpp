@@ -113,7 +113,7 @@ namespace math_func
 			math_func::m_function("round", static_cast<double_func>(round))
 		};
 	
-};
+}
 
 bool test::function_module_test1()
 {

@@ -204,6 +204,6 @@ namespace native
 		}
 	}
 	
-};
+}
 
 	
