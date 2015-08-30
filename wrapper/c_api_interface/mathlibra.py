@@ -1,7 +1,7 @@
 import ctypes
 
 class mathlibra_exception(Exception):
-    __init__(self,message):
+    def __init__(self,message):
         self.info = message
     def __str__(self):
         return self.info
@@ -29,12 +29,12 @@ class mathlibra:
         self.__error.restype = ctypes.c_bool
         
         self.__free = self.lib_instance.free_handle
-        self.__enable_plugins = self.lib_instance.enablei_plugins()
+        self.__enable_plugins = self.lib_instance.enable_plugins
     
     def __del__(self):
         self.__free(self.handle)
 
-    def check_error()
+    def check_error(self):
         if self.__error(self.handle):
             raise mathlibra_exception("failed")
     
@@ -47,7 +47,7 @@ class mathlibra:
         self.check_error()
         return val
     
-    def enablePlugins():
+    def enablePlugins(self):
         self.__enable_plugins()
         self.check_error
 
