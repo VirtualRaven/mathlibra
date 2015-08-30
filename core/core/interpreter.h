@@ -26,9 +26,13 @@ struct interpreterOops : public exception
 	const char* what();
 };
 
-
-
-
+/**
+ * @namespace debug Contains function which helps during program debugging
+ */
+namespace debug
+{
+	void check_tree_mem_leak(); /**< Check if the total count of allocated mathnode obhect is equal to the total delition count. Raiess interpreterOops on error.**/
+}
 
 
 

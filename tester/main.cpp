@@ -83,15 +83,15 @@ int main(int argc, char* argv[])
 
 
 	
-
+	{
 
 #ifndef DEBUG
-	err_redirect err; //remove cerr stream
+		err_redirect err; //remove cerr stream
 #endif
-	std::cout << std::setprecision(20);
-	
-	interpreter inter; 
-	std::string expression = "";
+		std::cout << std::setprecision(20);
+		
+		interpreter inter; 
+		std::string expression = "";
 	
 	memory::memory mem; //Create memory unit
 	operators::operators_interface oper;
@@ -182,7 +182,8 @@ int main(int argc, char* argv[])
 			}*/
 		}
 	} while (!exit);
-	
+		}
+	debug::check_tree_mem_leak();		
 	return 0;
 
 }

@@ -38,6 +38,16 @@ interpreterOops::interpreterOops(std::string inf, bool isCritical) : exception(i
 	class interpreter;
 
 
+void debug::check_tree_mem_leak()
+{
+	util::object_stats<tree::nodeDataInterface> stats;
+	std::cout << "COUNTABLE ASSERT RUNNING\n" << "STATS: \n" << "total: " << stats.get_total() << "\ncurrent: " << stats.get_current() << "\ndeleted: " << stats.get_deleted() << std::endl;
+	if(stats.get_total() != stats.get_deleted())
+	{
+		throw interpreterOops("ASSERT FAILIURE, possible memory leak in program",true);
+	}	
+}
+
 
 
  rootNode buildEntry1(interpreter * parentInterpreter)
@@ -563,9 +573,8 @@ interpreterOops::interpreterOops(std::string inf, bool isCritical) : exception(i
 #ifdef STRUCTUAL_INTEGRITY_TEST
             this->root.integrityTest();
 #endif
-			this->root.TakeContext();
-			return this->root.data->eval();
-
+	    this->root.TakeContext();
+            return this->root.data->eval();
         }
 		else throw interpreterOops("Tried to execute unfinished expresion",false);
 	}

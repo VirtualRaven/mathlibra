@@ -89,7 +89,7 @@ buildVector::buildVector(size_t lowLimit, size_t hiLimit, size_t vecOffset, std:
 
 
 		//Find error if program comes here
-		std::cerr << "-[ Unknown error ]\n";
+		//std::cerr << "-[ Unknown error ]\n";
 		throw build_exception("Unknow error in syntax interpetation");
 	}
 
