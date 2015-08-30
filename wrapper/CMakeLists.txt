@@ -7,4 +7,6 @@ add_subdirectory(c++_wrapper_client)
 if(WIN32 AND C_SHARP_LIB)
 	add_subdirectory(c_sharp_wrapper)
 endif()
-
+if(C_API)
+	add_subdirectory(c_api_interface)
+endif()
