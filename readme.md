@@ -10,11 +10,11 @@ The core has no loader for other files than windows DLL and linux shared librari
 The project is easiest to build using cmake. Out of source builds are recomended but not enforced so be carfull
 
 Build commands for linux:
- `cd /path/to/repo/
- `mkdir build
- `cd build
- `cmake ..
- `make
+ `cd /path/to/repo/`
+ `mkdir build`
+ `cd build`
+ `cmake ..`
+ `make`
 
 On Windows cmake can be used to create visual studio files. Install cmake for windows and follow the instructions.
 
@@ -58,15 +58,15 @@ All headers should only contain declerations and no implementations (but templat
 
 Comment in headers should be doxygen compatible using the java syntax. For more help see the doxygen homepage
 
-...
-#!c++
+
+```c++
 /**
  *func, My awsome function. An very awsome function.
  *@param name The name of the entity to tests the awsomeness of.
  *@returns integer representing it's awsomeness   
  */
  int func(std::string name);
-...
+```
 
 At the moment, cmake is not configured to generate documentations and thus it has to be done manually. Feel free to reconfigure cmake for doc gen.
 
