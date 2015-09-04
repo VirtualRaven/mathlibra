@@ -7,7 +7,7 @@ Mathlibra have no dependency and as such should build on most platforms, though 
 If core is built for any other platform than windows or linux plug ins will be disabled as currently. 
 The core has no loader for other files than windows DLL and linux shared libraries.
 
-The project is easiest to build using cmake. Out of source builds are recomended but not enforced so be carfull
+The project is easiest to build using cmake. Out of source builds are recommended but not enforced so be careful
 
 Build commands for linux:
  `cd /path/to/repo/`
@@ -18,15 +18,15 @@ Build commands for linux:
 
 On Windows cmake can be used to create visual studio files. Install cmake for windows and follow the instructions.
 
-For vim users all directories include config files for youcomplete me to enable autocompletion. To just install youcompleteme and when openening an file in the repo accept when it asks if you want to load the config files.
+For vim users all directories include config files for youcomplete me to enable autocompletion. To just install youcompleteme and when opening an file in the repo accept when it asks if you want to load the config files.
 
 ### Running Tests ###
-The project contains a tester executable which when run provids an interactive sessions for inputting expressions to be evaluated.
-Writing menu instead of an expression will bring up an menu which can run tests, provide help and lets you instpect the status of the interpreter at any time.
+The project contains a tester executable which when run provides an interactive sessions for inputting expressions to be evaluated.
+Writing menu instead of an expression will bring up an menu which can run tests, provide help and lets you inspect the status of the interpreter at any time.
 
 ### Contribution guidelines ###
 
-First and formost: This is an educational project, we are here to learn and have fun. If it happens to turn out to something awsome that is a nice bonus.
+First and foremost: This is an educational project, we are here to learn and have fun. If it happens to turn out to something awesome that is a nice bonus.
 
 
 Style
@@ -54,7 +54,7 @@ if(true){
    do_work();
 }
 ```
-All headers should only contain declerations and no implementations (but template are ok :) ). Headers providing abstract classes to be used an base classes and interfaces should be named classname_interface.h to clearly state it's content.
+All headers should only contain declarations and no implementations (but template are ok :) ). Headers providing abstract classes to be used an base classes and interfaces should be named classname_interface.h to clearly state it's content.
 
 Comment in headers should be doxygen compatible using the java syntax. For more help see the doxygen homepage
 
@@ -70,13 +70,13 @@ Comment in headers should be doxygen compatible using the java syntax. For more 
 
 At the moment, cmake is not configured to generate documentations and thus it has to be done manually. Feel free to reconfigure cmake for doc gen.
 
-An important trait of mathlibra is that it has no external dependecys and that it is platform independent. Any code breaking these traits will not be accepted. For example, do not write code that requires the c++ boost library. Any functions needed for mathlibra not provided by the standard c library or the standard template library should be implemented inside of the project.
-The reason behind this is that this is as stated above ab educational project, there are no time limits or deadlines to adhear to. So we have time to implement our own functions and learn something more that way. Implementing stuff by yourself may not always be the best option, but it is an great opertunity to learn, so for your own sake please follows these recomendations.  
-An exception has been made to platform independet rule regarding the plug-in system which calls platform specific function for loading shared libaries, but it does so by hiding this functions from the rest of the library and implements an generic interface for loadinng external code. In this way the plug-in loader supports both unix and windows.
+An important trait of mathlibra is that it has no external dependencies and that it is platform independent. Any code breaking these traits will not be accepted. For example, do not write code that requires the c++ boost library. Any functions needed for mathlibra not provided by the standard c library or the standard template library should be implemented inside of the project.
+The reason behind this is that this is as stated above ab educational project, there are no time limits or deadlines to adhere to. So we have time to implement our own functions and learn something more that way. Implementing stuff by yourself may not always be the best option, but it is an great opportunity to learn, so for your own sake please follows these recommendations.  
+An exception has been made to platform independent rule regarding the plug-in system which calls platform specific function for loading shared libraries, but it does so by hiding this functions from the rest of the library and implements an generic interface for loading external code. In this way the plug-in loader supports both unix and windows.
 
-Code seperation is also important. For example the code dealing with the external api implementation should be seperated into the wrapper folder. Mathematical runtime functions should not be implemented inside mathlibra, instead they should be provided as plug-ins.
+Code separation is also important. For example the code dealing with the external api implementation should be separated into the wrapper folder. Mathematical runtime functions should not be implemented inside mathlibra, instead they should be provided as plug-ins.
 
-Early optimization is never good as it makes it harder to develop. But that does not mean that you can compleatly ignore the issue. If you have implemented something but knows ways to improve it's preformance, raise an issue to notify everyone. 
+Early optimization is never good as it makes it harder to develop. But that does not mean that you can completely ignore the issue. If you have implemented something but knows ways to improve it's performance, raise an issue to notify everyone. 
 That way, everyone will know what parts of the code should be optimized when time is given. 
 
 Remember 
