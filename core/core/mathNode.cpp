@@ -62,6 +62,10 @@ namespace mathNode
 
 
         }
+		void mathExpressionNode_variable::set_mem_provider(memory::memory* mem_provider)
+		{
+			this->mem = mem_provider;
+		}
 
         mathExpressionNode_variable mathExpressionNode_variable::operator=(const mathExpressionNode_variable& val)
         {

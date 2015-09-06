@@ -250,20 +250,18 @@ namespace tree
 		*(sourceNode.copies) = 1;
 
 	}
-
+	
 	rootNode& rootNode::operator=(rootNode&& sourceNode)
 	{
+		
+		this->_empty();  //release our ownership of the current data in the node
+
 		this->nodePtr1 = sourceNode.nodePtr1;
 		this->nodePtr2 = sourceNode.nodePtr2;
 		this->data = sourceNode.data;
 		sourceNode.nodePtr1 = nullptr;
 		sourceNode.nodePtr2 = nullptr;
 		sourceNode.data = nullptr;
-		if (this->copies != nullptr)
-		{
-			delete this->copies;
-			this->copies = nullptr;
-		}
 		this->copies = sourceNode.copies;
 		sourceNode.copies = new int;
 		*(sourceNode.copies) = 1;
@@ -325,5 +323,29 @@ namespace tree
 			next = nullptr;
 		}
 		return args;
+	}
+	rootNode& rootNode::operator=(node&& sourceNode)
+	{
+		this->_empty();
+		this->copies = new int;
+		*this->copies = 1;
+		this->nodePtr1 = sourceNode.sub1();
+		this->nodePtr2 = sourceNode.sub2();
+		this->data = sourceNode.data;
+		this->TakeContext();
+		sourceNode.data = nullptr;
+		return *this;
+	}
+
+	rootNode::rootNode(node&& sourceNode): node(), copies(new int)
+	{
+		*(this->copies) = 1;
+		this->nodePtr1 = sourceNode.nodePtr1;
+		sourceNode.nodePtr1 = nullptr;
+		this->nodePtr2 = sourceNode.nodePtr2;
+		sourceNode.nodePtr2 = nullptr;
+		this->data = sourceNode.data;
+		this->TakeContext();
+		sourceNode.data = nullptr;
 	}
 }

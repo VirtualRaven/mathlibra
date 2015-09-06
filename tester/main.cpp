@@ -3,7 +3,7 @@
 #include <cstring>
 #include <iomanip> 
 #include "tests.h"
-
+#include "core/function_obj.h"
 /* TODO
 	Add function inpterpeting and execution DONE
 	Add varible interpeting and memmory system. DONE
@@ -153,6 +153,7 @@ int main(int argc, char* argv[])
 				if (inter.interpret())
 				{
 #if  defined(SYNTAX_TREE_EXEC)
+					
 					mem.set("ans",inter.exec());
 					
 #elif defined(CORAX_VM_EXEC)

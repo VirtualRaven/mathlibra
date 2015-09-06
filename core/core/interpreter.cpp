@@ -1,5 +1,6 @@
 #include "interpreter.h"
 #include "ptr_protect.h"
+#include "function_obj.h"
 
 interpreterOops::interpreterOops(std::string inf, bool isCritical) : exception(inf,isCritical){}
 
@@ -89,8 +90,11 @@ void debug::check_tree_mem_leak()
 	    if(!rootEmpty)
         {
             root.deleteSubNodes();
-            root.data->destroy();
-            root.data=nullptr;
+			if (root.data != nullptr)
+			{
+				root.data->destroy();
+				root.data = nullptr;
+			}
             rootEmpty=true;
         }
 	}
@@ -573,8 +577,11 @@ void debug::check_tree_mem_leak()
 #ifdef STRUCTUAL_INTEGRITY_TEST
             this->root.integrityTest();
 #endif
-	    this->root.TakeContext();
-            return this->root.data->eval();
+			this->root.TakeContext();
+			math_func::interpreted_func obj( &this->root,this->mem);
+			return obj.exec(2);
+			//return this->root.data->eval();
+
         }
 		else throw interpreterOops("Tried to execute unfinished expresion",false);
 	}
