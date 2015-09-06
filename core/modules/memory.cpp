@@ -33,7 +33,13 @@ const char* memory::memoryOops::what()
 		}
 		else return mem_it->second.value;
 	}
-	bool memory::memory::set(std::string var, number_type value, bool allocateIfNotFound, bool constant)
+	bool memory::memory::exists(std::string var)
+        {
+            mem_it = mem.find(var);
+            return (mem_it == mem.end());
+        }
+        
+        bool memory::memory::set(std::string var, number_type value, bool allocateIfNotFound, bool constant)
 	{
 		mem_it =mem.find(var);
 		if (mem_it == mem.end())

@@ -102,7 +102,10 @@ namespace mathNode
 			return _stack;
 		}
 
-
+                bool mathExpressionNode_variable::is_undefined()
+                {
+                   return mem->exists(this->name);
+                }
 		void mathExpressionNode_variable::bind(node_base* context)
 		{
 			wrapperNode = context;

@@ -12,7 +12,7 @@
 #include "modules/functions.h"
 #include "interface/interpreter_interface.h"
 #include "corax_virtual_machine.h"
-
+#include "core/function_obj.h"
 using mathNode::number_type;
 using tree::rootNode;
 using tree::node;

@@ -4,6 +4,15 @@
 namespace operators
 {
 
+    struct stdOperatorOops : public exception
+    {
+	stdOperatorOops(std::string inf) : exception(inf,false){}
+	const char* what()
+        {
+            return "built in operator exception";
+        }
+    };
+
 	number_type add(number_type x, number_type y)
 	{
 		return x+y;
@@ -13,7 +22,7 @@ namespace operators
 		return internal_helper::forward_fast<double,double>(add, n);
 	}
 
-    number_type multi(number_type x, number_type y)
+        number_type multi(number_type x, number_type y)
 	{
 		return x*y;
 	}
@@ -25,6 +34,16 @@ namespace operators
 	{
 		return x/y;
 	}
+        number_type declare_func(mathNode::mathExpressionNode_variable_interface* val,tree::nodeDataInterface* expr)
+        {
+            if(!val->is_undefined() )
+            {
+                throw stdOperatorOops("Can not redefine variable as function");
+            }
+                        
+            return 0;
+        }
+
 	number_type __divide(tree::nodeDataInterface* n)
 	{
 		return internal_helper::forward_fast<number_type, number_type>(divide, n);

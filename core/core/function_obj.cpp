@@ -1,6 +1,6 @@
 #include "function_obj.h"
-
-namespace math_func
+#include "mathNode.h"
+namespace function_obj
 {
 	
 	inline void __switch_mem(tree::node* next, memory::memory* mem)
@@ -54,7 +54,7 @@ double interpreted_func::exec(double x )
 {
 	return this->operator()(x);
 }
-interpreted_func::interpreted_func(tree::node* tree,  memory::memory* mem) : __tree(std::move(*tree)), global_mem(mem)
+interpreted_func::interpreted_func(tree::node* tree,  memory::memory* mem) :  global_mem(mem), __tree(std::move(*tree))
 {
 	this->__prepare_function();
 }

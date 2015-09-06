@@ -57,6 +57,7 @@ class mathExpressionNode_opr;
 		virtual ~mathExpressionNode_variable();
 		number_type eval();
 		bool is_pushable();
+                bool is_undefined();
 		void set(number_type);
 		void set_mem_provider(memory::memory* mem_provider);
 		mathExpressionNode_variable(const mathExpressionNode_variable&);

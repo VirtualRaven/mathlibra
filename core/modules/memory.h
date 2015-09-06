@@ -37,7 +37,8 @@ namespace memory
 		number_type get(std::string var);
 		bool set(std::string var, number_type value, bool allocateIfNotFound = true, bool constant = false);
 		std::vector<std::string> allVars();
-		void empty();
+		bool exists(std::string var);
+                void empty();
 		number_type* raw_ptr(std::string var);
 	};
 

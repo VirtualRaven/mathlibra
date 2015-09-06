@@ -8,7 +8,7 @@
  */
 namespace plugin
 { 
-
+        typedef double number_type;
 	typedef number_type(*function_pointer)(tree::node_base*);
 	struct function
 	{

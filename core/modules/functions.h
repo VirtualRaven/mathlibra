@@ -6,6 +6,8 @@
 #include "exception.h"
 #include "main.h"
 #include "core/tree_interface.h"
+#include "core/function_obj.h"
+
 namespace test
 {
 	/**
@@ -19,6 +21,7 @@ namespace test
 */
 namespace math_func
 {
+       using namespace function_obj; 
 	/**
 	 * The exception class for the function module. All exceptions thrown by the function module is of this type
 	 */
@@ -26,15 +29,21 @@ namespace math_func
 	{
 		functionOops(std::string inf);
 		const char* what();
-
 	};
-	
+        
+        struct load_test_return
+        {   
+            bool loaded;
+            bool functor;
+        };
+        
+	enum func_type {FAST,GENERAL,USER};
 	/**
 	 * Implements the function runtime type. All functions loaded into the function module @see  function_interface must be wrapped in this class.
 	 */
 	struct m_function
 	{
-		bool is_general; /**< @return True if function is of type generalFuncPtr, else if it is of type funcPtr it returns false */
+		func_type type; /**< @return True if function is of type generalFuncPtr, else if it is of type funcPtr it returns false */
 		std::string name; /**< The name of the function. This name is the name the user calls the function by during runtime.@note At present time no name collision tests are done. */
 		typedef number_type(*funcPtr)(number_type); /**< @typedef the standard fixed single argument type function. */
 		typedef number_type(*generalFuncPtr)(tree::node_base*); /**< @typedef the extended function type that takes an pointer to an node_base. Used for multi argument functions. */ 
@@ -42,7 +51,8 @@ namespace math_func
 		{
 			funcPtr ptr; 
 			generalFuncPtr gptr;
-		};
+		        interpreted_func* uptr;
+                };
 		
 		m_function(std::string name, funcPtr ptr); 
 		m_function(std::string name, generalFuncPtr ptr);
@@ -58,17 +68,18 @@ namespace math_func
  
 	class function_interface
 	{
-		std::vector<m_function> funcs;
+                std::vector<m_function> funcs;
 		m_function cache;
 		typedef number_type(*funcPtr)(number_type);
 	public:
 
 		void load(std::vector< m_function>& obj); /**< @param obj An vector of functions to be loaded by the module. */
 		void load(m_function obj); /**< @param obj An single object to be loaded by the module. */
-		bool isloaded(std::string funcName); /**< Checks if function is loaded. @param funcName The name to be checked if it is loaded. @return True if function is loaded. */
-		bool isGeneral(); /**< @return True if function last specified in isloaded() is of type generalFuncPtr. @note the last string to be sent to isloaded() is cached which this function works upon. */
+		load_test_return isloaded(std::string funcName); /**< Checks if function is loaded. @param funcName The name to be checked if it is loaded. @return True if function is loaded. */
+		func_type type(); /**< @return True if function last specified in isloaded() is of type generalFuncPtr. @note the last string to be sent to isloaded() is cached which this function works upon. */
 		void * get(std::string funcName); /**< Gets the an function pointer. @param funcName A string naming the function to search for. @return an void pointer to the funcName. @note The return needs to be converted to either an funcPtr or generalFuncPtr using an reinterpret_cast. */
-		void display(); /**< Outputs an list of loaded functions to cout. */
+                interpreted_func* getFunctor(std::string funcName); /**<Gets an functor object representing an userprovided function. */ 
+                void display(); /**< Outputs an list of loaded functions to cout. */
 		std::vector<std::string> getFunctionNames();
 	};
 	

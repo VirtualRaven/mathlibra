@@ -15,10 +15,10 @@ namespace math_func
 	typedef double(*double_func)(double);
 
 
-	math_func::m_function::m_function(std::string name, funcPtr ptr) :is_general(false),name(name), ptr(ptr) {}
-	math_func::m_function::m_function(std::string name, generalFuncPtr ptr) : is_general(true), name(name), gptr(ptr) {}
+	math_func::m_function::m_function(std::string name, funcPtr ptr) :type(func_type::FAST),name(name), ptr(ptr) {}
+	math_func::m_function::m_function(std::string name, generalFuncPtr ptr) : type(func_type::GENERAL), name(name), gptr(ptr) {}
 	math_func::m_function::~m_function(){}
-	math_func::m_function::m_function() :is_general(false), name(), ptr(nullptr){}
+	math_func::m_function::m_function() :type(func_type::FAST), name(), ptr(nullptr){}
 
 
 
@@ -30,28 +30,32 @@ namespace math_func
 		{
 			funcs.push_back(obj);
 		}
-		bool function_interface::isloaded(std::string funcName)
+		load_test_return  function_interface::isloaded(std::string funcName)
 		{
 			for (unsigned int i = 0; i < funcs.size(); i++)
 			{
 				if (funcs[i].name == funcName)
 				{
 					cache = funcs[i];
-					return true;
+					return {true, cache.type == func_type::USER };
 				}
 			}
-			return false;
+			return {false,false};
 		}
 		
-		bool function_interface::isGeneral()
+		func_type function_interface::type()
 		{
-			return this->cache.is_general;
+			return this->cache.type;
 		}
 		void * function_interface::get(std::string funcName)
 		{
 			if (cache.name == funcName)
 			{
-				return reinterpret_cast<void*>(cache.ptr);
+				if(cache.type == func_type::USER)
+                                {
+                                    throw functionOops("Can't convert functor to void *");
+                                }
+                                return reinterpret_cast<void*>(cache.ptr);
 			}
 			else
 			{
@@ -60,14 +64,36 @@ namespace math_func
 				{
 					if (funcs[i].name == funcName)
 					{
-						return reinterpret_cast<void*>(funcs[i].ptr);
+                                            if(funcs[i].type == func_type::USER)
+                                            {
+                                                throw functionOops("Can't convert functor to void *");
+                                            }
+					    else return reinterpret_cast<void*>(funcs[i].ptr);
 					}
 				}
 				return nullptr;
 			}
 		}
-
-		void function_interface::display()
+                
+                interpreted_func* function_interface::getFunctor(std::string funcName)
+                {
+                    if(cache.name ==funcName && cache.type == USER)
+                    {
+                            return cache.uptr;
+                    }
+                    else
+                    {
+                        for(unsigned int i =0; i < funcs.size(); i++)
+                        {
+                            if(funcs[i].name == funcName)
+                            {
+                                return cache.uptr;
+                            }
+                        }
+                        return nullptr;
+                    }   
+                }
+                void function_interface::display()
 		{
 			std::cout << "-[ function_interface {\n";
 			for (unsigned int i = 0; i < funcs.size(); i++)
@@ -120,7 +146,7 @@ bool test::function_module_test1()
 	math_func::function_interface func;
 	func.load(math_func::std_math_trig_func);
 	func.load(math_func::m_function("gen", (math_func::m_function::generalFuncPtr)(nullptr)));
-	if (!(func.isloaded("sin") && func.isloaded("cos") && func.isloaded("tan") && func.isloaded("gen")))
+	if (!(func.isloaded("sin").loaded && func.isloaded("cos").loaded && func.isloaded("tan").loaded && func.isloaded("gen").loaded))
 	{
 		return false;
 	}
@@ -129,7 +155,7 @@ bool test::function_module_test1()
 		return false;
 	}
 	func.isloaded("gen");
-	if (!func.isGeneral())
+	if (func.type()  != math_func::GENERAL)
 	{
 		return false;
 	}

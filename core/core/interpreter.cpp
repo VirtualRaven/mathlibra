@@ -248,7 +248,7 @@ void debug::check_tree_mem_leak()
 				i+=valueLength;
 				continue;
 			}
-			else if (expression[i] == '-' && PNegativeDigit(tokens, &expression,i) &&i + 1 < expressionLength && isdigit(expression[i+1]) )
+			else if (expression[i] == '-' && PNegativeDigit(tokens, &expression,i) && (i + 1) < expressionLength && isdigit(expression[i+1]) )
 			{
 				ptr_protect<token::valueToken*, false> tmp(new token::valueToken(i, 0));
 				short valueLength = 0;
@@ -400,17 +400,22 @@ void debug::check_tree_mem_leak()
 					}
 
 
-					if (current_functions != nullptr && current_functions->isloaded(name) == true)
+					if (current_functions != nullptr && current_functions->isloaded(name).loaded)
 					{
 						token::funcToken * tmp_ptr;
-						if (current_functions->isGeneral())
+                                                func_type type = current_functions->type();
+						if (type == math_func::func_type::GENERAL )
 						{
 							tmp_ptr = new token::funcToken(startPos, endPos, (token::funcToken::generalFuncPtr)current_functions->get(name));
 						}
-						else
+						else if (type == math_func::func_type::FAST)
 						{
 							tmp_ptr = new token::funcToken(startPos, endPos, (token::funcToken::funcPtr)current_functions->get(name));
 						}
+                                                else
+                                                {
+                                                    throw interpreterOops("User funcs are not implemented",true);
+                                                }
 
 						ptr_protect<token::funcToken *, false> tmp(tmp_ptr);
 						
@@ -578,9 +583,7 @@ void debug::check_tree_mem_leak()
             this->root.integrityTest();
 #endif
 			this->root.TakeContext();
-			math_func::interpreted_func obj( &this->root,this->mem);
-			return obj.exec(2);
-			//return this->root.data->eval();
+			return this->root.data->eval();
 
         }
 		else throw interpreterOops("Tried to execute unfinished expresion",false);

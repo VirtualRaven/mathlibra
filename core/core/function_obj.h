@@ -1,8 +1,10 @@
 #ifndef FUNC_OBJ_INCLUDED
 #define FUNC_OBJ_INCLUDED
-#include "interpreter.h"
+
+#include "tree.h"
 #include "modules/memory.h"
-namespace math_func
+
+namespace function_obj
 {
 	class interpreted_func
 	{
