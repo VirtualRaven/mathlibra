@@ -19,7 +19,7 @@ namespace math_func
 	math_func::m_function::m_function(std::string name, generalFuncPtr ptr) : type(func_type::GENERAL), name(name), gptr(ptr) {}
 	math_func::m_function::~m_function(){}
 	math_func::m_function::m_function() :type(func_type::FAST), name(), ptr(nullptr){}
-
+        math_func::m_function::m_function(std::string name, interpreted_func* ptr): type(func_type::USER), name(name),uptr(ptr) {}
 
 
 		void function_interface::load(std::vector< m_function>& obj)

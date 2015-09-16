@@ -5,6 +5,7 @@
 #include "modules/operators.h"
 #include "core/mathNode_interface.h"
 #include "main.h"
+#include "core/function_obj.h"
 struct buildVector;
 struct variableToken;
 using tree::node_base;
@@ -106,8 +107,18 @@ class mathExpressionNode_opr;
 		void bind(node_base * context);
 		void destroy();
 	};
+        
+        class mathExpressionNode_func_user: public mathNode::mathExpressionNode_func_user_interface
+        {
+            function_obj::interpreted_func* ptr;
+            virtual ~mathExpressionNode_func_user();
+            mathExpressionNode_func_user();
+            void bind(node_base * context);
+            mathExpressionNode_func_user(function_obj::interpreted_func* ptr);
+            number_type eval();
+            void destroy();       
 
-	
+        };        
 
 
 

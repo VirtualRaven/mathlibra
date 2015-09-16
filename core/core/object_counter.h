@@ -3,7 +3,7 @@ namespace util
 {	
 	template<typename T>class countable;
 
-	template<typename T> struct object_stats
+	template<typename T> struct object_stats /**<provides methods to query allocation stats regarding the the object T*/
 	{
 		unsigned int get_total()
 		{
@@ -21,7 +21,7 @@ namespace util
 	};
 
 		
-	template<typename T> class countable
+	template<typename T> class countable /**< A class that implements an counter. All objects that derives this class can be queried for allocation stats. @seealso object_stats*/
 	{
 		static unsigned int __current_count;
 		static unsigned int __total_count;

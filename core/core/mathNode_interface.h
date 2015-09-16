@@ -82,8 +82,13 @@ namespace mathNode
 		typedef number_type(*funcPtr)(tree::node_base*);
 		virtual number_type eval()=0;
 	};
+        
+        class mathExpressionNode_func_user_interface : public tree::nodeDataInterface
+        {
+            virtual number_type eval()=0;
+        };
 
-	
+        	
 	/**
 	 * @namesoace helper contains functions to ease creation of templates.
 	 */

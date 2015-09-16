@@ -235,9 +235,33 @@ namespace mathNode
 		{
 			delete this;
 		}
+                    
+                mathExpressionNode_func_user::~mathExpressionNode_func_user(){}
+                mathExpressionNode_func_user::mathExpressionNode_func_user():ptr(nullptr){}
+                mathExpressionNode_func_user::mathExpressionNode_func_user(function_obj::interpreted_func * ptr):ptr(ptr) {}
+                number_type mathExpressionNode_func_user::eval()
+                {
+                    if(this->ptr == nullptr)
+                    {
+                        throw mathNode::nodeOops("Tried to evaluate indefined function",true);
+                    }
+                    if(this->wrapperNode->sub1() == nullptr )
+                    {
+                        throw mathNode::nodeOops("Expected argument to function",false);
+                    }
+                    return this->ptr->exec(this->wrapperNode->sub1()->data->eval());
+                }
+                void mathExpressionNode_func_user::bind(node_base* context)
+                {
+                    this->wrapperNode = context;
+                }
+                void mathExpressionNode_func_user::destroy()
+                {
+                    delete this;
+                }
 
-		void displayToken(tree::nodeDataInterface* t)
-{
-    std::cerr << "Data type "<< t->type<< "\n";
-}
+	    void displayToken(tree::nodeDataInterface* t)
+            {
+                std::cerr << "Data type "<< t->type<< "\n";
+            }
 }

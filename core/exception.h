@@ -1,7 +1,3 @@
-/**
- * Main exception class. This class contains the basic exception class used in the core and its modules. 
- *  All exceptions the program throws shall be derived from this class.
- */
 
 #ifndef EXCEPTION_H_INCLUDED
 #define EXCEPTION_H_INCLUDED
@@ -9,6 +5,10 @@
 #include "main.h"
 
 
+/**
+ * Main exception class. This class contains the basic exception class used in the core and its modules. 
+ *  All exceptions the program throws shall be derived from this class.
+ */
 class exception
 {
 protected:

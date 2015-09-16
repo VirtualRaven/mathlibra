@@ -20,7 +20,7 @@ bool test_error(ptr_protect<interface::calc_lib_interface*, false>& calc)
 int run_test()
 {
 	//List of expressions to test that the interpreter must handle correctly.
-	std::vector < std::string> tests = { "sqrt(42)",  "2*(32-1)", "x=2^3", "x-1", "2^-x" };
+	std::vector < std::string> tests = { "sqrt(42)",  "2*(32-1)", "y=2^3", "x-1", "2^-x" };
 	std::vector<double> results;
 	ptr_protect<interface::calc_lib_interface*, false> calc(InitLib());
 	
@@ -60,7 +60,6 @@ int run_test()
 
 int main()
 {
-	std::cout << "Test successfull:" << (bool)run_test();
-	std::cin.get();
+	return run_test();
 	
 }

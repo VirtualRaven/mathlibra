@@ -1,6 +1,6 @@
 #include "modules/operators.h"
 #include "core/internal_helper.h"
-
+#include "core/function_obj.h"
 namespace operators
 {
 
@@ -40,7 +40,8 @@ namespace operators
             {
                 throw stdOperatorOops("Can not redefine variable as function");
             }
-                        
+            //auto ptr = new function_obj::interpreted_func();
+            
             return 0;
         }
 

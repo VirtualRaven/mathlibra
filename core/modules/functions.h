@@ -56,7 +56,8 @@ namespace math_func
 		
 		m_function(std::string name, funcPtr ptr); 
 		m_function(std::string name, generalFuncPtr ptr);
-		m_function();
+		m_function(std::string name, interpreted_func* ptr);
+                m_function();
 		~m_function();
 	};
 
@@ -75,7 +76,7 @@ namespace math_func
 
 		void load(std::vector< m_function>& obj); /**< @param obj An vector of functions to be loaded by the module. */
 		void load(m_function obj); /**< @param obj An single object to be loaded by the module. */
-		load_test_return isloaded(std::string funcName); /**< Checks if function is loaded. @param funcName The name to be checked if it is loaded. @return True if function is loaded. */
+                load_test_return isloaded(std::string funcName); /**< Checks if function is loaded. @param funcName The name to be checked if it is loaded. @return True if function is loaded. */
 		func_type type(); /**< @return True if function last specified in isloaded() is of type generalFuncPtr. @note the last string to be sent to isloaded() is cached which this function works upon. */
 		void * get(std::string funcName); /**< Gets the an function pointer. @param funcName A string naming the function to search for. @return an void pointer to the funcName. @note The return needs to be converted to either an funcPtr or generalFuncPtr using an reinterpret_cast. */
                 interpreted_func* getFunctor(std::string funcName); /**<Gets an functor object representing an userprovided function. */ 
