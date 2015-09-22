@@ -1,5 +1,6 @@
 #ifndef interpreter_H_INCLUDED
 #define interpreter_H_INCLUDED
+#include <stdlib.h>
 #include <string>
 //#include <cstring>
 //#include <cstdlib>
@@ -12,7 +13,6 @@
 #include "modules/functions.h"
 #include "interface/interpreter_interface.h"
 #include "corax_virtual_machine.h"
-
 using mathNode::number_type;
 using tree::rootNode;
 using tree::node;
