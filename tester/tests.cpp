@@ -34,9 +34,9 @@ void test::profileInterpreter(std::string& exr)
 		interpreter inter2(std::move(inter));
 		auto test1 = [&](){ return inter2.exec(); };
 		auto test2 = [&](){inter2.interpret(); };
-		std::cout << "interpret: " << func_profile<test_lenght>(test2) << "s\n";
+		std::cout << "interpret: " << func_profile<test_lenght>(test2) << "ms\n";
 		double exec = func_profile<test_lenght>(test1);
-		std::cout << "exec: " << exec << "s\n";
+		std::cout << "exec: " << exec << "ms\n";
 	}
 	catch (exception& e)
 	{
@@ -93,8 +93,8 @@ void test::profileInterpreterVM(std::string& exr)
 		double exec = func_profile<test_lenght>(test1);
 		double ccompile = func_profile<test_lenght>(test3);
 		double cexec = func_profile<test_lenght>(test4);
-		std::cout << "compile: " << ccompile << "s\n";
-		std::cout << "run: " << cexec << "s\n";
+		std::cout << "compile: " << ccompile << "ms\n";
+		std::cout << "run: " << cexec << "ms\n";
 		std::cout << "virtual machine overhead: " << round(((ccompile + cexec) / exec) * 100) << "%\n";
 	}
 	catch (exception& e)

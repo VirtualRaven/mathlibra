@@ -5,6 +5,8 @@
 #ifdef LIB_F_WIN
 
 #endif
+typedef std::chrono::milliseconds ms; 
+
 template<unsigned int TEST_LENGHT,typename func, typename... argN> double func_profile(func function,argN... args )
 {
 	std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
@@ -15,7 +17,8 @@ template<unsigned int TEST_LENGHT,typename func, typename... argN> double func_p
 	}
 	end = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> elapsed_seconds = end - start;
-	return elapsed_seconds.count();
+	return std::chrono::duration_cast<ms>( elapsed_seconds).count();
+
 	
 }
 
@@ -29,6 +32,6 @@ template<unsigned int TEST_LENGHT, typename func> double func_profile(func funct
 	}
 	end = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> elapsed_seconds = end - start;
-	return elapsed_seconds.count();
+	return std::chrono::duration_cast<ms>( elapsed_seconds).count();
 
 }
