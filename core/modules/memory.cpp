@@ -36,7 +36,7 @@ const char* memory::memoryOops::what()
 	bool memory::memory::exists(std::string var)
         {
             mem_it = mem.find(var);
-            return (mem_it == mem.end());
+            return (mem_it != mem.end());
         }
         
         bool memory::memory::set(std::string var, number_type value, bool allocateIfNotFound, bool constant)
@@ -62,6 +62,26 @@ const char* memory::memoryOops::what()
 				}
 				mem_it->second.value = value;
 				return true;
+	}
+        bool memory::memory::set_ignore_const(std::string var, number_type value, bool allocateIfNotFound, bool constant)
+	{
+		mem_it =mem.find(var);
+		if (mem_it == mem.end())
+		{
+			if (allocateIfNotFound)
+			{
+				mem[var] = memoryObject(var, value, constant);
+				return true;
+			}
+			else
+			{
+				throw memoryOops("requested variable not found");
+				return false;
+			}
+		 }
+				mem_it->second.value = value;
+				mem_it->second.constant = constant;
+                                return true;
 	}
 	
 	std::vector<std::string> memory::memory::allVars()

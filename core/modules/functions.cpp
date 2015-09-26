@@ -21,7 +21,6 @@ namespace math_func
 	math_func::m_function::m_function() :type(func_type::FAST), name(), ptr(nullptr){}
         math_func::m_function::m_function(std::string name, interpreted_func* ptr): type(func_type::USER), name(name),uptr(ptr) {}
 
-
 		void function_interface::load(std::vector< m_function>& obj)
 		{
 			funcs.insert(funcs.end(),obj.begin(),obj.end());
@@ -103,7 +102,16 @@ namespace math_func
 			std::cout << " }\nLoaded " << this->funcs.size() << " functions]\n";
 
 		}
-
+                function_interface::~function_interface()
+                {
+                        for(unsigned int i =0; i < funcs.size(); i++)
+                        {
+                            if(funcs[i].type == func_type::USER)
+                            {
+                                delete funcs[i].uptr;
+                            }
+                        }
+                }
 		std::vector<std::string> function_interface::getFunctionNames()
 		{
 			std::vector<std::string> vec;
@@ -150,7 +158,7 @@ bool test::function_module_test1()
 	{
 		return false;
 	}
-	if ((math_func::m_function::generalFuncPtr)func.get("gen") != nullptr || func.get("sin") != static_cast<math_func::double_func>(sin))
+	if ((math_func::m_function::generalFuncPtr)func.get("gen") != nullptr || func.get("sin") != reinterpret_cast<void*>(sin))
 	{
 		return false;
 	}

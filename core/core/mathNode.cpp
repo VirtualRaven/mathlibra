@@ -86,7 +86,7 @@ namespace mathNode
 			this->mem->set(this->name, x);
 		}
 
-		mathExpressionNode_variable::mathExpressionNode_variable(std::string var, memory::memory* mem, bool b)
+		mathExpressionNode_variable::mathExpressionNode_variable(std::string var, memory::memory* mem, bool b,math_func::function_interface* func): func(func)
 		{
 			this->mem = mem;
 			this->_stack = b;
@@ -101,6 +101,10 @@ namespace mathNode
 		{
 			return _stack;
 		}
+                memory::memory* mathExpressionNode_variable::get_mem_provider()
+                {
+                    return this->mem;
+                }
 
                 bool mathExpressionNode_variable::is_undefined()
                 {
@@ -114,7 +118,28 @@ namespace mathNode
 		{
 			delete this;
 		}
+                void mathExpressionNode_variable::makeFunction(function_obj::interpreted_func* ptr)
+                {
+                      if (this->is_undefined() )
+                      {
+                        throw mathNode::nodeOops("Can't redeclare variable as function",false);
+                      }
+                      else if(this->func == nullptr)
+                      {
+                        throw mathNode::nodeOops("Can't define funtions without an function_interface instance",true);
+                      }
+                      else
+                      {
+                        auto tmp = this->func->isloaded(this->name);
+                        if(!tmp.loaded)
+                        {
+                            math_func::m_function newFunc(this->name,ptr);
+                            this->func->load(newFunc);
+                        }
+                        else throw mathNode::nodeOops("Can't redefine function",false);
+                      }
 
+                }
 
 
 		mathExpressionNode_opr::mathExpressionNode_opr()
@@ -192,7 +217,12 @@ namespace mathNode
 			{
 					std::cerr << "Tree not correct, func type should have an empty second sub node";
 			}
-			return this->func(this->wrapperNode->sub1()->data->eval());
+                        else if(this->wrapperNode->sub1() != nullptr)
+                        {
+			    return this->func(this->wrapperNode->sub1()->data->eval());
+                        }
+                        else throw mathNode::nodeOops("Expected argument to function call",false);
+                        return 0;
 		}
 		void mathExpressionNode_func::bind(node_base* context)
 		{
@@ -238,12 +268,15 @@ namespace mathNode
                     
                 mathExpressionNode_func_user::~mathExpressionNode_func_user(){}
                 mathExpressionNode_func_user::mathExpressionNode_func_user():ptr(nullptr){}
-                mathExpressionNode_func_user::mathExpressionNode_func_user(function_obj::interpreted_func * ptr):ptr(ptr) {}
+                mathExpressionNode_func_user::mathExpressionNode_func_user(function_obj::interpreted_func * ptr):ptr(ptr)
+    {
+        this->type = tree::tokenType::FUNCTION_USER; 
+    }
                 number_type mathExpressionNode_func_user::eval()
                 {
                     if(this->ptr == nullptr)
                     {
-                        throw mathNode::nodeOops("Tried to evaluate indefined function",true);
+                        throw mathNode::nodeOops("Tried to evaluate undefined function",true);
                     }
                     if(this->wrapperNode->sub1() == nullptr )
                     {
@@ -259,6 +292,8 @@ namespace mathNode
                 {
                     delete this;
                 }
+                
+
 
 	    void displayToken(tree::nodeDataInterface* t)
             {

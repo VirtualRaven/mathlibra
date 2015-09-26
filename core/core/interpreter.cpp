@@ -65,18 +65,18 @@ void debug::check_tree_mem_leak()
 			if (!buildSubNodes(static_cast<tree::nodeDataInterface*>(root.data), build)) //Build the sub node acording to the build vector
 			{
 
-				root.deleteSubNodes();
-                root.data->destroy();
-                root.data=0;
-                throw interpreterOops("Failed to build syntax tree",false);
+			    root.deleteSubNodes();
+                            root.data->destroy();
+                            root.data=0;
+                            throw interpreterOops("Failed to build syntax tree",false);
 			}
 			else
 			{
 #ifdef STRUCTUAL_INTEGRITY_TEST
-                    root.integrityTest();
+                            root.integrityTest();
 #endif
-                return root;
-            }
+                            return root;
+                        }
 
 
 	}
@@ -157,7 +157,7 @@ void debug::check_tree_mem_leak()
 		this->startOperatorPos = 0;
 		size_t lowestWheight = 9999;
 		std::stack<token::parenthesesToken *> parStack;
-		for(unsigned short i = 0; i< expressionLength; i++)
+		for(size_t i = 0; i< expressionLength; i++)
 		{
 			if(expression[i] == '(')
 			{
@@ -364,9 +364,9 @@ void debug::check_tree_mem_leak()
 			else if (isalpha(expression[i]) )
 			{
 					
-					short valueLength = 0;
-					short endPos = 0;
-					short startPos = i;
+					unsigned short valueLength = 0;
+					unsigned short endPos = 0;
+					unsigned short startPos = i;
 					std::string name;
 					for (unsigned short i2 = i + 1; i2 < expressionLength; i2++)
 					{
@@ -398,8 +398,6 @@ void debug::check_tree_mem_leak()
 						tokens.push_back(tmp.ptr());
 						tmp.release();
 					}
-
-
 					if (current_functions != nullptr && current_functions->isloaded(name).loaded)
 					{
 						token::funcToken * tmp_ptr;
@@ -414,7 +412,8 @@ void debug::check_tree_mem_leak()
 						}
                                                 else
                                                 {
-                                                    throw interpreterOops("User funcs are not implemented",true);
+                                                    tmp_ptr = new token::funcToken(startPos,endPos,current_functions->getFunctor(name));
+
                                                 }
 
 						ptr_protect<token::funcToken *, false> tmp(tmp_ptr);
@@ -430,7 +429,7 @@ void debug::check_tree_mem_leak()
 					}
 					else if (mem != nullptr)
 					{
-						token::variableToken * tmp = new token::variableToken(startPos, endPos, mem);
+						token::variableToken * tmp = new token::variableToken(startPos, endPos, mem,current_functions);
 						tmp->variableName = name;
 						tokens.push_back(tmp);
 					}

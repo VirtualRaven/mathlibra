@@ -43,6 +43,8 @@ namespace tree
 #endif
 		node * sub1();
 		node * sub2();
+                node * take_ownership_sub1();
+                node * take_ownership_sub2();
 		std::stack<tree::node_base*> getArgs();
 		void raiseException(const char * inf);
 		void deleteSubNodes(); /**< Destroy child branches. Delete the data of any child branches and then remove the branch. */

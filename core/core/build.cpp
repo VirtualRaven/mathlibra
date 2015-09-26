@@ -130,10 +130,6 @@ bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)
 			//Create first sub branche
 
 			size_t result = node1.calculateNextOperation(node1.lowLimit, node1.hiLimit);
-			if(result < 0)
-			{
-				return false;
-			}
 
 			tree::nodeDataInterface* mathNode1=nullptr;
 			ptr_protect<nodeDataInterface*, false> mathNode1_guard(mathNode1);
@@ -152,10 +148,6 @@ bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)
 			node2.lowLimit = vec.vecOffset + 1;
 			node2.hiLimit = vec.hiLimit;
 			result =	node2.calculateNextOperation(node2.lowLimit,node2.hiLimit);
-			if(result < 0)
-			{
-				return false;
-			}
 
 			tree::nodeDataInterface* mathNode2=nullptr;
 			ptr_protect<nodeDataInterface*, false> mathNode2_guard(mathNode2);
@@ -193,17 +185,8 @@ bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)
 
 bool _function_build(mathNode::mathExpressionNode_func * tgt, buildVector vec)
 {
-	if (vec.vecOffset >= vec.vecPtr->size() - 1)
-	{
-		std::cerr << "Syntax error: Expected value or exression after function\n";
 
-	}
-	else if (vec.vecPtr->operator[](vec.vecOffset + 1)->type != tokenType::PARENTHESES) //Won't work if user writes any formating token before the operator
-	{
-		std::cerr << "Excpected parentheses after function name";
-		return false;
-	}
-	for (size_t i = vec.lowLimit; i < vec.vecOffset; i++)
+        for (size_t i = vec.lowLimit; i < vec.vecOffset; i++)
 	{
 		if (vec.vecPtr->operator[](i)->type != tree::PARENTHESES)
 		{
@@ -213,47 +196,83 @@ bool _function_build(mathNode::mathExpressionNode_func * tgt, buildVector vec)
 	}
 	buildVector node1(vec.vecOffset + 1, vec.hiLimit, 0, vec.vecPtr);
 	//Create first sub branche
-	size_t result = node1.calculateNextOperation(node1.lowLimit, node1.hiLimit);
-	if (result < 0)
-	{
-		return false;
-	}
-	tree::nodeDataInterface* mathNode1;
-	if (vec.vecPtr->operator[](result)->hasNode())
-	{
-		mathNode1 = vec.vecPtr->operator[](result)->node();
-	}
-	else
-	{
+        if(node1.lowLimit != node1.hiLimit)
+        {
+	    size_t result = node1.calculateNextOperation(node1.lowLimit, node1.hiLimit);
+	    tree::nodeDataInterface* mathNode1;
+	    if (vec.vecPtr->operator[](result)->hasNode())
+	    {
+	    	mathNode1 = vec.vecPtr->operator[](result)->node();
+	    }
+	    else
+	    {
 		std::cerr << "Can't create sub node!\n";
 		return false;
-	}
+	    }
 
-	node1.vecOffset = result;
-	auto tmp = static_cast<tree::node*>(nodeDataInterface_wrapper_access(tgt));
+	    node1.vecOffset = result;
+	    auto tmp = static_cast<tree::node*>(nodeDataInterface_wrapper_access(tgt));
 
-	tmp->createSubNodes(mathNode1,nullptr);
-	if (!buildSubNodes(mathNode1, node1))
-	{
+	    tmp->createSubNodes(mathNode1,nullptr);
+	    if (!buildSubNodes(mathNode1, node1))
+	    {
 		return false;
-	}
-
-	return true;
+	    }
+	    else return true;
+        }
+        else return true;
 }
 
 bool _function_build_tree(mathNode::mathExpressionNode_func_tree * tgt, buildVector vec)
 {
 	if (vec.vecOffset >= vec.vecPtr->size() - 1)
 	{
-		std::cerr << "Syntax error: Expected value or exression after function\n";
+		std::cerr << "syntax error: expected value or exression after function\n";
 
 	}
-	else if (vec.vecPtr->operator[](vec.vecOffset + 1)->type != tokenType::PARENTHESES) //Won't work if user writes any formating token before the operator
+/*	else if (vec.vecPtr->operator[](vec.vecOffset + 1)->type != tree::PARENTHESES) //won't work if user writes any formating token before the operator
 	{
-		std::cerr << "Excpected parentheses after function name";
+		std::cerr << "excpected parentheses after function name";
 		return false;
-	}
+	}*/
 	for (unsigned int i = vec.lowLimit; i < vec.vecOffset; i++)
+	{
+		if (vec.vecPtr->operator[](i)->type != tree::PARENTHESES)
+		{
+			std::cerr << "vital token on lefhand side of function in build vector!\n";
+			return false;
+		}
+	}
+	buildVector node1(vec.vecOffset + 1, vec.hiLimit, 0, vec.vecPtr);
+	//create first sub branche
+	    size_t result = node1.calculateNextOperation(node1.lowLimit, node1.hiLimit);
+	    tree::nodeDataInterface* mathnode1;
+	    if (vec.vecPtr->operator[](result)->hasNode())
+	    {
+		mathnode1 = vec.vecPtr->operator[](result)->node();
+	    }
+	    else
+	    {
+		std::cerr << "can't create sub node!\n";
+		return false;
+	    }   
+            node1.vecOffset = result;
+	    auto tmp = static_cast<tree::node*>(nodeDataInterface_wrapper_access(tgt));
+	    tmp->createSubNodes(mathnode1, nullptr);
+	    if (!buildSubNodes(mathnode1, node1))
+	    {
+		return false;
+	    }
+            else return true;
+        
+	
+
+}
+
+
+bool _function_build_user(mathNode::mathExpressionNode_func_user * tgt, buildVector vec)
+{
+        for (size_t i = vec.lowLimit; i < vec.vecOffset; i++)
 	{
 		if (vec.vecPtr->operator[](i)->type != tree::PARENTHESES)
 		{
@@ -261,35 +280,37 @@ bool _function_build_tree(mathNode::mathExpressionNode_func_tree * tgt, buildVec
 			return false;
 		}
 	}
+        
+        
 	buildVector node1(vec.vecOffset + 1, vec.hiLimit, 0, vec.vecPtr);
-	//Create first sub branche
-	size_t result = node1.calculateNextOperation(node1.lowLimit, node1.hiLimit);
-	if (result < 0)
-	{
-		return false;
-	}
-	tree::nodeDataInterface* mathNode1;
-	if (vec.vecPtr->operator[](result)->hasNode())
-	{
+	    //Create first sub branche
+	if(node1.lowLimit != node1.hiLimit)
+        {
+            size_t result = node1.calculateNextOperation(node1.lowLimit, node1.hiLimit);
+	
+	    tree::nodeDataInterface* mathNode1;
+	    if (vec.vecPtr->operator[](result)->hasNode())
+	    {
 		mathNode1 = vec.vecPtr->operator[](result)->node();
-	}
-	else
-	{
+	    }
+	    else
+	    {
 		std::cerr << "Can't create sub node!\n";
 		return false;
-	}
+	    }
 
-	node1.vecOffset = result;
-	auto tmp = static_cast<tree::node*>(nodeDataInterface_wrapper_access(tgt));
-	tmp->createSubNodes(mathNode1, nullptr);
-	if (!buildSubNodes(mathNode1, node1))
-	{
+	    node1.vecOffset = result;
+	    auto tmp = static_cast<tree::node*>(nodeDataInterface_wrapper_access(tgt));
+
+	    tmp->createSubNodes(mathNode1,nullptr);
+	    if (!buildSubNodes(mathNode1, node1))
+	    {
 		return false;
-	}
-
-	return true;
+	    }
+	    else return true;
+        }
+        else return true;
 }
-
 
 
 
@@ -313,6 +334,10 @@ bool buildSubNodes(tree::nodeDataInterface * target, buildVector vec)
 	case tree::FUNCTION_TREE:
 		return _function_build_tree(static_cast<mathNode::mathExpressionNode_func_tree*>(target), vec);
 		break;
+        case tree::FUNCTION_USER:
+                return _function_build_user (static_cast<mathNode::mathExpressionNode_func_user*>(target),vec);
+                break;
+                    
 	default:
 	{
 			   std::cerr << "Can't build subnodes, unsopported type\n";

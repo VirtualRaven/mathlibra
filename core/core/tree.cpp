@@ -61,10 +61,22 @@ namespace tree
 	{
 		return nodePtr1;
 	}
+        node* node::take_ownership_sub1()
+        {
+            auto tmp = nodePtr1;
+            nodePtr1=nullptr;
+            return tmp;
+        }
 	node * node::sub2()
 	{
 		return nodePtr2;
 	}
+        node* node::take_ownership_sub2()
+        {
+            auto tmp = nodePtr2;
+            nodePtr2=nullptr;
+            return tmp;
+        }
 	void node::deleteSubNodes()
 	{
 		if (this->nodePtr1)
@@ -111,7 +123,6 @@ namespace tree
 	{
 
 	}
-
 	void node::set(nodeDataInterface* data)
 	{
 		this->data = data;

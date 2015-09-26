@@ -46,7 +46,7 @@ void interpreted_func::__prepare_function()
 }
 double interpreted_func::operator()(double x)
 {
-	this->local_mem.set("x", x, true, true);
+	this->local_mem.set_ignore_const("x", x, true, true);
 	this->__tree.TakeContext();
 	return this->__tree.data->eval();
 }

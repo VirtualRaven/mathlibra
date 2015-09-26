@@ -1,6 +1,8 @@
 #include "modules/operators.h"
+#include "ptr_protect.h"
 #include "core/internal_helper.h"
 #include "core/function_obj.h"
+#include "core/mathNode.h"
 namespace operators
 {
 
@@ -34,15 +36,45 @@ namespace operators
 	{
 		return x/y;
 	}
-        number_type declare_func(mathNode::mathExpressionNode_variable_interface* val,tree::nodeDataInterface* expr)
+        number_type declare_func(tree::nodeDataInterface* n)
         {
-            if(!val->is_undefined() )
-            {
-                throw stdOperatorOops("Can not redefine variable as function");
-            }
-            //auto ptr = new function_obj::interpreted_func();
+            tree::node*  node = static_cast<tree::node*>(nodeDataInterface_wrapper_access(n));
             
-            return 0;
+            if(node->sub1() != nullptr  )
+            {
+                auto type = node->sub1()->data->type;
+                if(type == tree::VARIABLE)
+                { 
+                    mathNode::mathExpressionNode_variable* var = static_cast<mathNode::mathExpressionNode_variable*>(node->sub1()->data);
+                    ptr_protect<tree::node*,false> expr(node->take_ownership_sub2());
+                    if(expr.ptr() != nullptr)
+                    {
+                        function_obj::interpreted_func* func= new function_obj::interpreted_func(expr.ptr(),var->get_mem_provider());
+                        var->makeFunction(func);  
+                        expr.release();   
+                        return 1;
+                    }
+                    else 
+                    {
+                        throw stdOperatorOops("Expected expression on right hand side of : operator");
+                    }
+                }
+                else if(type == tree::FUNCTION_USER )
+                {
+                    throw stdOperatorOops("Can't redefine already defined function");
+                }
+                else if(type == tree::FUNCTION || type == tree::FUNCTION_TREE)
+                {
+                    throw stdOperatorOops("The function is already declared by the system");
+                }
+
+            }
+            else
+            {
+                throw stdOperatorOops("Expected function name on lefthand side of : operator");
+            } 
+            
+            return 0;     
         }
 
 	number_type __divide(tree::nodeDataInterface* n)
@@ -86,7 +118,8 @@ namespace operators
 		interpreter_operator(&__divide,'/' ,2),
 		interpreter_operator(&__pow,'^' ,3),
         interpreter_operator(&__assign,'=',0),
-		interpreter_operator((generic_oper_ptr)nullptr, ',', 0 )
+		interpreter_operator((generic_oper_ptr)nullptr, ',', 0 ),
+                interpreter_operator(&declare_func,':',0)
     };
 
 operators::interpreter_operator::interpreter_operator(generic_oper_ptr opr, char symbol, short wheight):

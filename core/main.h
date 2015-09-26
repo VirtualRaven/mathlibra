@@ -1,5 +1,5 @@
 #ifndef MAIN_H_INCLUDED
-#define MAI_H_INCLUDED
+#define MAIN_H_INCLUDED
 #define EXEC_ENV 1
 /**
  * Main include file. This file contains global macors and defines.
@@ -14,7 +14,7 @@
 
 
 typedef double number_type;
-
+#define DEBUG
 #ifdef DEBUG
 #define P_TEST
 //#define RUN_TESTS

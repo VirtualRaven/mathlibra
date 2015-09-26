@@ -119,14 +119,15 @@
 		{
 			throw memory::memoryOops("Tried to create node variable without assigning memoryblock");
 		}
-		return new mathNode::mathExpressionNode_variable(variableName,mem,_stack);
+		return new mathNode::mathExpressionNode_variable(variableName,mem,_stack,func);
 	}
 	 bool  token::variableToken::hasNode()
 	{
 		return true;
 	}
-	 token::variableToken::variableToken(short startPos, short endPos, memory::memory* mem)
+	 token::variableToken::variableToken(short startPos, short endPos, memory::memory* mem, math_func::function_interface* func)
 	:baseToken(),
+        func(func),
 	variableName(""),
 	mem(mem),
 	_stack(true)
@@ -138,6 +139,7 @@
 
 	 token::variableToken::variableToken()
 	:baseToken(),
+        func(nullptr),
 	variableName(""),
 	mem(nullptr),
 	_stack(true)
@@ -163,21 +165,27 @@
         return *this;
     }
 
-
+using token::ptr_type_enum;
+        
 	 tree::nodeDataInterface* token::funcToken::node()
 	{
+                
 		if (ptr == nullptr)
 		{
 			throw memory::memoryOops("Function node missing pointer to actual function");
 		}
-		if (_is_general)
+		else if (this->ptr_type == ptr_type_enum::gen)
 		{
 			return new mathNode::mathExpressionNode_func_tree(gptr);
 		}
-		else
+		else if (this->ptr_type == ptr_type_enum::std)
 		{
 			return new mathNode::mathExpressionNode_func(ptr);
 		}
+                else 
+                {
+                    return new mathNode::mathExpressionNode_func_user(uptr);
+                }
 		
 	}
 	 bool  token::funcToken::hasNode()
@@ -187,21 +195,31 @@
 	 token::funcToken::funcToken(short startPos, short endPos, funcPtr ptr)
 	:ptr(ptr),
 	baseWheight(4),
-	_is_general(false)
+	ptr_type(ptr_type_enum::std)
 	{
 		this->endPos = endPos;
 		this->startPos = startPos;
 		this->type = tree::FUNCTION;
 	}
 	 token::funcToken::funcToken(short startPos, short endPos, generalFuncPtr ptr)
-		:gptr(ptr),
-		baseWheight(4),
-		_is_general(true)
+	:gptr(ptr),
+	baseWheight(4),
+	ptr_type(ptr_type_enum::gen)
 	{
 		this->endPos = endPos;
 		this->startPos = startPos;
 		this->type = tree::FUNCTION;
 	}
+        token::funcToken::funcToken(short startPos, short endPos,usr_ptr ptr)
+        : uptr(ptr),
+        baseWheight(4),
+        ptr_type(ptr_type_enum::usr)
+        {
+            this->endPos = endPos;
+            this->startPos = startPos;
+            this->type=tree::FUNCTION;
+        }
+
 	 token::funcToken::funcToken()
 	:ptr(nullptr),
 	baseWheight(4)

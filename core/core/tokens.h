@@ -5,7 +5,9 @@
 #include "mathNode.h"
 #include "tree.h"
 #include "modules/operators.h"
+#include "modules/functions.h"
 #include "main.h"
+#include "function_obj.h"
 using mathNode::number_type;
 using tree::tokenType;
 /**
@@ -81,42 +83,48 @@ struct valueToken : public baseToken
  */
 struct variableToken : public baseToken
 {
-
+        math_func::function_interface* func;
 	std::string variableName; /**< The name of the variable. Variable names can be an single character or an small word. No numbers or special characters are allowed*/
 	memory::memory *mem; /**< Pointer to the memory module. The pointer points to the currently used memory module. This pointer is used evaluate the variable using the provided variableName. */
 	bool _stack; /**< Stackable. Signifies  if the variable should be put on the stack. Used for the corax virtual machine. */
 	tree::nodeDataInterface* node();
-	bool  hasNode();
-	variableToken(short startPos, short endPos, memory::memory* mem);
+	bool  hasNode();	
+	variableToken(short startPos, short endPos, memory::memory* mem, math_func::function_interface* func);
 	variableToken();
-    variableToken(const variableToken&);
-    variableToken operator=(const variableToken&); 
+        variableToken(const variableToken&);
+        variableToken operator=(const variableToken&); 
 
 
 };
 
+enum ptr_type_enum {std,gen,usr};
 /**
  *  Token representing an token.
  * All function type nodes are represented by this token.
  */
 struct funcToken : public baseToken
 {
-
+       
+         
 	typedef number_type(*funcPtr)(number_type); /**< @typedef The standard single argument function. Used by FUNCTION type nodes */
 	typedef number_type(*generalFuncPtr)(tree::node_base*); /** @typedef Special pointer for multi argument functions. Used by FUNCTION_TREE type nodes */
+        typedef function_obj::interpreted_func* usr_ptr;
 	union
 	{
 		funcPtr ptr;
 		generalFuncPtr gptr;
+                usr_ptr uptr;    
+                
 	};
 	unsigned short baseWheight; /**< Weight of the operator. Higher weight means higher execution priority.  */
 	tree::nodeDataInterface* node();
 	bool  hasNode();
 	funcToken(short startPos, short endPos, funcPtr ptr);
 	funcToken(short startPos, short endPos, generalFuncPtr ptr);
+        funcToken(short startPos,short endPos, usr_ptr ptr);
 	funcToken();
 private:
-		bool _is_general;
+            ptr_type_enum ptr_type;
 };
 }
 #endif // TOKENS_H_INCLUDED

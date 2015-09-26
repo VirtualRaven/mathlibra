@@ -82,6 +82,7 @@ namespace math_func
                 interpreted_func* getFunctor(std::string funcName); /**<Gets an functor object representing an userprovided function. */ 
                 void display(); /**< Outputs an list of loaded functions to cout. */
 		std::vector<std::string> getFunctionNames();
+                ~function_interface();
 	};
 	
 

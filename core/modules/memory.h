@@ -36,7 +36,8 @@ namespace memory
 	public:
 		number_type get(std::string var);
 		bool set(std::string var, number_type value, bool allocateIfNotFound = true, bool constant = false);
-		std::vector<std::string> allVars();
+		bool set_ignore_const(std::string var, number_type value, bool allocateIfNotFound=false, bool constant=false);
+                std::vector<std::string> allVars();
 		bool exists(std::string var);
                 void empty();
 		number_type* raw_ptr(std::string var);

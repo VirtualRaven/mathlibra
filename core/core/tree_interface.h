@@ -20,8 +20,9 @@ namespace tree
 		VALUE = 4,	/**<Value type*/
 		PARENTHESES = 5, /*< Paratheses type. Can not exist as an node.*/
 		FUNCTION_TREE = 6, /**< A node that is a function that takes an variable number of arguments. @see math_func::m_function */
-		DUMMY = 7 /**< A node that is a comma sign.  @note This type is only used to create multi argument functions, calling eval on a dummy node results in an exception.*/
-	};
+		DUMMY = 7, /**< A node that is a comma sign.  @note This type is only used to create multi argument functions, calling eval on a dummy node results in an exception.*/
+                FUNCTION_USER =8
+	};      
 
 	/**
 	 * A data interface for nodes. All nodes have to contain data which is of the type nodeDataInterface. Data like values, variables and function names are all stored using this interface.

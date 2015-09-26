@@ -3,6 +3,7 @@
 #include "tree_interface.h"
 #include "modules/memory.h"
 #include "modules/operators.h"
+#include "modules/functions.h"
 #include "core/mathNode_interface.h"
 #include "main.h"
 #include "core/function_obj.h"
@@ -50,17 +51,21 @@ class mathExpressionNode_opr;
 
 	private:
 		memory::memory* mem;
-		bool _stack;
+                math_func::function_interface* func;
+                bool _stack;
 		friend mathExpressionNode_opr;
 	public:
+	        	
+                void makeFunction(function_obj::interpreted_func* ptr);
 		
-		mathExpressionNode_variable(std::string var, memory::memory* mem, bool b);
+                mathExpressionNode_variable(std::string var, memory::memory* mem, bool b,math_func::function_interface * func);
 		virtual ~mathExpressionNode_variable();
 		number_type eval();
 		bool is_pushable();
                 bool is_undefined();
 		void set(number_type);
 		void set_mem_provider(memory::memory* mem_provider);
+                memory::memory* get_mem_provider();
 		mathExpressionNode_variable(const mathExpressionNode_variable&);
 		mathExpressionNode_variable operator=(const mathExpressionNode_variable&);
 		void bind(node_base * context);
@@ -111,6 +116,7 @@ class mathExpressionNode_opr;
         class mathExpressionNode_func_user: public mathNode::mathExpressionNode_func_user_interface
         {
             function_obj::interpreted_func* ptr;
+            public:
             virtual ~mathExpressionNode_func_user();
             mathExpressionNode_func_user();
             void bind(node_base * context);
