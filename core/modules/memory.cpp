@@ -24,15 +24,8 @@ const char* memory::memoryOops::what()
 
 	number_type memory::memory::get(std::string var)
 	{
-		mem_it = mem.find(var);
-		if (mem_it == mem.end())
-		{
-			throw memoryOops("requested variable not found");
-			return false;
-
-		}
-		else return mem_it->second.value;
-	}
+	    return this->get_obj(var).value;
+        }
 	bool memory::memory::exists(std::string var)
         {
             mem_it = mem.find(var);
@@ -112,7 +105,51 @@ const char* memory::memoryOops::what()
 		}
 		else return &mem_it->second.value;
 	}
+        memory::memoryObject  memory::memory::get_obj(std::string name)
+        {
+		mem_it = mem.find(name);
+		if (mem_it == mem.end())
+		{
+			throw memoryOops("requested variable not found");
 
+		}
+		else return mem_it->second;	
+        } 
+        
+        memory::memoryObject  memory::memory::get_obj(size_t index)
+        {
+            if (index >= this->get_size())
+            {
+                throw memoryOops("Requested index out of bounds");
+            }    
+            else if(this->mem_it2_index == index)
+            {
+                return mem_it->second;
+            }
+            else if(this->mem_it2_index < index)
+            {
+                for(unsigned int i = 0;i<(index - this->mem_it2_index);  i++)
+                {
+                    this->mem_it2++;
+                }
+               this->mem_it2_index = index;
+               return this->mem_it2->second;
+            }
+            else 
+            {
+                for(unsigned int i =0; i< (this->mem_it2_index - index); i++)
+                {
+                    this->mem_it2--;
+                }
+                this->mem_it2_index = index;
+                return this->mem_it2->second; 
+            }
+
+        }
+        size_t memory::memory::get_size()
+        {
+           return this->mem.size(); 
+        }
 	bool test::memory_module_test1()
 	{
 		//Test allocation
@@ -193,3 +230,4 @@ const char* memory::memoryOops::what()
 		return true;
 
 	}
+                

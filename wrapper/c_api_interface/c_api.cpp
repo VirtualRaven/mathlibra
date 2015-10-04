@@ -1,10 +1,24 @@
 #include "c_api.h"
 #include "native_class_wrapper.h"
-
+#include <cstring>
 struct handle_obj
 {
  	native::core_native_wrapper wrp;
 };
+
+
+mem_obj to_c_struct(interface::mem_obj_api obj)
+{
+    mem_obj tmp = {new char[obj.name.size()],obj.value,obj.isConst};
+    strcpy(tmp.name, obj.name.c_str()); 
+    return tmp;
+
+}
+
+void free_mem_obj(mem_obj obj)
+{
+    delete obj.name;   
+}
 
 handle create_handle()
 {
@@ -41,3 +55,23 @@ void enable_plugins(handle hwn)
 	hwn->wrp.enablePlugins();
 
 }
+
+uint  mem_size(handle hwn)
+{
+    return  hwn->wrp.getNumVariables();    
+}
+mem_obj mem_get_index(handle hwn,uint index)
+{
+      
+    return to_c_struct( hwn->wrp.getVariable((size_t)index));
+}
+
+mem_obj mem_get(handle hwn,char* name)
+{
+    return to_c_struct( hwn->wrp.getVariable(name));
+}
+void    mem_set(handle hwn,mem_obj obj)
+{
+    hwn->wrp.manageVariable(std::string(obj.name),obj.val,obj.const_specifier);       
+}
+

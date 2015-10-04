@@ -133,7 +133,7 @@ namespace native
 	{
 		try
 		{
-			this->mem.set(name,value,false,false);
+			this->mem.set_ignore_const(name,value,false,false);
 		}
 		catch (exception& e)
 		{
@@ -203,7 +203,97 @@ namespace native
 			return std::vector<std::string>();
 		}
 	}
-	
+	void core_native_wrapper::manageVariable(std::string name,double value,bool isConst)
+        {
+            try
+            {
+               this->mem.set_ignore_const(name,value,true,isConst);
+            }
+            catch (exception& e)
+	    {
+		this->ex_inf.type = e.what();
+		this->ex_inf.desc = e.desc();
+		this->ex_inf.isCritical = e.critical();
+		this->exception_occurred = true;
+	    }
+        }
+        bool  core_native_wrapper::isConstVariable(std::string name)
+        {
+            try
+            {
+                auto obj = this->mem.get_obj(name);
+                return obj.constant;
+            }
+            catch (exception& e)
+	    {
+		this->ex_inf.type = e.what();
+		this->ex_inf.desc = e.desc();
+		this->ex_inf.isCritical = e.critical();
+		this->exception_occurred = true;
+	    }    
+            return {};
+        }
+        unsigned int core_native_wrapper::getNumVariables()
+        {
+            return  this->mem.get_size(); 
+        }
+        bool core_native_wrapper::isDefined(std::string name)
+        {
+            try
+            {
+               return this->mem.exists(name);
+            }
+            catch (exception& e)
+	    {
+		this->ex_inf.type = e.what();
+		this->ex_inf.desc = e.desc();
+		this->ex_inf.isCritical = e.critical();
+		this->exception_occurred = true;
+	    }
+            return{};
+        }
+	mem_obj_api core_native_wrapper::getVariable(std::string name)
+        {
+          
+            try
+            {
+               auto obj = this->mem.get_obj(name);
+               mem_obj_api tmp_obj;
+               tmp_obj.value = obj.value;
+               tmp_obj.isConst = obj.constant;
+               tmp_obj.name = obj.name;
+               return tmp_obj;
+            }
+            catch (exception& e)
+	    {
+		this->ex_inf.type = e.what();
+		this->ex_inf.desc = e.desc();
+		this->ex_inf.isCritical = e.critical();
+		this->exception_occurred = true;
+	    }  
+            return {};
+        }
+        mem_obj_api core_native_wrapper::getVariable(size_t index)
+        {
+            try
+            {
+               auto obj = this->mem.get_obj(index);
+               mem_obj_api tmp_obj;
+               tmp_obj.value = obj.value;
+               tmp_obj.isConst = obj.constant;
+               tmp_obj.name = obj.name;
+                return tmp_obj; 
+            }
+            catch (exception& e)
+	    {
+		this->ex_inf.type = e.what();
+		this->ex_inf.desc = e.desc();
+		this->ex_inf.isCritical = e.critical();
+		this->exception_occurred = true;
+	    }
+            return {};
+        }
+                
 }
 
 	

@@ -3,7 +3,8 @@
 namespace native
 {
 	extern const char * CoreVersion ;
-	
+        using interface::mem_obj_api;
+        using interface::wrapper_exception_info;        
 
 	class core_native_wrapper : public interface::calc_lib_interface
 	{
@@ -22,7 +23,7 @@ namespace native
 		void set_arg(std::string str);
 		bool interpret_arg();
 		double execute_arg();
-		interface::wrapper_exception_info get_exception_info();
+		wrapper_exception_info get_exception_info();
 		bool exceptionOccured();
 		//Fúnction unit
 		std::vector<std::string> getFunctionNames();
@@ -30,9 +31,15 @@ namespace native
 		//Memroy unit 
 		std::vector<std::string> getVariableNames();
 		double getVariableValue(std::string  name);
-		void setVariable(std::string name, double value);
+		mem_obj_api getVariable(std::string name);
+                mem_obj_api getVariable(size_t index);
+                void setVariable(std::string name, double value);
 		void createVariable(std::string name, double value);
 		void clearVariables();
+                void manageVariable(std::string,double value,bool const);
+                bool  isConstVariable(std::string);
+                unsigned int getNumVariables();
+                bool isDefined(std::string name);
 
 		//Plugins
 		void enablePlugins();
