@@ -9,3 +9,13 @@ if(UNIX)
 	target_link_libraries(core_lib -ldl)
 endif()
 
+
+#Copy files needed for the plugin api
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/plugins/api_version.h  ${PLUGIN_API_INCLUDE}/api_version.h COPYONLY )
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ptr_protect.h  ${PLUGIN_API_INCLUDE}/ptr_protect.h COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/main.h ${PLUGIN_API_INCLUDE}/main.h COPYONLY )
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/tree_interface.h  ${PLUGIN_API_INCLUDE}/tree_interface.h COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/mathNode_interface.h  ${PLUGIN_API_INCLUDE}/mathNode_interface.h COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/object_counter.h  ${PLUGIN_API_INCLUDE}/object_counter.h COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/modules/function_helper.h  ${PLUGIN_API_INCLUDE}/function_helper.h COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/plugins/functions_external_interface.h  ${PLUGIN_API_INCLUDE}/functions_external_interface.h COPYONLY)
