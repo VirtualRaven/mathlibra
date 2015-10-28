@@ -1,11 +1,14 @@
 #ifndef MATHNODE_INTERFACE_H_INCLUDED
 #define MATHNODE_INTERFACE_H_INCLUDED
 #include "tree_interface.h"
-
+#include <string>
 
 using tree::node_base;
 using tree::nodeDataInterface;
-
+namespace mathNode
+{
+  typedef double number_type;
+}
 namespace memory
 {
 	class memory;
@@ -13,7 +16,7 @@ namespace memory
 
 namespace operators
 {
-	typedef number_type(*generic_oper_ptr)(tree::nodeDataInterface*);
+	typedef mathNode::number_type (*generic_oper_ptr) (tree::nodeDataInterface*);
 }
 
 namespace mathNode
@@ -21,9 +24,7 @@ namespace mathNode
 
 	
 
-	typedef double number_type;
-
-	/**
+		/**
 	 * Interface for value type nodes.
 	 */
 	class mathExpressionNode_val_interface : public tree::nodeDataInterface
