@@ -15,6 +15,13 @@ mem_obj to_c_struct(interface::mem_obj_api obj)
 
 }
 
+const char* to_c_str(std::string x)
+{
+  char * str = new char[x.size()];
+  strcpy(str,x.c_str());
+  return str;
+}
+
 void free_mem_obj(mem_obj obj)
 {
     delete obj.name;   
@@ -74,4 +81,38 @@ void    mem_set(handle hwn,mem_obj obj)
 {
     hwn->wrp.manageVariable(std::string(obj.name),obj.val,obj.const_specifier);       
 }
+
+func_obj_array func_get(handle hwn)
+{
+	auto vec = hwn->wrp.getFunctionObjs();
+	unsigned int size = vec.size();
+	func_obj* ptr = new func_obj[size];
+	for(unsigned int i =0; i < size; i++)
+	{
+		ptr[i].name =to_c_str(vec[i].name);
+		ptr[i].doc =to_c_str(vec[i].doc);
+		ptr[i].tag =to_c_str(vec[i].tag);
+		ptr[i].disp_name =to_c_str(vec[i].disp_name);
+	}
+	return {ptr,size};
+}
+inline void free_func_obj(func_obj obj)
+{
+	delete obj.name;
+	delete obj.tag;
+	delete obj.doc;
+	delete obj.disp_name;	
+}
+void free_func_obj_array(func_obj_array obj)
+{
+	for(unsigned int i=0; i < obj.size; i++)
+	{
+		free_func_obj(obj.array[i]);
+	}
+	delete obj.array;
+}
+
+
+void free_func_obj_array(func_obj_array obj);
+
 

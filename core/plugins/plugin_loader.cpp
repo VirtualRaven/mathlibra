@@ -54,7 +54,7 @@ void plugin::plugin_manager::unloadPlugins()
 	 unsigned int max = func->function_size();
 	 for (unsigned int i = 0; i < max; i++)
 	 {
-		 __funcs.push_back(math_func::m_function(tmp_funcs[i].name, tmp_funcs[i].ptr));
+		 __funcs.push_back(math_func::m_function(tmp_funcs[i].name,tmp_funcs[i].tag,tmp_funcs[i].doc,tmp_funcs[i].disp_name,   tmp_funcs[i].ptr));
 	 }
 	 function_unit->load(__funcs);
  }

@@ -15,7 +15,9 @@ namespace plugin
 		
 		function_pointer ptr; /**< Pointer to the function*/
 		const char * name; /**< Function name. Pointer to a c-style string contaning the name the function which the user will call the function by*/
-		const char * doc /**<Documentation string. Pointer to a c-style string containing a short description of the function*/ ;
+		const char * doc; /**<Documentation string. Pointer to a c-style string containing a short description of the function*/ 
+		const char * disp_name; /**<Name to display. */
+		const char * tag; /**<Catergory tag*/
 	};
 	
 	

@@ -133,7 +133,7 @@ namespace mathNode
                         auto tmp = this->func->isloaded(this->name);
                         if(!tmp.loaded)
                         {
-                            math_func::m_function newFunc(this->name,ptr);
+                            math_func::m_function newFunc(this->name,"user","f(double)",this->name,ptr);
                             this->func->load(newFunc);
                         }
                         else throw mathNode::nodeOops("Can't redefine function",false);

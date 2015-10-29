@@ -203,6 +203,33 @@ namespace native
 			return std::vector<std::string>();
 		}
 	}
+	std::vector<interface::func_obj_api> core_native_wrapper::getFunctionObjs()
+	{
+		try	
+		{	std::vector<interface::func_obj_api> vec;
+		       	auto in_vec = this->functions.getFunctionObjs();
+
+			vec.reserve(in_vec.size());
+			for(size_t i =0; i<in_vec.size(); i++)
+			{
+				vec.push_back({std::move(in_vec[i].name),
+						std::move(in_vec[i].tag),
+						std::move(in_vec[i].doc),
+						std::move(in_vec[i].disp_name),
+						});
+			}
+
+			return	vec;	
+		}
+		catch (exception& e)
+		{
+			this->ex_inf.type = e.what();
+			this->ex_inf.desc = e.desc();
+			this->ex_inf.isCritical = e.critical();
+			this->exception_occurred = true;
+			return std::vector<interface::func_obj_api>();
+		}
+	}
 	void core_native_wrapper::manageVariable(std::string name,double value,bool isConst)
         {
             try

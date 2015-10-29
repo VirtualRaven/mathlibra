@@ -36,7 +36,16 @@ namespace math_func
             bool loaded;
             bool functor;
         };
-        
+ 
+	struct func_obj_info
+	{
+	  	std::string name;
+		std::string tag;
+		std::string doc;
+		std::string disp_name;
+	};
+
+       
 	enum func_type {FAST,GENERAL,USER};
 	/**
 	 * Implements the function runtime type. All functions loaded into the function module @see  function_interface must be wrapped in this class.
@@ -45,6 +54,9 @@ namespace math_func
 	{
 		func_type type; /**< @return True if function is of type generalFuncPtr, else if it is of type funcPtr it returns false */
 		std::string name; /**< The name of the function. This name is the name the user calls the function by during runtime.@note At present time no name collision tests are done. */
+		std::string tag;
+		std::string doc;
+		std::string disp_name;
 		typedef number_type(*funcPtr)(number_type); /**< @typedef the standard fixed single argument type function. */
 		typedef number_type(*generalFuncPtr)(tree::node_base*); /**< @typedef the extended function type that takes an pointer to an node_base. Used for multi argument functions. */ 
 		union
@@ -54,9 +66,9 @@ namespace math_func
 		        interpreted_func* uptr;
                 };
 		
-		m_function(std::string name, funcPtr ptr); 
-		m_function(std::string name, generalFuncPtr ptr);
-		m_function(std::string name, interpreted_func* ptr);
+		m_function(std::string name,std::string tag,std::string doc,std::string disp_name, funcPtr ptr); 
+		m_function(std::string name,std::string tag,std::string doc,std::string disp_name, generalFuncPtr ptr);
+		m_function(std::string name,std::string tag,std::string doc,std::string disp_name, interpreted_func* ptr);
                 m_function();
 		~m_function();
 	};
@@ -82,7 +94,8 @@ namespace math_func
                 interpreted_func* getFunctor(std::string funcName); /**<Gets an functor object representing an userprovided function. */ 
                 void display(); /**< Outputs an list of loaded functions to cout. */
 		std::vector<std::string> getFunctionNames();
-                ~function_interface();
+		std::vector<func_obj_info> getFunctionObjs();
+		~function_interface();
 	};
 	
 

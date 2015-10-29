@@ -22,6 +22,22 @@ extern "C"
               bool const_specifier;
        };
 
+	struct func_obj
+	{
+		const char* name;
+		const char* tag;
+		const char* doc;
+		const char* disp_name;
+	};
+	
+	struct func_obj_array
+	{
+		func_obj* array;
+		unsigned int size;
+	};
+       	
+	extern func_obj_array func_get(handle);	
+	extern void free_func_obj_array(func_obj_array obj);
 
         extern uint  mem_size(handle); /**>@returns Integer representing the number of variables in memory     */ 
         extern mem_obj mem_get_index(handle,uint index); //| O(n)

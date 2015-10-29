@@ -27,6 +27,7 @@ namespace native
 		bool exceptionOccured();
 		//Fúnction unit
 		std::vector<std::string> getFunctionNames();
+		std::vector<interface::func_obj_api> getFunctionObjs();
 
 		//Memroy unit 
 		std::vector<std::string> getVariableNames();

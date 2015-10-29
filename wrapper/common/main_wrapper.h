@@ -17,6 +17,15 @@ namespace interface
             double value;
             bool    isConst;
         };
+
+	struct func_obj_api
+	{
+	  	std::string name;
+		std::string tag;
+		std::string doc;
+		std::string disp_name;
+	};
+
 	class calc_lib_interface
 	{
 	public:
@@ -28,6 +37,8 @@ namespace interface
 
 		//Function unit
 		virtual std::vector<std::string> getFunctionNames() = 0;
+		virtual std::vector<func_obj_api> getFunctionObjs() = 0;	
+		
 
 		//Memroy unit 
 		virtual std::vector<std::string> getVariableNames() = 0;
