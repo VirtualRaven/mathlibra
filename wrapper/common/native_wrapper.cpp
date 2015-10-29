@@ -208,10 +208,9 @@ namespace native
 		try	
 		{	std::vector<interface::func_obj_api> vec;
 		       	auto in_vec = this->functions.getFunctionObjs();
-
 			vec.reserve(in_vec.size());
 			for(size_t i =0; i<in_vec.size(); i++)
-			{
+			{	
 				vec.push_back({std::move(in_vec[i].name),
 						std::move(in_vec[i].tag),
 						std::move(in_vec[i].doc),

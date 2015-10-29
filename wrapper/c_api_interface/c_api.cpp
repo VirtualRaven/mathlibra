@@ -1,6 +1,8 @@
 #include "c_api.h"
 #include "native_class_wrapper.h"
 #include <cstring>
+
+
 struct handle_obj
 {
  	native::core_native_wrapper wrp;
@@ -29,7 +31,8 @@ void free_mem_obj(mem_obj obj)
 
 handle create_handle()
 {
-	return  new handle_obj;	
+	auto tmp=  new handle_obj;
+	return tmp;
 }
 void free_handle(handle hwn)
 {
@@ -53,10 +56,15 @@ const char* mathlibra_error_info(handle hwn)
 {
 	auto x = hwn->wrp.get_exception_info();
 	std::string msg = x.type + std::string(":")+  x.desc;
-	return msg.c_str();
-
+	char * tmp = new char[msg.size()];
+	strcpy(tmp,msg.c_str());
+	return tmp;
+	
 }	
-
+void free_error_info(const char * info)
+{
+	delete info;
+}
 void enable_plugins(handle hwn)
 {
 	hwn->wrp.enablePlugins();
@@ -105,6 +113,7 @@ inline void free_func_obj(func_obj obj)
 }
 void free_func_obj_array(func_obj_array obj)
 {
+	
 	for(unsigned int i=0; i < obj.size; i++)
 	{
 		free_func_obj(obj.array[i]);

@@ -12,6 +12,7 @@ extern "C"
 	extern double execute_arg(handle);
 	extern bool mathlibra_error(handle);
 	extern const char* mathlibra_error_info(handle);
+	extern void free_error_info(const char* info);
 	extern void enable_plugins(handle);	
 
         //Memory module

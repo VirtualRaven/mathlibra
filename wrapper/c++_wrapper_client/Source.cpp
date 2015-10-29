@@ -30,6 +30,11 @@ int run_test()
 	{
 		return false;
 	}*/ 
+	auto func =calc->getFunctionObjs();
+	for (auto obj : func)
+	{
+		std::cout << obj.name << " " << obj.doc << " " << obj.tag << " "<<obj.disp_name << std::endl;
+	}
 	auto names = calc->getFunctionNames();
 	for (auto name : names)
 	{
@@ -60,6 +65,7 @@ int run_test()
 
 int main()
 {
+
 	return run_test();
 	
 }
