@@ -21,6 +21,8 @@ On Windows cmake can be used to create visual studio files. Install cmake for wi
 For vim users all directories include config files for youcomplete me to enable autocompletion. To just install youcompleteme and when opening an file in the repo accept when it asks if you want to load the config files.
 
 ### Running Tests ###
+The project includes an random tester which generates test cases. The tester works by generating random expressions and passing them to mathlibra through the C api. The result is then compared to the calculated expected result, if they differ or a exception is thrown, the test fails. To enable the tester use the command `cmake -DC_API_TEST=True ..` when configuring cmake  and then to run the tester with `make test`. If the tester fails it will generate an report `test/test_report.txt` in the build folder.
+
 The project contains a tester executable which when run provides an interactive sessions for inputting expressions to be evaluated.
 Writing menu instead of an expression will bring up an menu which can run tests, provide help and lets you inspect the status of the interpreter at any time.
 
