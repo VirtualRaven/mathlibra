@@ -150,8 +150,7 @@ int main(int argc, char* argv[])
 			try
 			{
 				inter.set(expression.c_str(), expression.size());
-				if (inter.interpret())
-				{
+				inter.interpret();
 #if  defined(SYNTAX_TREE_EXEC)
 					
 					mem.set("ans",inter.exec());
@@ -163,11 +162,7 @@ int main(int argc, char* argv[])
 #error "WARNING, no execution enviroment selected"
 #endif
 					std::cout << expression << " = " << mem.get("ans") << std::endl;
-				}
-				else
-				{
-					std::cout << "Failed to interpret expression!" << std::endl;
-				}
+				
 
 			}
 

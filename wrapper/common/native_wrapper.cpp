@@ -44,23 +44,21 @@ namespace native
 			this->exception_occurred = true;
 		}
 	}
-	bool core_native_wrapper::interpret_arg()
+	void core_native_wrapper::interpret_arg()
 	{
 		try
 		{
-			return this->inter.interpret();
+			this->inter.interpret();
 		}
 		catch (exception& e)
 		{
 			this->ex_inf.type = e.what();
 			this->ex_inf.desc = e.desc();
 			this->exception_occurred = true;
-			return false;
 		}
 		catch (...)
 		{
 			this->exception_occurred = true;
-			return false;
 		}
 
 	}

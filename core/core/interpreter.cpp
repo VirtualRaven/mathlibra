@@ -149,7 +149,7 @@ void debug::check_tree_mem_leak()
 		expression[expressionLength] = '\0';
 	}
 
-	bool interpreter::lexicalAnalys()
+	void  interpreter::lexicalAnalys()
 	{
 		this->destroyTokens();
 		tokens.reserve(expressionLength); 
@@ -187,8 +187,8 @@ void debug::check_tree_mem_leak()
 			{
 				if(parStack.empty())
 				{
-					std::cerr << "Syntax error : found unmatched ) \n";
-					return false;
+					throw  interpreterOops("Syntax error : found unmatched )",false);
+					
 				}
 				else
 				{
@@ -217,15 +217,18 @@ void debug::check_tree_mem_leak()
 					{
 						if(i2+1 < expressionLength && ( !isdigit(expression[i2+1]) && expression[i2+1] !='-') )
 						{
-							std::cerr << "Syntax error: expected exponent after e \n";
+							throw interpreterOops("Syntax error: expected exponent after e",false);
 
-							return false;
+						}
+						else if(i2+1 >=expressionLength)
+						{
+							throw interpreterOops("Syntax error: expected exponent after e",false);
 						}
 
 					}
 					else if(expression[i2] == '-')
 					{
-						if(i2-1 >= 0 && expression[i2-1] != 'e') //If expression is > instead of >= it will fail for expressions as 0-x^2
+						if(i2-1 < expressionLength  && expression[i2-1] != 'e') //If expression is > instead of >= it will fail for expressions as 0-x^2
 						{
 							break;
 						}
@@ -238,7 +241,7 @@ void debug::check_tree_mem_leak()
 
 				//Create a temporary string from which we can convert the string to a double
 				char* tmp_str = nullptr;
-                tmp_str = new char[tmp_str_length+1];
+                		tmp_str = new char[tmp_str_length+1];
 				memcpy(tmp_str, &expression[i], (tmp_str_length*sizeof(char)) );
 				tmp_str[tmp_str_length] = '\0';
 				tmp->value =  atof(tmp_str);
@@ -262,9 +265,8 @@ void debug::check_tree_mem_leak()
 					{
 						if (i2 + 1 < expressionLength && !isdigit(expression[i2 + 1]))
 						{
-							std::cerr << "Syntax error: expected exponent after e \n";
+							throw interpreterOops("Syntax error: expected exponent after e",false);
 
-							return false;
 						}
 
 					}
@@ -347,8 +349,8 @@ void debug::check_tree_mem_leak()
 
 					if (tokens.back()->type != tokenType::VARIABLE)
 					{
-						std::cerr << "Syntax error: Assigment operator requirers an variable on left hand side\n";
-						return false;
+
+						throw interpreterOops("Syntax error: Assigment operator requirers an variable on left hand side",false);
 					}
 					else
 					{
@@ -435,15 +437,13 @@ void debug::check_tree_mem_leak()
 					}
 					else
 					{
-						std::cerr << "Found variable in string but no memory unit is assigned to the interpeter\n";
-						return false;
+						 throw interpreterOops("Found variable in string but no memory unit is assigned to the interpeter",true);
 					}
 					continue;
 			}
 			else
 			{
-				std::cerr << "Syntax error: found unknown token in string \n";
-				return false ;
+				throw interpreterOops("Syntax error: found unknown token in string",false);
 			}
 
 
@@ -451,39 +451,43 @@ void debug::check_tree_mem_leak()
 		}
 		if(!parStack.empty())
 		{
-			std::cerr << "Syntax error: found unmatched ( \n";
-			return false ;
+			throw	interpreterOops("Syntax error: found unmatched ( ",false);
 		}
 		else
 		{
 			tokens.shrink_to_fit();
-			return true;
 		}
 
 
 	}
 
-	bool interpreter::buildSyntaxTree()
+	void interpreter::buildSyntaxTree()
 	{
-        if(this->startOperatorPos)
-        {
-            emptyRoot();
-            this->root =buildEntry1(this);
-            rootEmpty = false;
-            return true;
+       		 if(this->startOperatorPos)
+       		 {
+       		     emptyRoot();
+       		     this->root =buildEntry1(this);
+       		     rootEmpty = false;
 
-        }
+       		 }
 		else
 		{
 			if (this->tokens[this->startOperatorPos]->type == tree::FUNCTION)
 			{
-					emptyRoot();
-					this->root = buildEntry1(this);
-					rootEmpty = false;
-					return true;
+				emptyRoot();
+				this->root = buildEntry1(this);
+				rootEmpty = false;
 			}
-			std::cerr << "Can't find start point\n";
-            return false;
+			else if(this->tokens.size() == 1 && (this->tokens[0]->type == tokenType::VALUE || this->tokens[0]->type == tokenType::VARIABLE ))
+			{
+				emptyRoot();
+				this->root = buildEntry1(this);
+				rootEmpty=false;
+			}
+			else
+			{
+				throw interpreterOops("Sorry, don't know where to start",false);	
+			}
 		}
 
 	}
@@ -499,16 +503,13 @@ void debug::check_tree_mem_leak()
 	{
 	    this->_operators = operators;
 	}
-	bool interpreter::interpret()
+	void  interpreter::interpret()
 	{
 		//Add syntax checking
 		//std::cerr << "-[Interptating: " << this->expression << "\n";
 
 
-		if (!lexicalAnalys())
-		{
-			return false;
-		}
+		lexicalAnalys();
 #ifdef  LEXICAL_ANANALYSIS_DEBUG
 		for(unsigned int i = 0; i < this->tokens.size(); i++)
 		{
@@ -558,20 +559,21 @@ void debug::check_tree_mem_leak()
 
 		}
 #endif
-
-
-
-		if (!this->buildSyntaxTree())
-		{
-			this->destroyTokens(); //Remove all tokens
-			return false;
-		}
+			try
+			{
+				this->buildSyntaxTree();
+			}
+			catch(...)
+			{
+				this->destroyTokens(); //Remove all tokens
+				throw;
+			}
+		
 		this->destroyTokens(); //Remove all tokens
         #ifdef STRUCTUAL_INTEGRITY_TEST
             this->root.integrityTest();
         #endif
 
-		return true;
 
 	}
 	number_type interpreter::exec()

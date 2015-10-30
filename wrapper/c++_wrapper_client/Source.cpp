@@ -43,7 +43,7 @@ int run_test()
 	for (std::string expr : tests)
 	{
 		calc->set_arg(expr);
-		if (!calc->interpret_arg() || !test_error(calc))
+		if ( !test_error(calc))
 		{
 			return false;
 		}

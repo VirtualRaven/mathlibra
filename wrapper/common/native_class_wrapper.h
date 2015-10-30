@@ -21,7 +21,7 @@ namespace native
 		core_native_wrapper();
 		~core_native_wrapper();
 		void set_arg(std::string str);
-		bool interpret_arg();
+		void interpret_arg();
 		double execute_arg();
 		wrapper_exception_info get_exception_info();
 		bool exceptionOccured();

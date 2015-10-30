@@ -90,11 +90,11 @@ class interpreter : public interface::interpreter_interface
 
 	void emptyRoot();
 	void destroyTokens();
-    void stripSlashes();
+    	void stripSlashes();
 	void freeExpression();
 	void allocExpression(short lenght);
-	bool lexicalAnalys();
-	bool buildSyntaxTree();
+	void lexicalAnalys();
+	void buildSyntaxTree();
 	
 	interpreter(const interpreter& other);
 	interpreter& operator=(const interpreter& other);
@@ -106,7 +106,7 @@ public:
 	void setOperator(operators::operators_interface* operators); /**< Load operator module. @param operators Pointer to the  operator module to load. @note does not copy the module, therefore the pointer must remain valid through the lifetime of the interpeter. */
 	void setMemory(memory::memory* mem_); /**< Load memory module. @param mem_ Pointer to the module to load. @note does not copy the module, therefore the pointer must remain valid through the lifetime of the interpeter. */
 	void setFunction(math_func::function_interface* functions); /**< Load function module. @param operators Pointer to the  module to load. @note does not copy the module, therefore the pointer must remain valid through the lifetime of the interpeter. */
-	bool interpret(); /**< Construct the abstract syntax tree. @return True if tree construction was successful. @note The tree remains until the next call to interpret() or the destructor. Thus several calls can be made to exec cheaply after the construction.*/
+	void interpret(); /**< Construct the abstract syntax tree.  @note The tree remains until the next call to interpret() or the destructor. Thus several calls can be made to exec cheaply after the construction.*/
 	number_type exec(); /**< Evaluate the abstract syntax tree. @return The result of the tree evaluation. */
 	void set(const char * expression_, unsigned short lenght); /**< Sets the expression to interpret. @param expression_ Pointer to an c-style string. @param lenght the lenght of the string excluding any termination characters.*/
 	interpreter();

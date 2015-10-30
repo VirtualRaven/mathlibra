@@ -30,7 +30,7 @@ namespace interface
 	{
 	public:
 		virtual void set_arg(std::string str) = 0;
-		virtual bool interpret_arg() = 0;
+		virtual void interpret_arg() = 0;
 		virtual double execute_arg() = 0;
 		virtual wrapper_exception_info get_exception_info() = 0;
 		virtual bool exceptionOccured() = 0;
