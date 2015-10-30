@@ -14,7 +14,11 @@ if(MSVC)
   endif()
 elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   # Update if necessary
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11 -Wno-long-long -pedantic")
+  if (CMAKE_BUILD_TYPE EQUAL "DEBUG")
+  	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11 -Wno-long-long -pedantic")
+  else()
+	  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s -Wall -std=c++11 -Wno-long-long -pedantic")
+  endif()
 endif()
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
