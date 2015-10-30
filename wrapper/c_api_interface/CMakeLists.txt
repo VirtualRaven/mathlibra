@@ -14,9 +14,9 @@ add_custom_command(TARGET mathlibra_C
 	COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/run_tests.py ${CMAKE_BINARY_DIR}/test/
        	)
 
-if(CMAKE_TEST)
-	enable_testing()
+if(${C_API_TEST})
 	find_package(PythonInterp REQUIRED)
 	add_test(NAME C_API_CHECK COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_BINARY_DIR}/test/run_tests.py 
 	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/test/)
+	set_tests_properties(C_API_CHECK PROPERTIES DEPENDS mathlibra_C)
 endif()
