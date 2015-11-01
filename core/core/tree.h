@@ -8,19 +8,6 @@
 namespace tree
 {
 	
-	class TreeStructOops : public exception
-	{
-	public:
-		TreeStructOops(std::string inf, bool isCritical);
-		const char* what();
-	};
-
-
-
-
-
-
-
 	node_base * nodeDataInterface_wrapper_access(nodeDataInterface* node);
 
 	/**

@@ -1,14 +1,10 @@
 #include "modules/memory.h"
 #include <iostream>
-memory::memoryOops::memoryOops(std::string info)
+	
+	template<EXCEPTION T> void memoryOops()
 	{
-		this->info = info;
+		__mathlibra__raise<T,MEMORY>();
 	}
-const char* memory::memoryOops::what()
-	{
-		return "Memory exception";
-	}
-
 
 	memory::memoryObject::memoryObject(std::string name, number_type value, bool constant):
 	    name(name),
@@ -44,13 +40,13 @@ const char* memory::memoryOops::what()
 			}
 			else
 			{
-				throw memoryOops("requested variable not found");
+				memoryOops<MEM_VAR_NOT_FOUND>();
 				return false;
 			}
 		 }
 				if (mem_it->second.constant == true)
 				{
-					throw memoryOops("Tried to alter constant variable");
+					memoryOops<MEM_ALTER_CONST_VAR>();
 					return false;
 				}
 				mem_it->second.value = value;
@@ -68,7 +64,7 @@ const char* memory::memoryOops::what()
 			}
 			else
 			{
-				throw memoryOops("requested variable not found");
+				memoryOops<MEM_VAR_NOT_FOUND>();
 				return false;
 			}
 		 }
@@ -99,7 +95,7 @@ const char* memory::memoryOops::what()
 		mem_it = mem.find(var);
 		if (mem_it == mem.end())
 		{
-			throw memoryOops("requested variable not found");
+			memoryOops<MEM_VAR_NOT_FOUND>();
 			return nullptr;
 
 		}
@@ -110,8 +106,8 @@ const char* memory::memoryOops::what()
 		mem_it = mem.find(name);
 		if (mem_it == mem.end())
 		{
-			throw memoryOops("requested variable not found");
-
+			memoryOops<MEM_VAR_NOT_FOUND>();
+			return mem_it->second; //Dummy expression to avoid warning, will never be executed
 		}
 		else return mem_it->second;	
         } 
@@ -120,7 +116,8 @@ const char* memory::memoryOops::what()
         {
             if (index >= this->get_size())
             {
-                throw memoryOops("Requested index out of bounds");
+		memoryOops<MEM_INDEX_OUT_OF_BOUNDS>();
+		return mem_it->second; // Dummy expression to avoid warning,will never be executed
             }    
             else if(this->mem_it2_index == index)
             {
@@ -180,7 +177,7 @@ const char* memory::memoryOops::what()
 				std::cout << "Failed to protect const\n";
 				return false;
 			}
-			catch (memory::memoryOops& e)
+			catch (exception& e)
 			{
 
 				
@@ -221,7 +218,7 @@ const char* memory::memoryOops::what()
 				return false;
 			}
 		}
-		catch (memory::memoryOops& e)
+		catch (exception& e)
 		{
 			std::cout << "Test failed, exception occured " << e.what()<< " " << e.desc() << "\n\n";
 			return false;

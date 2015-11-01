@@ -3,18 +3,14 @@
 #include "core/internal_helper.h"
 #include "core/function_obj.h"
 #include "core/mathNode.h"
+#include "exception_helper.h"
 namespace operators
 {
 
-    struct stdOperatorOops : public exception
-    {
-	stdOperatorOops(std::string inf) : exception(inf,false){}
-	const char* what()
-        {
-            return "built in operator exception";
-        }
-    };
-
+   	template<EXCEPTION T> void stdOperatorOops()
+	{
+		__mathlibra__raise<T,STD_OPERATORS>();
+	}
 	number_type add(number_type x, number_type y)
 	{
 		return x+y;
@@ -56,22 +52,22 @@ namespace operators
                     }
                     else 
                     {
-                        throw stdOperatorOops("Expected expression on right hand side of : operator");
+			    stdOperatorOops<FUNC_OPR_NEED_EXPR>();
                     }
                 }
                 else if(type == tree::FUNCTION_USER )
                 {
-                    throw stdOperatorOops("Can't redefine already defined function");
+		    stdOperatorOops<FUNC_OPR_NO_REDEFINE>();
                 }
                 else if(type == tree::FUNCTION || type == tree::FUNCTION_TREE)
                 {
-                    throw stdOperatorOops("The function is already declared by the system");
+		    stdOperatorOops<FUNC_OPR_NO_REDEFINE_SYSTEM>();
                 }
 
             }
             else
             {
-                throw stdOperatorOops("Expected function name on lefthand side of : operator");
+		stdOperatorOops<FUNC_OPR_NEED_FUNC_NAME>();
             } 
             
             return 0;     

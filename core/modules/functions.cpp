@@ -1,17 +1,13 @@
 #include "modules/functions.h"
+#include "exception_helper.h"
 //Contains temporary implementation of function module
 namespace math_func
 {
-	functionOops::functionOops(std::string inf)
+	template<EXCEPTION T> void functionOops()
 	{
-		info = inf;
+		__mathlibra__raise<T,FUNCTION>();
 	}
 
-	const char* functionOops::what()
-	{
-		return "function Exception";
-	}
-	
 	typedef double(*double_func)(double);
 
 
@@ -75,7 +71,7 @@ namespace math_func
 			{
 				if(cache.type == func_type::USER)
                                 {
-                                    throw functionOops("Can't convert functor to void *");
+					functionOops<FUNC_NO_CONV_FUNCTOR_VOID_P>();
                                 }
                                 return reinterpret_cast<void*>(cache.ptr);
 			}
@@ -88,7 +84,7 @@ namespace math_func
 					{
                                             if(funcs[i].type == func_type::USER)
                                             {
-                                                throw functionOops("Can't convert functor to void *");
+						functionOops<FUNC_NO_CONV_FUNCTOR_VOID_P>();
                                             }
 					    else return reinterpret_cast<void*>(funcs[i].ptr);
 					}

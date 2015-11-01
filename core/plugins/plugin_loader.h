@@ -3,13 +3,7 @@
 #include <vector>
 namespace plugin
 {
-	struct pluginManagerOops : public exception
-	{
-	public:
-		pluginManagerOops(std::string inf);
-		const char* what();
-	};
-	
+
 	void plugin_init(function_plugin_base* func, math_func::function_interface * function_unit);
 
 	class plugin_manager

@@ -1,8 +1,11 @@
 #include "tokens.h"
+#include "exception_helper.h"
 
 
-
-
+	template<EXCEPTION T> void tokenOops()
+	{
+		__mathlibra__raise<T,TOKEN>();
+	}
 
 	 bool  token::baseToken::hasNode()
 	{
@@ -117,7 +120,8 @@
 	{
 		if (mem == nullptr)
 		{
-			throw memory::memoryOops("Tried to create node variable without assigning memoryblock");
+			tokenOops<TOKEN_NO_MEM_MODULE>();
+			return nullptr;
 		}
 		return new mathNode::mathExpressionNode_variable(variableName,mem,_stack,func);
 	}
@@ -172,7 +176,8 @@ using token::ptr_type_enum;
                 
 		if (ptr == nullptr)
 		{
-			throw memory::memoryOops("Function node missing pointer to actual function");
+			tokenOops<TOKEN_FUNCTION_NULL_POINTER>();
+			return nullptr;
 		}
 		else if (this->ptr_type == ptr_type_enum::gen)
 		{

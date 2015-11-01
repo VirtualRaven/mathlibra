@@ -1,13 +1,17 @@
 #include "interpreter.h"
 #include "ptr_protect.h"
 #include "function_obj.h"
+#include "exception_helper.h"
 
-interpreterOops::interpreterOops(std::string inf, bool isCritical) : exception(inf,isCritical){}
+/**
+ * Exception thrower for intepreter
+ */
+template<EXCEPTION T> void interpreterOops()
+{
+	__mathlibra__raise<T,INTERPRETER>();
+}
 
-	const char* interpreterOops::what()
-	{
-		return "interpreter Exception";
-	}
+
 
 
 
@@ -45,7 +49,7 @@ void debug::check_tree_mem_leak()
 	std::cout << "COUNTABLE ASSERT RUNNING\n" << "STATS: \n" << "total: " << stats.get_total() << "\ncurrent: " << stats.get_current() << "\ndeleted: " << stats.get_deleted() << std::endl;
 	if(stats.get_total() != stats.get_deleted())
 	{
-		throw interpreterOops("ASSERT FAILIURE, possible memory leak in program",true);
+		interpreterOops<MEMORY_LEAK_ASSERT>();
 	}	
 }
 
@@ -56,7 +60,7 @@ void debug::check_tree_mem_leak()
            rootNode root;
 			if (parentInterpreter->tokens.size() <= parentInterpreter->startOperatorPos)
 			{
-				throw interpreterOops("Panic: Tokens subscript operator out of bounds", true);
+				interpreterOops<SUBSCRIPT_OPERATOR_OUT_OF_BOUNDS>();
 			}
 			tree::nodeDataInterface* topNode = parentInterpreter->tokens[parentInterpreter->startOperatorPos]->node(); //Create the top node out of the starting token
 
@@ -68,7 +72,8 @@ void debug::check_tree_mem_leak()
 			    root.deleteSubNodes();
                             root.data->destroy();
                             root.data=0;
-                            throw interpreterOops("Failed to build syntax tree",false);
+                            interpreterOops<TREE_BUILD_FAILED>();
+			    return root;
 			}
 			else
 			{
@@ -187,7 +192,7 @@ void debug::check_tree_mem_leak()
 			{
 				if(parStack.empty())
 				{
-					throw  interpreterOops("Syntax error : found unmatched )",false);
+					interpreterOops<SYNTAX_UNMATCHED_CLOSING_PARANTHESES>();
 					
 				}
 				else
@@ -217,12 +222,11 @@ void debug::check_tree_mem_leak()
 					{
 						if(i2+1 < expressionLength && ( !isdigit(expression[i2+1]) && expression[i2+1] !='-') )
 						{
-							throw interpreterOops("Syntax error: expected exponent after e",false);
-
+							interpreterOops<SYNTAX_EXP_AFTER_E>();
 						}
 						else if(i2+1 >=expressionLength)
 						{
-							throw interpreterOops("Syntax error: expected exponent after e",false);
+							interpreterOops<SYNTAX_EXP_AFTER_E>();
 						}
 
 					}
@@ -265,8 +269,8 @@ void debug::check_tree_mem_leak()
 					{
 						if (i2 + 1 < expressionLength && !isdigit(expression[i2 + 1]))
 						{
-							throw interpreterOops("Syntax error: expected exponent after e",false);
 
+							interpreterOops<SYNTAX_EXP_AFTER_E>();
 						}
 
 					}
@@ -349,8 +353,7 @@ void debug::check_tree_mem_leak()
 
 					if (tokens.back()->type != tokenType::VARIABLE)
 					{
-
-						throw interpreterOops("Syntax error: Assigment operator requirers an variable on left hand side",false);
+						interpreterOops<SYNTAX_ASSIGMENT_NEEDS_VAR>();
 					}
 					else
 					{
@@ -437,13 +440,14 @@ void debug::check_tree_mem_leak()
 					}
 					else
 					{
-						 throw interpreterOops("Found variable in string but no memory unit is assigned to the interpeter",true);
+						interpreterOops<VARIABLES_DISABLED_BUT_USED>();
 					}
+
 					continue;
 			}
 			else
 			{
-				throw interpreterOops("Syntax error: found unknown token in string",false);
+				interpreterOops<UNKNOWN_CHAR_STR>();
 			}
 
 
@@ -451,7 +455,7 @@ void debug::check_tree_mem_leak()
 		}
 		if(!parStack.empty())
 		{
-			throw	interpreterOops("Syntax error: found unmatched ( ",false);
+			interpreterOops<SYNTAX_UNMATCHED_OPENING_PARANTHESES>();
 		}
 		else
 		{
@@ -486,7 +490,7 @@ void debug::check_tree_mem_leak()
 			}
 			else
 			{
-				throw interpreterOops("Sorry, don't know where to start",false);	
+				interpreterOops<CANT_FIND_STARTING_POINT>();
 			}
 		}
 
@@ -587,7 +591,8 @@ void debug::check_tree_mem_leak()
 			return this->root.data->eval();
 
         }
-		else throw interpreterOops("Tried to execute unfinished expresion",false);
+		interpreterOops<EXEC_UNFINISHED_EXPR>();
+		return 0;
 	}
 	void interpreter::set(const char * expression_, unsigned short lenght)
 	{
@@ -598,7 +603,7 @@ void debug::check_tree_mem_leak()
 			memcpy(this->expression, expression_, lenght*sizeof(char));
 			this->stripSlashes();
 		}
-		else throw interpreterOops("Passed empty expression to interpreter!\n",false);
+		else interpreterOops<EMPTY_EXPR>();
 	}
 
 	interpreter::interpreter()
@@ -628,129 +633,6 @@ void debug::check_tree_mem_leak()
 	{
 		this->current_functions = functions;
 	}
-#ifdef ENABLE_CORAX
-	void CoraxVM::Corax_program_builder_module::_rpn(node * nodePtr, CoraxVM::corax_program * prgm )
-	{
-	    if(nodePtr == nullptr)
-        {
-            return;
-        }
-	    else if(nodePtr->data->type == tokenType::VALUE || nodePtr->data->type == tokenType::VARIABLE  )
-        {
-			/* 
-				LDI R1 CONST
-				PUSH R1
-			*/
-            if(nodePtr->data->type == tokenType::VALUE)
-            {
-               prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::LDI | CoraxVM::instruction_flags::R1,
-                                                                               static_cast<mathNode::mathExpressionNode_val*>(nodePtr->data)->value ));
-               prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::PUSH | CoraxVM::instruction_flags::R1, nullptr));
-              // std::cout << static_cast<mathNode::mathExpressionNode_val*>(nodePtr->data)->value;
-#ifdef DEBUG_CORAX_INS
-			   std::cout << "LDI R1 " <<  static_cast<mathNode::mathExpressionNode_val*>(nodePtr->data)->value <<"\nPUSH R1\n";
-#endif
-            }
-			/*
-				LD R1 CONST_PTR
-				PUSH R1
-			*/
-            else
-            {
-				mathNode::mathExpressionNode_variable* tmp_math_var = static_cast<mathNode::mathExpressionNode_variable*>(nodePtr->data);
-				
-				if (tmp_math_var->is_pushable())
-				{
-					void* tmp_ptr = (void*)this->_ptr->mem->raw_ptr(tmp_math_var->name);
-					prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::LD | CoraxVM::instruction_flags::R1, tmp_ptr));
-					prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::PUSH | CoraxVM::instruction_flags::R1, nullptr));
-					#ifdef DEBUG_CORAX_INS
-					std::cout << "LD R1 " << tmp_ptr << "\nPUSH R1\n";
-					#endif
-				}
-				else
-				{
-					if (!this->_ptr->mem->set(tmp_math_var->name, 0))
-					{
-						throw CoraxVM::coraxOops("Failed to allocate memory for variable for assigment operator");
-					}
-					void* tmp_ptr = (void*)this->_ptr->mem->raw_ptr(tmp_math_var->name);
-					prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::LDI | CoraxVM::instruction_flags::PR2, tmp_ptr));
-#ifdef DEBUG_CORAX_INS
-					std::cout << "LDI PR2 " << tmp_ptr << "\n";
-#endif
-				}
-				//std::cout << tmp_math_var->name;
-			
-            }
-            return;
-        }
-        else if(nodePtr->data->type == tokenType::UNKNOWN)
-        {
-            throw interpreterOops("COMPILER FAILURE: found unknown node type",false);
-        }
-        else
-        {
-            _rpn(nodePtr->sub1(),prgm);
-            _rpn(nodePtr->sub2(),prgm);
-			/*
-				CALL ARG1 CONST_PTR
-			*/
-            if(nodePtr->data->type == tokenType::FUNCTION)
-            {
-                prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::CALL | CoraxVM::instruction_flags::ARG1, 
-                                                                            (void*)static_cast<mathNode::mathExpressionNode_func*>(nodePtr->data)->func));
-#ifdef DEBUG_CORAX_INS
-				std::cout << "CALL ARG1 " <<  (void*)static_cast<mathNode::mathExpressionNode_func*>(nodePtr->data)->func << "\n";
-#endif
-
-               // std::cout << "FUNCTION(" << std::hex << (void *)static_cast<mathNode::mathExpressionNode_func*>(nodePtr->data)->func<< std::dec << ")";
-            }
-			/*
-				CALL ARG2 CONST_PTR
-			*/
-            else //Is operator
-            {
-                mathNode::mathExpressionNode_opr * tmp = static_cast<mathNode::mathExpressionNode_opr*>(nodePtr->data);
-                if(tmp->assignB)
-                {
-					prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::POP | CoraxVM::instruction_flags::R2,nullptr));
-					prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::ST | CoraxVM::instruction_flags::R2 | CoraxVM::instruction_flags::PR2, nullptr));
-					prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::PUSH  |CoraxVM::instruction_flags::R2, nullptr));
-#ifdef DEBUG_CORAX_INS
-					std::cout << "POP R2\nST R2 PR2\nPUSH R2\n";
-#endif
-                //    std::cout << "ASSIGN(" << std::hex<< (void *)tmp->assign << std::dec<< ")";
-                }
-                else
-                {
-                    prgm->instructions.push_back(CoraxVM::corax_program_instruction(CoraxVM::instruction_set::CALL | CoraxVM::instruction_flags::ARG2, 
-                                                                            (void*)tmp->operation));
-#ifdef DEBUG_CORAX_INS
-					std::cout << "CALL ARG2 " <<  (void*)tmp->operation << "\n";
-#endif
-               //   std::cout << "OPER("<< std::hex << (void *)tmp->operation<< std::dec << ")";
-                }
-            }
-
-        }
-	}
-
-	bool CoraxVM::Corax_program_builder_module::create_program(interface::corax_program * prgm)
-	{
-	    CoraxVM::corax_program * cast_prgm = dynamic_cast<CoraxVM::corax_program*>(prgm);
-	    if(this->_ptr->rootEmpty)
-        {
-            return false;
-        }
-	     //Create rpn
-		cast_prgm->clear();
-		_rpn(&this->_ptr->root, cast_prgm);
-        return true;
-
-	}
-	CoraxVM::Corax_program_builder_module::Corax_program_builder_module(interpreter* ptr) : _ptr(ptr){}
-#endif //ENABLE_CORAX
 	/*
 			char * expression;
 	unsigned short expressionLength;
@@ -780,7 +662,7 @@ void debug::check_tree_mem_leak()
 	}
 	interpreter::interpreter(const interpreter& other)
 	{
-		throw interpreterOops("Can't copy interpreter object",true);
+		interpreterOops<CANT_CPY_OBJ>();
 	}
 	interpreter& interpreter::operator=(const interpreter& other)
 	{

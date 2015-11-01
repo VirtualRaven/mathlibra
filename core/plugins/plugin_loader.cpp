@@ -9,18 +9,13 @@
 #include <sys/types.h>
 #include <dirent.h>
 #endif
+#include "exception_helper.h"
 
-
-plugin::pluginManagerOops::pluginManagerOops(std::string inf)
+template<EXCEPTION T> void pluginOops()
 {
-	this->_isCritical = true;
-	this->info = inf;
+	__mathlibra__raise<T,PLUG_IN>();
 }
 
-const char* plugin::pluginManagerOops::what()
-{
-	return "plugin manager exception";
-}
 
 void plugin::plugin_manager::loadPlugins(math_func::function_interface*  f_interface)
 {
@@ -99,7 +94,7 @@ void plugin::plugin_manager::unloadPlugins()
 	 }
 	 else
 	 {
-		 throw plugin::pluginManagerOops("Failed to search folders");
+		 pluginOops<PLUGIN_FAILED_SEARCH_FOLDER>();
 	 }
  }
  
@@ -109,8 +104,7 @@ void windows_plugin_manager::load_dll(windows_plugin_manager::plugin_name_contai
 	 DLL newDll = LoadLibrary( std::string(std::string(".//plugins//") + container).c_str());
 	 if (newDll == NULL)
 	 {
-		
-		 throw plugin::pluginManagerOops("Failed to load plugin");
+		 pluginOops<PLUGIN_LOAD_FAILED>();
 	 }
 	 else
 	 {
@@ -119,7 +113,7 @@ void windows_plugin_manager::load_dll(windows_plugin_manager::plugin_name_contai
 	 plugin::plugin_constructor my_constr = (plugin::plugin_constructor)GetProcAddress(newDll, "PLUGIN_ENTRY");
 	 if (!my_constr)
 	 {
-		 throw plugin::pluginManagerOops("Failed to find plugin entry point");
+		 pluginOops<PLUGIN_ENTRY_NOT_DEFINED>();
 	 }
 	 else
 	 {
@@ -178,8 +172,7 @@ class linux_plugin_manager : public plugin::plugin_manager
     	struct dirent *dirp;
     	if((dp  = opendir("./plugins/")) == NULL)
 		{
-        	
-		 throw plugin::pluginManagerOops("Failed to search folders");
+        	pluginOops<PLUGIN_FAILED_SEARCH_FOLDER>();	
     	}
 
     	while ((dirp = readdir(dp)) != NULL) 
@@ -201,8 +194,7 @@ class linux_plugin_manager : public plugin::plugin_manager
 		 Lib newLib = dlopen( std::string(std::string(".//plugins//") + container).c_str(),RTLD_NOW);
 	 if (newLib == NULL)
 	 {
-		
-		 throw plugin::pluginManagerOops(std::string(dlerror()));
+		__mathlibra__runtime__raise<PLUGIN_DYNAMIC_ERROR,PLUG_IN>(dlerror());	
 	 }
 	 else
 	 {
@@ -211,7 +203,7 @@ class linux_plugin_manager : public plugin::plugin_manager
 	 plugin::plugin_constructor my_constr = (plugin::plugin_constructor)dlsym(newLib, "PLUGIN_ENTRY");
 	 if (!my_constr)
 	 {
-		 throw plugin::pluginManagerOops("Failed to find plugin entry point");
+		 pluginOops<PLUGIN_ENTRY_NOT_DEFINED>();
 	 }
 	 else
 	 {

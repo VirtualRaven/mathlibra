@@ -1,14 +1,13 @@
 #include "tree.h"
 #include <vector>
+#include "exception_helper.h"
 namespace tree
 {
 
-	TreeStructOops::TreeStructOops(std::string inf, bool isCritical): exception(inf, isCritical){}
-
-	const char* TreeStructOops::what()
+	template<EXCEPTION T> void treeOops()
 	{
-		return "TreeStructure Exception";
-	}
+		__mathlibra__raise<T,TREE>();
+	}	
 
 
 	node_base * nodeDataInterface_wrapper_access(nodeDataInterface* node)
@@ -135,11 +134,12 @@ namespace tree
 		
 	{
 		data = nullptr;
-		throw TreeStructOops("bare node can not be copied",true);
+		treeOops<TREE_BARE_NODE_NO_CPY>();
 	}
 	node& node::operator=(const node&)
 	{
-		throw TreeStructOops("bare node can not be copied",true);
+		treeOops<TREE_BARE_NODE_NO_CPY>();
+		return *this;
 	}
 	node& node::operator=(node&& other)
 	{
@@ -188,9 +188,8 @@ namespace tree
 		}
 		else
 		{
+			treeOops<TREE_UNITILIZED_COUNTER_POINTER>();
 
-
-			throw TreeStructOops("Uninitilized counter of copies\n",true);
 		}
 	}
 	void rootNode::_copy(const rootNode& sourceNode)
@@ -201,7 +200,7 @@ namespace tree
 		if (sourceNode.copies == nullptr)
 		{
 
-			throw TreeStructOops("Unitilized copies pointer in constructor\n", true);
+			treeOops<TREE_UNITILIZED_COUNTER_POINTER>();
 		}
 		this->copies = sourceNode.copies;
 		(*copies)++;
@@ -211,7 +210,7 @@ namespace tree
 		}
 		else
 		{
-			throw TreeStructOops("Failed to copy Treestucture, data pointer empty",true);
+			treeOops<TREE_CPY_FAILED_NO_DATA>();
 		}
 	}
 
@@ -237,7 +236,7 @@ namespace tree
 		}
 		else
 		{
-			throw TreeStructOops("Cant get context, data pointer empty",true);
+			treeOops<TREE_FAILED_CONTEXT_NO_DATA>();
 		}
 	}
 	rootNode::rootNode(const rootNode& sourceNode)
@@ -293,7 +292,7 @@ namespace tree
 
 	void node::raiseException(const char* inf)
 	{
-		throw TreeStructOops(inf, false);
+		__mathlibra__runtime__raise<TREE_FORWARDED_EXCEPTION,TREE>(inf);
 	}
 	//Breadth first function for displaying the syntax tree under the node_base
 	std::stack<tree::node_base*> node::getArgs()

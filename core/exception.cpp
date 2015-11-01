@@ -1,19 +1,32 @@
 #include "exception.h"
 
 
-exception::exception(std::string inf, bool isCritical) : info(inf),_isCritical(isCritical) {}
+exception::exception(const char* type,
+	  const char* inf,
+	  bool isCritical ,
+	  unsigned short eid 
+	  	) : _info(inf),
+		     _type(type),
+		    _id(eid),
+		    _isCritical(isCritical) {}
 
-exception::exception():info(""),_isCritical(true){}
 bool exception::critical()
 {
 	return _isCritical;
 }
- exception::~exception()
- {
 
- }
+unsigned short exception::id()
+{
+	return this->_id;
+}
 
- std::string exception::desc()
+const char * exception::what()
+{
+	return this->_type;
+}
+
+
+ const char *  exception::desc()
  {
-	 return this->info;
+	 return this->_info;
  }

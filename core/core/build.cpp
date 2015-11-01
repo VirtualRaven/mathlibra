@@ -1,23 +1,12 @@
 #include "build.h"
 #include "ptr_protect.h"
+#include "exception_helper.h"
 using tree::rootNode;
 
-struct build_exception : exception
+template<EXCEPTION T> void buildOops()
 {
-	const char* what()
-	{
-		return "expression interpetation failure";
-	}
-	
-	build_exception(std::string inf)
-	{
-		this->info = inf;
-		this->_isCritical = false;
-	}
-
-};
-
-
+	__mathlibra__raise<T,BUILD>();
+}
 
 buildVector::buildVector(size_t lowLimit, size_t hiLimit, size_t vecOffset, std::vector<token::baseToken*>* vecPtr)
 	:lowLimit(lowLimit),
@@ -90,7 +79,8 @@ buildVector::buildVector(size_t lowLimit, size_t hiLimit, size_t vecOffset, std:
 
 		//Find error if program comes here
 		//std::cerr << "-[ Unknown error ]\n";
-		throw build_exception("Unknow error in syntax interpetation");
+		buildOops<BUILD_UNKNOWN_ERROR>();
+		return 0; 
 	}
 
 bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)

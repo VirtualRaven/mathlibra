@@ -22,14 +22,6 @@ namespace mathNode
 
 typedef double number_type;
 
-    struct nodeOops : public exception
-    {
-        nodeOops(std::string inf, bool isCritical);
-        const char* what();
-	
-    };
-
-
 
    class mathExpressionNode_val : public mathNode::mathExpressionNode_val_interface
 	{

@@ -19,15 +19,6 @@ using tree::rootNode;
 using tree::node;
 
 /**
- * Exception oject which is throwed by the interpreter. 
-  */
-struct interpreterOops : public exception
-{
-	interpreterOops(std::string inf, bool isCritical);
-	const char* what();
-};
-
-/**
  * @namespace debug Contains function which helps during program debugging
  */
 namespace debug

@@ -1,14 +1,13 @@
 #include "mathNode.h"
 #include "tree.h"
+#include "exception_helper.h"
 namespace mathNode
 {
-        nodeOops::nodeOops(std::string inf, bool isCritical): exception(inf,isCritical){}
 
-        const char* nodeOops::what()
-        {
-            return "math node Exception";
-        }
-
+	template<EXCEPTION T> void nodeOops()
+	{
+		__mathlibra__raise<T,NODE>();
+	}
 
 
 		
@@ -122,11 +121,11 @@ namespace mathNode
                 {
                       if (this->is_undefined() )
                       {
-                        throw mathNode::nodeOops("Can't redeclare variable as function",false);
+			      nodeOops<NODE_VAR_NO_REDECLARE_FUNC>();
                       }
                       else if(this->func == nullptr)
                       {
-                        throw mathNode::nodeOops("Can't define funtions without an function_interface instance",true);
+			      nodeOops<NODE_NO_FUNC_DEF_WITHOUT_FUNCTION_INTERFACE>();
                       }
                       else
                       {
@@ -136,8 +135,8 @@ namespace mathNode
                             math_func::m_function newFunc(this->name,"user","f(double)",this->name,ptr);
                             this->func->load(newFunc);
                         }
-                        else throw mathNode::nodeOops("Can't redefine function",false);
-                      }
+                        else nodeOops<NODE_NO_FUNC_REDEFINE>();
+		      }
 
                 }
 
@@ -165,7 +164,8 @@ namespace mathNode
 		{
 			if(this->wrapperNode->sub1() == nullptr || this->wrapperNode->sub2() == nullptr)
 			{
-				throw nodeOops("Panic: syntax tree has unexpected null pointer",true);
+				nodeOops<NODE_UNEXPECTED_NULL_POINTER>();
+				return 0;
 			}
 			else
 			{
@@ -175,7 +175,8 @@ namespace mathNode
 				}
 				else
 				{
-					throw mathNode::nodeOops("Tried to exectue dummy node",false);
+					nodeOops<NODE_DUMMY_NODE_EXEC>();
+					return 0;
 				}
 
 				
@@ -221,7 +222,7 @@ namespace mathNode
                         {
 			    return this->func(this->wrapperNode->sub1()->data->eval());
                         }
-                        else throw mathNode::nodeOops("Expected argument to function call",false);
+                        else nodeOops<NODE_EXPECTED_ARGUMENT_FOR_FUNC>(); 
                         return 0;
 		}
 		void mathExpressionNode_func::bind(node_base* context)
@@ -276,11 +277,11 @@ namespace mathNode
                 {
                     if(this->ptr == nullptr)
                     {
-                        throw mathNode::nodeOops("Tried to evaluate undefined function",true);
+			    nodeOops<NODE_EVAL_UNDEFINED_FUNC>();
                     }
                     if(this->wrapperNode->sub1() == nullptr )
                     {
-                        throw mathNode::nodeOops("Expected argument to function",false);
+			    nodeOops<NODE_EXPECTED_ARGUMENT_FOR_FUNC>();
                     }
                     return this->ptr->exec(this->wrapperNode->sub1()->data->eval());
                 }

@@ -22,15 +22,7 @@ namespace test
 namespace math_func
 {
        using namespace function_obj; 
-	/**
-	 * The exception class for the function module. All exceptions thrown by the function module is of this type
-	 */
-	struct functionOops : public exception
-	{
-		functionOops(std::string inf);
-		const char* what();
-	};
-        
+	        
         struct load_test_return
         {   
             bool loaded;

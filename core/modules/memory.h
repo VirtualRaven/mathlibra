@@ -4,7 +4,7 @@
 #include <string>
 #include <map>
 #include <vector>
-#include "exception.h"
+#include "exception_helper.h"
 #include "main.h"
 
 /**
@@ -13,12 +13,8 @@
 namespace memory 
 {
 
-
-	struct memoryOops : public exception
-	{
-		memoryOops(std::string info);
-		const char* what();
-	};
+	
+	
 
 	struct memoryObject
 	{

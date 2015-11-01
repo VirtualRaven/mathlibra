@@ -11,28 +11,30 @@
  */
 class exception
 {
-protected:
+private:
 	/**
 	 * String containing exception info. info contains extended information about the exception.
 	 * info is returned by desc
 	 * @see desc()
 	 */
-	std::string info;
+	const char* _info;
+	const char* _type;
+	unsigned short _id;
 	/**
 	 * Variable defining if exception is severe. 
 	 * If set to true the error is consider non recoverable and as such the program will terminate
 	 * @see critical()
 	 */
 	bool _isCritical;
+
 public:
 
 		
-	exception(std::string inf,bool isCritical); /**< 	Standrad exception construct. @param inf An string containing an extended error description. @param isCritical A bool defining if error is recoverable. */
-	exception(); /**< Empty constructor. Used to create an empty exception. */
-	virtual ~exception(); /**< Standrad destructor */
-	virtual const char * what()=0; /**< Returns the type of exception. what() is an abstract method which describe the exception. @pure. @return A c style string describing the exception type.  */
+	exception(const char *  type, const char * inf,bool isCritical ,unsigned short eid); /**< 	Standrad exception constructor. @param type And string describing the category. @param inf An string containing an extended error description. @param isCritical A bool defining if error is recoverable. @param id, the exeptions unique id*/
+	virtual const char * what(); /**< Returns the type of exception. what() is an abstract method which describe the exception. @pure. @return A c style string describing the exception type.  */
 	bool critical(); /**< Gets the exception severity. @return True if exception is non recoverable, else false. */
-    std::string desc(); /**< Gets the exception description. @return A string describing the exception. @see info. */
+	unsigned short id(); /**<Retruns exception identification number*/ 
+    	const char* desc(); /**< Gets the exception description. @return A string describing the exception. @see info. */
 
 
 };
