@@ -7,8 +7,9 @@ namespace interface
 
 	struct wrapper_exception_info
 	{
-		std::string type;
-		std::string desc;
+		const char * type;
+		const char * desc;
+                unsigned int id;
 		bool isCritical;
 	};
         struct mem_obj_api

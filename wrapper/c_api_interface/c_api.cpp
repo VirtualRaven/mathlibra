@@ -52,14 +52,11 @@ bool mathlibra_error(handle hwn)
 	return hwn->wrp.exceptionOccured();
 }
 
-const char* mathlibra_error_info(handle hwn)
+error_obj  mathlibra_error_info(handle hwn)
 {
 	auto x = hwn->wrp.get_exception_info();
-	std::string msg = x.type + std::string(":")+  x.desc;
-	char * tmp = new char[msg.size()];
-	strcpy(tmp,msg.c_str());
-	return tmp;
-	
+        //Initlize an new error_obj struct and return it
+        return {x.type, x.desc,x.isCritical, x.id };        
 }	
 void free_error_info(const char * info)
 {

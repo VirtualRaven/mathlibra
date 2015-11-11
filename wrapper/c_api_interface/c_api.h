@@ -10,32 +10,45 @@ extern "C"
 	extern void free_handle(handle);
 	extern void interpret_arg(handle,char *);
 	extern double execute_arg(handle);
-	extern bool mathlibra_error(handle);
-	extern const char* mathlibra_error_info(handle);
-	extern void free_error_info(const char* info);
 	extern void enable_plugins(handle);	
 
+        //Error handling
+        typedef struct error_obj
+        {
+            const char * type;
+            const char * description;
+            bool critical;
+            unsigned int id_number;
+
+        } error_obj;
+        
+        //Returns the current error object and resets the error state.
+        extern  error_obj mathlibra_error_info(handle);
+
+        //Returns true if an error has occured. To clear the error call mathlibra_error_info
+	extern bool mathlibra_error(handle);
+
         //Memory module
-       struct mem_obj
+       typedef struct mem_obj
        {
               char* name;
               double val;
               bool const_specifier;
-       };
+       } mem_obj;
 
-	struct func_obj
+	typedef struct func_obj
 	{
 		const char* name;
 		const char* tag;
 		const char* doc;
 		const char* disp_name;
-	};
+	} func_obj;
 	
-	struct func_obj_array
+	typedef struct func_obj_array
 	{
 		func_obj* array;
 		unsigned int size;
-	};
+	} func_obj_array;
        	
 	extern func_obj_array func_get(handle);	
 	extern void free_func_obj_array(func_obj_array obj);

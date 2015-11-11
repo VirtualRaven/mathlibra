@@ -1,5 +1,6 @@
 #include "native_class_wrapper.h"
 #include "core/export_lib_version.h"
+#include "exception.h"
 namespace native
 {
 	const char * CoreVersion = LIB_VERSION;
@@ -25,6 +26,15 @@ namespace native
 	{
 		delete this->manager;
 	}
+
+        void core_native_wrapper::__handle(exception& e)
+        {
+            this->ex_inf.type = e.what();
+            this->ex_inf.desc = e.desc();
+            this->ex_inf.isCritical = e.critical();
+            this->ex_inf.id = e.id();
+            this->exception_occurred=true;
+        }
 	void core_native_wrapper::set_arg(std::string str)
 	{
 
@@ -34,15 +44,8 @@ namespace native
 		}
 		catch (exception& e)
 		{
-			this->ex_inf.type = e.what();
-			this->ex_inf.desc = e.desc();
-			this->exception_occurred = true;
-
-		}
-		catch (...)
-		{
-			this->exception_occurred = true;
-		}
+		    this->__handle(e);
+                }
 	}
 	void core_native_wrapper::interpret_arg()
 	{
@@ -52,13 +55,7 @@ namespace native
 		}
 		catch (exception& e)
 		{
-			this->ex_inf.type = e.what();
-			this->ex_inf.desc = e.desc();
-			this->exception_occurred = true;
-		}
-		catch (...)
-		{
-			this->exception_occurred = true;
+		    this->__handle(e);
 		}
 
 	}
@@ -72,15 +69,8 @@ namespace native
 		}
 		catch (exception& e)
 		{
-			this->ex_inf.type = e.what();
-			this->ex_inf.desc = e.desc();
-			this->exception_occurred = true;
+		    this->__handle(e);
 			return 0;
-		}
-		catch (...)
-		{
-			this->exception_occurred = true;
-			return false;
 		}
 	}
 
@@ -88,8 +78,10 @@ namespace native
 	{
 		this->exception_occurred = false;
 		interface::wrapper_exception_info tmp = ex_inf;
-		ex_inf.desc.clear();
-		ex_inf.desc.clear();
+		ex_inf.desc=nullptr;
+                ex_inf.isCritical=false;
+                ex_inf.id=0;
+		ex_inf.desc=nullptr;
 		return tmp;
 	}
 
@@ -105,9 +97,7 @@ namespace native
 		}
 		catch (exception& e)
 		{
-			this->ex_inf.type = e.what();
-			this->ex_inf.desc = e.desc();
-			this->exception_occurred = true;
+		    this->__handle(e);
 			return std::vector<std::string>();
 		}
 	}
@@ -120,9 +110,7 @@ namespace native
 		}
 		catch (exception& e)
 		{
-			this->ex_inf.type = e.what();
-			this->ex_inf.desc = e.desc();
-			this->exception_occurred = true;
+		    this->__handle(e);
 			return 0;
 		}
 		
@@ -135,9 +123,7 @@ namespace native
 		}
 		catch (exception& e)
 		{
-			this->ex_inf.type = e.what();
-			this->ex_inf.desc = e.desc();
-			this->exception_occurred = true;
+		    this->__handle(e);
 			return;
 		}
 	}
@@ -149,9 +135,7 @@ namespace native
 		}
 		catch (exception& e)
 		{
-			this->ex_inf.type = e.what();
-			this->ex_inf.desc = e.desc();
-			this->exception_occurred = true;
+		    this->__handle(e);
 			return;
 		}
 	}
@@ -163,10 +147,7 @@ namespace native
 		}
 		catch (exception& e)
 		{
-			this->ex_inf.type = e.what();
-			this->ex_inf.desc = e.desc();
-			this->ex_inf.isCritical = e.critical();
-			this->exception_occurred = true;
+		    this->__handle(e);
 			return;
 		}
 	}
@@ -179,10 +160,7 @@ namespace native
 		}
 		catch (exception& e)
 		{
-			this->ex_inf.type = e.what();
-			this->ex_inf.desc = e.desc();
-			this->ex_inf.isCritical = e.critical();
-			this->exception_occurred = true;
+		    this->__handle(e);
 			return;
 		}
 	}
@@ -194,10 +172,7 @@ namespace native
 		}
 		catch (exception& e)
 		{
-			this->ex_inf.type = e.what();
-			this->ex_inf.desc = e.desc();
-			this->ex_inf.isCritical = e.critical();
-			this->exception_occurred = true;
+		    this->__handle(e);
 			return std::vector<std::string>();
 		}
 	}
@@ -220,11 +195,8 @@ namespace native
 		}
 		catch (exception& e)
 		{
-			this->ex_inf.type = e.what();
-			this->ex_inf.desc = e.desc();
-			this->ex_inf.isCritical = e.critical();
-			this->exception_occurred = true;
-			return std::vector<interface::func_obj_api>();
+		    this->__handle(e);
+                    return std::vector<interface::func_obj_api>();
 		}
 	}
 	void core_native_wrapper::manageVariable(std::string name,double value,bool isConst)
@@ -235,10 +207,7 @@ namespace native
             }
             catch (exception& e)
 	    {
-		this->ex_inf.type = e.what();
-		this->ex_inf.desc = e.desc();
-		this->ex_inf.isCritical = e.critical();
-		this->exception_occurred = true;
+		    this->__handle(e);
 	    }
         }
         bool  core_native_wrapper::isConstVariable(std::string name)
@@ -250,10 +219,7 @@ namespace native
             }
             catch (exception& e)
 	    {
-		this->ex_inf.type = e.what();
-		this->ex_inf.desc = e.desc();
-		this->ex_inf.isCritical = e.critical();
-		this->exception_occurred = true;
+		    this->__handle(e);
 	    }    
             return {};
         }
@@ -269,10 +235,7 @@ namespace native
             }
             catch (exception& e)
 	    {
-		this->ex_inf.type = e.what();
-		this->ex_inf.desc = e.desc();
-		this->ex_inf.isCritical = e.critical();
-		this->exception_occurred = true;
+		    this->__handle(e);
 	    }
             return{};
         }
@@ -290,10 +253,7 @@ namespace native
             }
             catch (exception& e)
 	    {
-		this->ex_inf.type = e.what();
-		this->ex_inf.desc = e.desc();
-		this->ex_inf.isCritical = e.critical();
-		this->exception_occurred = true;
+		    this->__handle(e);
 	    }  
             return {};
         }
@@ -310,10 +270,7 @@ namespace native
             }
             catch (exception& e)
 	    {
-		this->ex_inf.type = e.what();
-		this->ex_inf.desc = e.desc();
-		this->ex_inf.isCritical = e.critical();
-		this->exception_occurred = true;
+		    this->__handle(e);
 	    }
             return {};
         }

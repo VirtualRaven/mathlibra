@@ -14,7 +14,7 @@ namespace native
 		math_func::function_interface functions;
 		plugin::plugin_manager * manager;
 		bool exception_occurred;
-
+                void __handle(exception& e);
 		interface::wrapper_exception_info ex_inf;
 
 	public:

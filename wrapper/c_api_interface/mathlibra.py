@@ -1,10 +1,13 @@
 import ctypes
 
 class mathlibra_exception(Exception):
-    def __init__(self,message):
+    def __init__(self,etype,message,crit,id_num):
         self.info = message
+        self.etype=etype
+        self.critical = crit
+        self.id_num = id_num
     def __str__(self):
-        return self.info
+        return self.etype + " " + self.info + " (" +str(self.id_num) + ")"
 
 class func_obj_c (ctypes.Structure):
     _fields_ = [
@@ -13,6 +16,12 @@ class func_obj_c (ctypes.Structure):
                 ("doc",ctypes.c_char_p),
                 ("disp_name",ctypes.c_char_p)]
 
+class error_obj_c(ctypes.Structure):
+    _fields_ = [
+                ("type",ctypes.c_char_p),
+                ("description",ctypes.c_char_p),
+                ("critical",ctypes.c_bool),
+                ("id_number",ctypes.c_uint)]
 class func_obj_array_c (ctypes.Structure):
     _fields_ = [("array",ctypes.POINTER(func_obj_c)),("size",ctypes.c_uint)]
 
@@ -33,11 +42,8 @@ class mathlibra:
         #Error managment functions
         #Type is set to void pointer to ensure that ctypes to not convert it to an python string
         self.__get_excep=self.lib_instance.mathlibra_error_info
-        self.__get_excep.restype =ctypes.c_void_p 
+        self.__get_excep.restype =error_obj_c
 
-        self.__free_error_info = self.lib_instance.free_error_info
-        self.__free_error_info.restype = None
-        self.__free_error_info.argtypes=[ctypes.c_void_p]
         
         #create internal functions for library exported functions
         self.__interpret_arg = self.lib_instance.interpret_arg
@@ -74,9 +80,7 @@ class mathlibra:
     def __check_error(self):
         if self.__error(self.handle):
             msg=self.__get_excep(self.handle)
-            py_msg = ctypes.cast(msg,ctypes.c_char_p).value 
-            self.__free_error_info(msg)
-            raise mathlibra_exception(py_msg)
+            raise mathlibra_exception(msg.type,msg.description,msg.critical,msg.id_number)
     
     def interpret_arg(self,expression):
         self.__interpret_arg(self.handle,ctypes.c_char_p(expression))
