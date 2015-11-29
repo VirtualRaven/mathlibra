@@ -453,6 +453,7 @@ void debug::check_tree_mem_leak()
 
 
 		}
+		#ifndef NON_STRICT_PARANTHESES
 		if(!parStack.empty())
 		{
 			interpreterOops<SYNTAX_UNMATCHED_OPENING_PARANTHESES>();
@@ -461,7 +462,10 @@ void debug::check_tree_mem_leak()
 		{
 			tokens.shrink_to_fit();
 		}
+		#else
 
+		tokens.shrink_to_fit();
+		#endif // NON_STRICT_PARATHESES
 
 	}
 

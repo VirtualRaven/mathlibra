@@ -15,7 +15,12 @@ class func_obj_c (ctypes.Structure):
                 ("tag",ctypes.c_char_p),
                 ("doc",ctypes.c_char_p),
                 ("disp_name",ctypes.c_char_p)]
-
+class mem_obj_c (ctypes.Structure):
+    _fields_ = [
+        ("name",ctypes.c_char_p),
+        ("val",ctypes.c_double),
+        ("const",ctypes.c_bool)
+        ]
 class error_obj_c(ctypes.Structure):
     _fields_ = [
                 ("type",ctypes.c_char_p),
@@ -61,6 +66,19 @@ class mathlibra:
         
         self.__free = self.lib_instance.free_handle
         self.__enable_plugins = self.lib_instance.enable_plugins
+        
+        self.__mem_size = self.lib_instance.mem_size
+        self.__mem_size.restype =ctypes.c_uint
+
+        self.__mem_get_index=self.lib_instance.mem_get_index
+        self.__mem_get_index.restype = mem_obj_c
+        
+        self.__mem_get = self.lib_instance.mem_get
+        self.__mem_get.restype=mem_obj_c
+
+        self.__mem_set= self.lib_instance.mem_set
+
+        self.__free_mem_obj=self.lib_instance.free_mem_obj
     
     #Function to convert c struct to python data types
     def __from_func_obj_array_c(self,obj):
@@ -90,6 +108,13 @@ class mathlibra:
         val = self.__from_func_obj_array_c(self.__func_get(self.handle))
         self.__check_error()
         return val
+    def get_mem(self):
+        num = self.__mem_size(self.handle)
+        tmp_list = []
+        for index in range(num):
+            c =self.__mem_get_index(self.handle,index)
+            tmp_list.append({'name':c.name, 'value':c.val, 'const':c.const})
+        return tmp_list
 
     def execute_arg(self):
         val = self.__execute_arg(self.handle)

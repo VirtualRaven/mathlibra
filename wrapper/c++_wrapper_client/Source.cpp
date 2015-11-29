@@ -20,7 +20,7 @@ bool test_error(ptr_protect<interface::calc_lib_interface*, false>& calc)
 int run_test()
 {
 	//List of expressions to test that the interpreter must handle correctly.
-	std::vector < std::string> tests = { "sqrt(42)",  "2*(32-1)", "y=2^3", "x-1", "2^-x" };
+	std::vector < std::string> tests = { "sqrt(42)",  "x=2*(32-1)", "y=2^3", "x-1", "2^-x" };
 	std::vector<double> results;
 	ptr_protect<interface::calc_lib_interface*, false> calc(InitLib());
 	
@@ -59,6 +59,9 @@ int run_test()
 		}
 	}
 
+	
+	interface::mem_obj_api obj =  calc->getVariable(0);
+	std::cout << "0: " << obj.name.c_str() << " " << obj.value << " "<<obj.isConst << std::endl;
 	return true;
 	
 }

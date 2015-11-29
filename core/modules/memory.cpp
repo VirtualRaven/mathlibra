@@ -118,35 +118,52 @@
             {
 		memoryOops<MEM_INDEX_OUT_OF_BOUNDS>();
 		return mem_it->second; // Dummy expression to avoid warning,will never be executed
-            }    
-            else if(this->mem_it2_index == index)
-            {
-                return mem_it->second;
-            }
-            else if(this->mem_it2_index < index)
-            {
-                for(unsigned int i = 0;i<(index - this->mem_it2_index);  i++)
-                {
-                    this->mem_it2++;
-                }
-               this->mem_it2_index = index;
-               return this->mem_it2->second;
-            }
-            else 
-            {
-                for(unsigned int i =0; i< (this->mem_it2_index - index); i++)
-                {
-                    this->mem_it2--;
-                }
-                this->mem_it2_index = index;
-                return this->mem_it2->second; 
-            }
+            } 
+	    else
+	    {   
+		if(mem_it2 == mem.end())
+		{
+			mem_it2 = mem.begin();
+			mem_it2_index=0;
+		}
+
+
+             	if(this->mem_it2_index == index)
+            	{
+            	    return mem_it->second;
+            	}
+            	else if(this->mem_it2_index < index)
+            	{
+            	    for(unsigned int i = 0;i<(index - this->mem_it2_index);  i++)
+            	    {
+            	        this->mem_it2++;
+            	    }
+            	   this->mem_it2_index = index;
+            	   return this->mem_it2->second;
+            	}
+            	else 
+            	{
+            	    for(unsigned int i =0; i< (this->mem_it2_index - index); i++)
+            	    {
+            	        this->mem_it2--;
+            	    }
+            	    this->mem_it2_index = index;
+            	    return this->mem_it2->second; 
+            	}
+	    }
 
         }
         size_t memory::memory::get_size()
         {
            return this->mem.size(); 
         }
+
+	memory::memory::memory() :
+		mem(),
+		mem_it(mem.end()),
+		mem_it2(mem.end()),
+		mem_it2_index(0) {}
+
 	bool test::memory_module_test1()
 	{
 		//Test allocation

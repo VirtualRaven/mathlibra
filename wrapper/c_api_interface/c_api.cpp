@@ -74,13 +74,28 @@ uint  mem_size(handle hwn)
 }
 mem_obj mem_get_index(handle hwn,uint index)
 {
-      
-    return to_c_struct( hwn->wrp.getVariable((size_t)index));
+      auto tmp=hwn->wrp.getVariable((size_t)index);
+      if(!hwn->wrp.exceptionOccured())
+      {
+    	return to_c_struct(tmp);
+      }
+      else
+	{
+		return {};
+	}
 }
 
 mem_obj mem_get(handle hwn,char* name)
 {
-    return to_c_struct( hwn->wrp.getVariable(name));
+	auto tmp=hwn->wrp.getVariable(name);
+	if(!hwn->wrp.exceptionOccured())
+	{
+    		return to_c_struct(tmp);
+	}
+	else
+	{
+		return {};
+	}
 }
 void    mem_set(handle hwn,mem_obj obj)
 {
@@ -119,6 +134,5 @@ void free_func_obj_array(func_obj_array obj)
 }
 
 
-void free_func_obj_array(func_obj_array obj);
 
 

@@ -44,7 +44,7 @@ namespace memory
                 memoryObject get_obj(std::string name); /**<Get an memoryObject by name. Tries to return an memoryObject registered as name. Throws an memoryOops if an undefined variable is requested. @returns An copy of the internal memoryObject. @see memory::exists. */     
                 memoryObject get_obj(size_t index); /**< Get an memoryObject by index. Returns the memoryOject number index, use size to get maximum allowed index. @see memory::size. @note Due to the implementation of the internal oemory container the memory class do not support random access by integer index, instead it itterates through the structure to get the index. Thus get_obj(size_t index) is O(n) but provides caching to spead up sequential reads.  */
                 size_t get_size();
-
+		memory();
 	};
 
 }
