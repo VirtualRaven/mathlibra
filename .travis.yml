@@ -1,6 +1,6 @@
 install: true
 
-compiler: gcc
+compiler: g++
 
 
 
