@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 2.8)
 file(GLOB_RECURSE TESTER_SRC ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 include_directories(${CMAKE_SOURCE_DIR}/core)
 add_executable(tester ${TESTER_SRC})

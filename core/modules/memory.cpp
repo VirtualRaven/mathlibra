@@ -130,7 +130,7 @@
 
              	if(this->mem_it2_index == index)
             	{
-            	    return mem_it->second;
+            	    return mem_it2->second;
             	}
             	else if(this->mem_it2_index < index)
             	{
