@@ -164,16 +164,16 @@ namespace math_func
 			 math_func::m_function("sin","trig","sin(double), standard sinus functions","sin", static_cast<double_func>(sin)),
 			 math_func::m_function("cos","trig","cos(double), standard cosinus function","cos", static_cast<double_func>(cos)),
 			 math_func::m_function("tan","trig","tan(double), standard tan function","tan", static_cast<double_func>(tan)),
-			 math_func::m_function("asin","trig","asindouble), inverse sin function","sin⁻¹", static_cast<double_func>(asin)),
-			 math_func::m_function("acos","trig","acos(double), inverse cosinus function","cos⁻¹", static_cast<double_func>(acos)),
-			 math_func::m_function("atan","trig","stan(double), inverse tan function","tan⁻¹", static_cast<double_func>(atan))
+			 math_func::m_function("asin","trig","asindouble), inverse sin function","asin", static_cast<double_func>(asin)),
+			 math_func::m_function("acos","trig","acos(double), inverse cosinus function","acos", static_cast<double_func>(acos)),
+			 math_func::m_function("atan","trig","stan(double), inverse tan function","atan", static_cast<double_func>(atan))
 		};
 
 		std::vector<math_func::m_function> std_math_func = {
 			//math_func::m_function("abs", static_cast<double(*)(double)>(abs)), //Only defined with double overload on certain platforms
 			math_func::m_function("sqrt","numeric","sqrt(double), square root function function","\u221A", static_cast<double_func>(sqrt)),
-			math_func::m_function("log","numeric","log(double), natural logarithm function","log", static_cast<double_func>(log)),
-			math_func::m_function("lg","numeric","lg(double),  logarithm base ten","log", static_cast<double_func>(log10))
+			math_func::m_function("ln","numeric","ln(double), natural logarithm function","ln", static_cast<double_func>(log)),
+			math_func::m_function("log10","numeric","log(double),  logarithm base ten","log10", static_cast<double_func>(log10))
 		};
 
 		std::vector<math_func::m_function> std_math_num_func = {
