@@ -4,7 +4,12 @@ include_directories(${CMAKE_SOURCE_DIR}/core)
 include_directories(${PROJECT_BINARY_DIR})
 set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/GIT_VERSION.h.in ${PROJECT_BINARY_DIR}/GIT_VERSION.h )
+if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
+	SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -fPIC" )
+endif()
+					  
 add_library(core_lib STATIC ${CORE_SRC})
+
 if(UNIX)
 	target_link_libraries(core_lib -ldl)
 endif()
