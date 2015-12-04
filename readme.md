@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/VirtualRaven/mathlibra.svg?token=CLuwuoYsSeFx17TVonxH&branch=master)](https://travis-ci.com/VirtualRaven/mathlibra)
+
 #README#
 This is the repo for mathlibra, an calculator backend library that parsers and interprets mathematical expressions. It is designed to serve as an backend for developing calculator software.
 
