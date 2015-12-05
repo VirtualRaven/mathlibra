@@ -65,7 +65,7 @@ namespace math_func
 		{
 			return this->cache.type;
 		}
-		void * function_interface::get(std::string funcName)
+		u_ptr function_interface::get(std::string funcName)
 		{
 			if (cache.name == funcName)
 			{
@@ -73,7 +73,7 @@ namespace math_func
                                 {
 					functionOops<FUNC_NO_CONV_FUNCTOR_VOID_P>();
                                 }
-                                return reinterpret_cast<void*>(cache.ptr);
+                                return reinterpret_cast<u_ptr>(cache.ptr);
 			}
 			else
 			{
@@ -86,7 +86,7 @@ namespace math_func
                                             {
 						functionOops<FUNC_NO_CONV_FUNCTOR_VOID_P>();
                                             }
-					    else return reinterpret_cast<void*>(funcs[i].ptr);
+					    else return reinterpret_cast<u_ptr>(funcs[i].ptr);
 					}
 				}
 				return nullptr;

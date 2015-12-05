@@ -70,7 +70,8 @@ namespace math_func
 /**
  * The function module. This module is loaded by the interpreter to implement the runtime functions. It handles function loading, name lookup, address lookup and specification of function type.
  */
- 
+ 	typedef void(*u_ptr)();
+
 	class function_interface
 	{
                 std::vector<m_function> funcs;
@@ -82,7 +83,7 @@ namespace math_func
 		void load(m_function obj); /**< @param obj An single object to be loaded by the module. */
                 load_test_return isloaded(std::string funcName); /**< Checks if function is loaded. @param funcName The name to be checked if it is loaded. @return True if function is loaded. */
 		func_type type(); /**< @return True if function last specified in isloaded() is of type generalFuncPtr. @note the last string to be sent to isloaded() is cached which this function works upon. */
-		void * get(std::string funcName); /**< Gets the an function pointer. @param funcName A string naming the function to search for. @return an void pointer to the funcName. @note The return needs to be converted to either an funcPtr or generalFuncPtr using an reinterpret_cast. */
+		u_ptr get(std::string funcName); /**< Gets the an function pointer. @param funcName A string naming the function to search for. @return an void pointer to the funcName. @note The return needs to be converted to either an funcPtr or generalFuncPtr using an reinterpret_cast. */
                 interpreted_func* getFunctor(std::string funcName); /**<Gets an functor object representing an userprovided function. */ 
                 void display(); /**< Outputs an list of loaded functions to cout. */
 		std::vector<std::string> getFunctionNames();

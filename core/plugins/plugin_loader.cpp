@@ -16,6 +16,11 @@ template<EXCEPTION T> void pluginOops()
 	__mathlibra__raise<T,PLUG_IN>();
 }
 
+typedef union cast_union 
+{
+	void* from;
+	plugin::plugin_constructor to;
+} cast_union;
 
 void plugin::plugin_manager::loadPlugins(math_func::function_interface*  f_interface)
 {
@@ -164,7 +169,7 @@ class linux_plugin_manager : public plugin::plugin_manager
  public:
 	 virtual ~linux_plugin_manager();
 
- };
+};
 	
 	void linux_plugin_manager::get_plugin_names()
 	{
@@ -200,7 +205,10 @@ class linux_plugin_manager : public plugin::plugin_manager
 	 {
 		 libs.push_back(newLib);
 	 }
-	 plugin::plugin_constructor my_constr = (plugin::plugin_constructor)dlsym(newLib, "PLUGIN_ENTRY");
+	 void * vptr = dlsym(newLib, "PLUGIN_ENTRY");
+	 cast_union tmp;
+	 tmp.from=vptr;
+	 plugin::plugin_constructor my_constr = tmp.to;
 	 if (!my_constr)
 	 {
 		 pluginOops<PLUGIN_ENTRY_NOT_DEFINED>();
