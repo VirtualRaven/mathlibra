@@ -290,7 +290,7 @@ void parse_opr(const char* expr, tvec& tokens ,i_state& s,operators::operators_i
 	//Following test compensates for implicit -1 situations like -x or 2*-(2+x) which 
 	//will be extended to -1*x and 2*-1*(2+x) where the multiplication sign
 	//between -1 and the other terme has an higher than usal weight
-	if (expr[*(s.i)] == '-')
+	if ( expr[*(s.i)] == '-')
 	{
 		tree::tokenType test_type;
 		if (tokens.size() > 0)
@@ -302,13 +302,13 @@ void parse_opr(const char* expr, tvec& tokens ,i_state& s,operators::operators_i
 			test_type = tree::UNKNOWN;
 		}
 
-		if ( (*(s.i) - 1 > 0 && (test_type == tree::OPERATOR || expr[*(s.i) - 1] == '(')) || 
-				*(s.i) == 0) 
+		if ((  *(s.i) - 1 > 0 && (test_type == tree::OPERATOR || expr[*(s.i) - 1] == '(')) || *(s.i) == 0)  
 		{
 			if (opr->inArray('*'))
 			{
 				pushValue(tokens,s,-1);	
 				pushMulti(tokens,opr,s);
+				return;
 			}		
 		}
 	}
