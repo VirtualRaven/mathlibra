@@ -81,6 +81,7 @@ class interpreter : public interface::interpreter_interface
 
 	void emptyRoot();
 	void destroyTokens();
+	void stripParanthese();
     	void stripSlashes();
 	void freeExpression();
 	void allocExpression(short lenght);

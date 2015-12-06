@@ -112,7 +112,7 @@ state lexical(const char * expr,
 			lexicalOops<UNKNOWN_CHAR_STR>();
 		}
 	}
-#ifndef CT_PARANTHESES
+#ifndef NON_STRICT_PARANTHESES
 	
 	if(!paran.empty())
 	{

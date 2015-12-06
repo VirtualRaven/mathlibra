@@ -3,6 +3,7 @@
 #include "function_obj.h"
 #include "exception_helper.h"
 #include "lexical.h"
+#include <algorithm>
 /**
  * Exception thrower for intepreter
  */
@@ -16,25 +17,6 @@ template<EXCEPTION T> void interpreterOops()
 
 
 
-	bool PNegativeDigit(std::vector<token::baseToken*>& tokens, char ** expression, unsigned short i)
-{
-	if (!tokens.empty())
-	{
-		token::baseToken * token = tokens.back();
-		if (token->type == tree::PARENTHESES)
-		{
-			return ((*expression)[i - 1] == '(');
-
-		}
-		else if (token->type == tree::OPERATOR)
-		{
-			return true;
-		}
-		else return false;
-
-	}
-	else return true;
-}
 
 
 
@@ -102,6 +84,18 @@ void debug::check_tree_mem_leak()
 			}
             rootEmpty=true;
         }
+	}
+
+	void interpreter::stripParanthese()
+	{	
+		std::vector<token::baseToken*> tmp;
+		std::copy_if(	this->tokens.begin(),
+				this->tokens.end(),
+				std::back_inserter(tmp),
+				[](token::baseToken* t){return t->type!=tree::PARENTHESES;}
+			    );
+		this->tokens = tmp;
+				
 	}
 	void interpreter::destroyTokens()
 	{
@@ -178,15 +172,19 @@ void debug::check_tree_mem_leak()
 				this->root = buildEntry1(this);
 				rootEmpty = false;
 			}
-			else if(this->tokens.size() == 1 && (this->tokens[0]->type == tokenType::VALUE || this->tokens[0]->type == tokenType::VARIABLE ))
-			{
-				emptyRoot();
-				this->root = buildEntry1(this);
-				rootEmpty=false;
-			}
 			else
 			{
-				interpreterOops<CANT_FIND_STARTING_POINT>();
+				this->stripParanthese();
+			 	if( this->tokens.size() == 1 && (this->tokens[0]->type == tokenType::VALUE || this->tokens[0]->type == tokenType::VARIABLE ))
+				{
+					emptyRoot();
+					this->root = buildEntry1(this);
+					rootEmpty=false;
+				}
+				else
+				{
+					interpreterOops<CANT_FIND_STARTING_POINT>();
+				}
 			}
 		}
 
