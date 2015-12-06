@@ -319,7 +319,7 @@ void parse_opr(const char* expr, tvec& tokens ,i_state& s,operators::operators_i
 	updateStartPoint(tokens,s,tmp->baseWheight);
 	if (tmp->operChar == '=')
 	{
-		if (tokens.back()->type != tokenType::VARIABLE)
+		if (tokens.size() ==0 || tokens.back()->type != tokenType::VARIABLE)
 		{
 			lexicalOops<SYNTAX_ASSIGMENT_NEEDS_VAR>();
 		}
