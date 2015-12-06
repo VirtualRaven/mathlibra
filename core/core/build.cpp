@@ -176,6 +176,11 @@ bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)
 bool _function_build(mathNode::mathExpressionNode_func * tgt, buildVector vec)
 {
 
+	if (vec.vecOffset >= vec.vecPtr->size() - 1 || ((vec.vecOffset == vec.vecPtr->size() - 2) && vec.vecPtr->operator[](vec.vecOffset+1)->type ==tree::PARENTHESES ))
+	{
+		buildOops<SYNTAX_EXPECTED_FUNC_ARG>();
+
+	}
         for (size_t i = vec.lowLimit; i < vec.vecOffset; i++)
 	{
 		if (vec.vecPtr->operator[](i)->type != tree::PARENTHESES)
@@ -214,12 +219,14 @@ bool _function_build(mathNode::mathExpressionNode_func * tgt, buildVector vec)
 }
 
 bool _function_build_tree(mathNode::mathExpressionNode_func_tree * tgt, buildVector vec)
-{
-	if (vec.vecOffset >= vec.vecPtr->size() - 1)
+{	
+	if (vec.vecOffset >= vec.vecPtr->size() - 1 || ((vec.vecOffset == vec.vecPtr->size() - 2) && vec.vecPtr->operator[](vec.vecOffset+1)->type ==tree::PARENTHESES ))
 	{
 		buildOops<SYNTAX_EXPECTED_FUNC_ARG>();
 
 	}
+
+	
 /*	else if (vec.vecPtr->operator[](vec.vecOffset + 1)->type != tree::PARENTHESES) //won't work if user writes any formating token before the operator
 	{
 		std::cerr << "excpected parentheses after function name";
