@@ -173,7 +173,7 @@ namespace math_func
 			//math_func::m_function("abs", static_cast<double(*)(double)>(abs)), //Only defined with double overload on certain platforms
 			math_func::m_function("sqrt","numeric","sqrt(double), square root function function","\u221A", static_cast<double_func>(sqrt)),
 			math_func::m_function("ln","numeric","ln(double), natural logarithm function","ln", static_cast<double_func>(log)),
-			math_func::m_function("log10","numeric","log(double),  logarithm base ten","log10", static_cast<double_func>(log10))
+			math_func::m_function("log","numeric","log(double),  logarithm base ten","log", static_cast<double_func>(log10))
 		};
 
 		std::vector<math_func::m_function> std_math_num_func = {
