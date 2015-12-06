@@ -93,23 +93,23 @@ bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)
 			//Simple syntax checking for the operators. Implement more advanced checking
 			if(vec.vecOffset <= 0 )
 			{
-				std::cerr << "Syntax error: Expected value or exression before operator\n";
+				buildOops<SYNTAX_EXPECTED_LH_OPERAND>();
 				return false;
 
 			}
 			else if (vec.vecPtr->operator[](vec.vecOffset - 1)->type == tokenType::OPERATOR) //Won't work if user writes any formating token before the operator
 			{
-				std::cerr << "Syntax error: Unexpected operator before operator\n";
+				buildOops<SYNTAX_DUPLICATED_OPERATORS_LH>();
 				return false;
 			}
 			else if( vec.vecOffset >= vec.vecPtr->size()-1 )
 			{
-				std::cerr << "Syntax error: Expected value or exression after operator\n";
-
+				buildOops<SYNTAX_EXPECTED_RH_OPERAND>();
+				return false;
 			}
 			else if(vec.vecPtr->operator[](vec.vecOffset+1)->type == tokenType::OPERATOR) //Won't work if user writes any formating token before the operator
 			{
-				std::cerr << "Syntax error: Unexpected operator after operator\n";
+				buildOops<SYNTAX_DUPLICATED_OPERATORS_RH>();
 				return false;
 			}
 
@@ -217,7 +217,7 @@ bool _function_build_tree(mathNode::mathExpressionNode_func_tree * tgt, buildVec
 {
 	if (vec.vecOffset >= vec.vecPtr->size() - 1)
 	{
-		std::cerr << "syntax error: expected value or exression after function\n";
+		buildOops<SYNTAX_EXPECTED_FUNC_ARG>();
 
 	}
 /*	else if (vec.vecPtr->operator[](vec.vecOffset + 1)->type != tree::PARENTHESES) //won't work if user writes any formating token before the operator

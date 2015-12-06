@@ -10,6 +10,11 @@ enum EXCEPTION {
 	SYNTAX_UNMATCHED_OPENING_PARANTHESES,
 	SYNTAX_EXP_AFTER_E,
 	SYNTAX_ASSIGMENT_NEEDS_VAR,
+	SYNTAX_EXPECTED_RH_OPERAND,
+	SYNTAX_EXPECTED_LH_OPERAND,
+	SYNTAX_DUPLICATED_OPERATORS_RH,
+	SYNTAX_DUPLICATED_OPERATORS_LH,
+	SYNTAX_EXPECTED_FUNC_ARG,
 	VARIABLES_DISABLED_BUT_USED,
 	UNKNOWN_CHAR_STR,
 	CANT_FIND_STARTING_POINT,
@@ -461,4 +466,40 @@ declare_exception(TOKEN_FUNCTION_NULL_POINTER)
 	bool_property critical = true;
 	owner_property owner = TOKEN;
 };
+
+declare_exception(SYNTAX_EXPECTED_RH_OPERAND)
+{
+	str_property info = "Expected right hand side operand";
+	bool_property critical = false;
+	owner_property owner = BUILD;
+};
+
+declare_exception(SYNTAX_EXPECTED_LH_OPERAND)
+{
+	str_property info ="Expected left hand side operand";
+	bool_property critical = false;
+	owner_property owner = BUILD;
+};
+
+declare_exception(SYNTAX_DUPLICATED_OPERATORS_RH)
+{
+	str_property info = "Found extra operator before current operator";
+	bool_property critical = false;
+	owner_property owner = BUILD;
+};
+
+declare_exception(SYNTAX_DUPLICATED_OPERATORS_LH)
+{
+	str_property info = "Found extra operator after current operator";
+	bool_property critical = false;
+	owner_property owner = BUILD;
+};
+	
+declare_exception(SYNTAX_EXPECTED_FUNC_ARG)
+{
+	str_property info = "Expected argument after function name";
+	bool_property critical = false;
+	owner_property owner = BUILD;
+};
+	
 #endif //EXCEPTION_HELPER_INCLUDED
