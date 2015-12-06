@@ -1,6 +1,7 @@
 #include "exception_helper.h"
 #include "lexical_internal.h"
 #include <cstring>
+#include <cstdlib>
 #include "ptr_protect.h"
 using namespace __internal;
 
