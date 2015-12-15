@@ -71,14 +71,14 @@ state lexical(const char * expr,
 		{
 			parse_parantheses2(tokens,s,paran);
 		}
-		else if (isdigit(expr[i]))
+		else if (isdigit(expr[i]) || expr[i]== '.')
 		{
 			parse_number(expr,tokens,s,opr);	
 		}
 		else if(expr[i] == '-'  && 
 			isUnary(expr,i,tokens) &&
 			i+1<expr_len &&
-			isdigit(expr[i+1]))
+			(isdigit(expr[i+1]) || expr[i+1] == '.'))
 		{
 			parse_number(expr,tokens,s,opr);
 		}
