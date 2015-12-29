@@ -34,6 +34,8 @@ namespace tree
                 node * take_ownership_sub2();
 		std::stack<tree::node_base*> getArgs();
 		void raiseException(const char * inf);
+                virtual interface::type* realloc(interface::type* t)=0; /**< Reallocates the the type by deepcopying the object. Used to tranfer object allocation form shared library memory space to mathlibra's memoryspace */
+                virtual void    free_type(interface::type* t)=0; 
 		void deleteSubNodes(); /**< Destroy child branches. Delete the data of any child branches and then remove the branch. */
 		node();
 		node(nodeDataInterface* val);

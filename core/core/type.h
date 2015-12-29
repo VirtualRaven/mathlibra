@@ -1,6 +1,5 @@
 #include "exception_helper.h"
 #include "type_interface.h"
-#include <initializer_list>
 #include <iterator>
 #include <string>
 using interface::type; 
@@ -52,6 +51,7 @@ template<> std::string _t_toString<interface::type*>(interface::type** d, size_t
 {
     return __toString<interface::type*>(d,n,m,[](interface::type* t){return t->toString();});
 }
+
 
 
 template<typename T,bool C=false> class type_iterator : std::iterator<std::random_access_iterator_tag,T>
@@ -154,8 +154,8 @@ template<typename T> class   base_type : public interface::t_type<T>
     size_t  _n;
     T* _mat;
     std::string _str;
-    
     public:
+
     size_t  sizeN() const
     {
         return _n;
@@ -256,10 +256,7 @@ template<typename T> class   base_type : public interface::t_type<T>
         {
                 memcpy(_mat, d,m*n*sizeof(T)); 
         }
-        base_type(const base_type& b) : 
-            base_type(b._mat,b.sizeN(),b.sizeM())
-        {}
-        
+        base_type(const base_type& b) : base_type(b._mat,b._n,b._m) {};   
         base_type(base_type&& b):
             base_type(b._mat,b.sizeN(),b.sizeM())
         {
@@ -267,10 +264,16 @@ template<typename T> class   base_type : public interface::t_type<T>
             b._n=0;
             b._m=0;   
         }
-
+        interface::type* copy() const
+        {
+            return new base_type(*this);
+        }
+         
         ~base_type()
         {   
             delete[] _mat;
         }
 };  
-
+typedef base_type<char> char_mat;
+typedef base_type<type*> mat_mat;
+typedef base_type<double> num_mat;

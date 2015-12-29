@@ -47,7 +47,8 @@ enum EXCEPTION {
 	NODE_EXPECTED_ARGUMENT_FOR_FUNC,
 	NODE_EVAL_UNDEFINED_FUNC,
 	TOKEN_NO_MEM_MODULE,
-	TOKEN_FUNCTION_NULL_POINTER	
+	TOKEN_FUNCTION_NULL_POINTER,
+        REALLOC_NO_RULE
 	};
 
 //* Lists all possible exception owners
@@ -60,7 +61,8 @@ enum EXCEPTION_TYPE {
 		PLUG_IN,
 		BUILD,
 		NODE,
-		TOKEN
+		TOKEN,
+                TYPE
 };
 
 
@@ -182,6 +184,11 @@ declare_exception_owner(NODE)
 declare_exception_owner(TOKEN)
 {
 	str_property str = "Token Oops";
+};
+
+declare_exception_owner(TYPE)
+{
+    str_property str = "Type Oops";
 };
 /***************************************************************
 *              LIST OF EXCEPTIONS
@@ -501,5 +508,11 @@ declare_exception(SYNTAX_EXPECTED_FUNC_ARG)
 	bool_property critical = false;
 	owner_property owner = BUILD;
 };
-	
+
+declare_exception(REALLOC_NO_RULE)
+{
+        str_property info = "No rule found for reallocation current object";
+        bool_property critical = "True";
+        owner_property owner = TREE;
+};
 #endif //EXCEPTION_HELPER_INCLUDED

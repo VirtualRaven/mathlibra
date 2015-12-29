@@ -1,4 +1,5 @@
 #include <string>
+#include "ptr_protect.h"
 namespace interface
 {
     
@@ -49,7 +50,8 @@ namespace interface
         virtual bool    isString() const=0;
         virtual bool    isNumber() const =0;
         virtual storage_types stores() const=0 ;
-        virtual ~type() = default; 
+        virtual ~type() = default;
+        virtual type*   copy() const=0; /**> Deep copies the underlying type */
         //virtual type* reduce(); /**> Tries to convert the internal t_type to the least general one*/
 
         /*
@@ -59,7 +61,7 @@ namespace interface
         virtual const char*  toString()=0; /**< @returns a pointer valid until next operation on object */
 
     };
-
+    typedef ptr_protect<type*,false> type_ptr;
     template<typename T> class   t_type : public type
     {
         public:

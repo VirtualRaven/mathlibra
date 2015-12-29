@@ -2,9 +2,10 @@
  * Defines helper templates to convert node_base pointers to function arguments.
  */
 #ifndef FUNCTION_HELPER_INCLUDED
-#define FUNCTION_HELPER_INCUDED
+#define FUNCTION_HELPER_INCLUDED
 #include <stack>
 #include "core/mathNode_interface.h"
+#include "core/type.h"
 #include <iostream>
 /**
 * @namespace parameter_package Functions for creating packages of function arguments of different types
@@ -69,7 +70,16 @@ namespace parameter_package
  */
 namespace function_helper
 {
-
+        class exception : std::exception
+        {
+            std::string _str;
+            public:
+            exception(std::string e):_str(e) {}
+            virtual const char* what() const noexcept
+            {
+                return _str.c_str();
+            }
+        };
 
 	using tree::node_base;
 
@@ -87,17 +97,58 @@ namespace function_helper
 		}
 		else
 		{
-			n->raiseException("Wrong argument type");
+			throw exception("Wrong argument type");
 			return nullptr;
 		}
 	}
+        
+        template<typename T> T convertData(node_base* n )
+        {
+            auto tmp = n->data->eval();
+           if(tmp->stores() == interface::get_storage<T> )
+           {
+                auto tmp2 = base_type<T>(*static_cast<base_type<T*>>(tmp));
+                n->free_type(tmp);
+                return tmp2;
+           }
+           else
+           {
+                n->free_type(n);
+                throw exception("Expected argument of type mat_mat");
+           } 
+        }
+
 	template<> nodeDataInterface* getData<nodeDataInterface*>(node_base * n)
 	{
 		return n->data;
 	}
+         
+        template<> mat_mat getData<mat_mat>(node_base *n)
+        {
+             return convertData<mat_mat>(n); 
+        }
+        template<> char_mat getData<char_mat>(node_base *n)
+        {
+            return convertData<char_mat>(n);
+        }
+        template<> num_mat getData<num_mat>(node_base* n)
+        {
+            return convertData<num_mat>(n);
+        }
 	template<> double getData<double>(node_base * n)
 	{
-		return n->data->eval();
+	    auto tmp = n->data->eval();
+            double res=0;
+            if(tmp.isValue())
+            {
+                res=tmp.toValue();   
+            }
+            n->free_type(tmp);
+            if(!tmp.isSingleton)
+            {
+                throw exception("Expected type convertaible to bool");
+            }
+            return res;
 	}
 
 
@@ -135,7 +186,7 @@ template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> paramet
 	 *
 	 */
 	
-	template< typename... argN> double forward(typename func_type<argN...>::type  func, node_base * n)
+	template< typename... argN> type* forward(typename func_type<argN...>::type  func, node_base * n)
 	{
 		auto args = n->getArgs();
 		if (args.size() != sizeof...(argN))
@@ -146,7 +197,8 @@ template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> paramet
 		parameter_package::package<argN...> pack = fillPackage<argN...>(args);
 		try
 		{
-			return parameter_package::package_forward<double, typename func_type<argN...>::type>(func, pack);
+			auto tmp =parameter_package::package_forward<type*, typename func_type<argN...>::type>(func, pack);
+                        return n->realloc(tmp);
 		}
 		catch (std::exception& e)
 		{
