@@ -11,13 +11,6 @@ namespace math_func
 	typedef double(*double_func)(double);
 
 
-	math_func::m_function::m_function(std::string name,std::string tag,std::string doc,std::string disp_name, funcPtr ptr) :type(func_type::FAST),
-			name(name), 
-			tag(tag),
-			doc(doc),
-			disp_name(disp_name),
-			ptr(ptr) {}
-
 	math_func::m_function::m_function(std::string name,std::string tag,std::string doc,std::string disp_name, generalFuncPtr ptr) : type(func_type::GENERAL), 
 				name(name), 
 				tag(tag),
@@ -159,7 +152,6 @@ namespace math_func
 
 
 		}
-
 		 std::vector< math_func::m_function> std_math_trig_func = {
 			 math_func::m_function("sin","trig","sin(double), standard sinus functions","sin", static_cast<double_func>(sin)),
 			 math_func::m_function("cos","trig","cos(double), standard cosinus function","cos", static_cast<double_func>(cos)),

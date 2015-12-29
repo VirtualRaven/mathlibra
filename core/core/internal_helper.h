@@ -6,7 +6,7 @@ namespace internal_helper
         /*
          * forward_fast is an faster impementation. It is faster as it runs under the assumption that the function only takes two arguments, and thus do not have to travers the tree. This function is indented for implementing binary operators. 
          */ 
-	template<typename T, typename T2> double forward_fast(typename function_helper::func_type<T, T2>::type func, tree::nodeDataInterface*n)
+	template<typename T, typename T2> type* forward_fast(typename function_helper::func_type<T, T2>::type func, tree::nodeDataInterface*n)
 	{
 		auto wrapper = tree::nodeDataInterface_wrapper_access(n);
 		

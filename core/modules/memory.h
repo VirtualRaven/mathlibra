@@ -6,7 +6,7 @@
 #include <vector>
 #include "exception_helper.h"
 #include "main.h"
-
+#include "core/type.h"
 /**
  * @namespace memory includes the memory module
  */
@@ -19,10 +19,13 @@ namespace memory
 	struct memoryObject
 	{
 		std::string name;
-		number_type value;
+                interface::type_ptr value;
 		bool constant;
 		memoryObject(std::string name, number_type value, bool constant = false);
-		memoryObject();
+		memoryObject(std::string name, type* value,bool constant = false);
+                memoryObject();
+                memoryObject& operator==(const memoryObject&);
+                memoryObject& operator==(memoryObject&&);
 	};
 
 	class memory
@@ -32,13 +35,13 @@ namespace memory
 		std::map<std::string, memoryObject>::iterator mem_it2;
                 size_t mem_it2_index;
 	public:
-		number_type get(std::string var);
-		bool set(std::string var, number_type value, bool allocateIfNotFound = true, bool constant = false);
-		bool set_ignore_const(std::string var, number_type value, bool allocateIfNotFound=false, bool constant=false);
+		const type* get(std::string var);
+		bool set(std::string var, type* value, bool allocateIfNotFound = true, bool constant = false);
+		bool set_ignore_const(std::string var, type* value, bool allocateIfNotFound=false, bool constant=false);
                 std::vector<std::string> allVars();
 		bool exists(std::string var);
                 void empty();
-		number_type* raw_ptr(std::string var);
+		type* raw_ptr(std::string var);
 
                 //Updated external api
                 memoryObject get_obj(std::string name); /**<Get an memoryObject by name. Tries to return an memoryObject registered as name. Throws an memoryOops if an undefined variable is requested. @returns An copy of the internal memoryObject. @see memory::exists. */     

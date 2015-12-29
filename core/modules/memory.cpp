@@ -1,5 +1,6 @@
 #include "modules/memory.h"
 #include <iostream>
+#include "core/type.h"
 	
 	template<EXCEPTION T> void memoryOops()
 	{
@@ -8,19 +9,37 @@
 
 	memory::memoryObject::memoryObject(std::string name, number_type value, bool constant):
 	    name(name),
+	    value(interface::type_ptr(base_type<double>(&value,1,1))),
+	    constant(constant)
+	    {}
+        memory::memoryObject::memoryObject(std::string name, type* value, bool constant):
+	    name(name),
 	    value(value),
 	    constant(constant)
 	    {}
+	
 	memory::memoryObject::memoryObject() :
 		name(""),
-		value(0),
+		value(nullptr),
 		constant(false)
 	{}
 
+        memory::memoryObject::operator==(const memoryObject& e)
+        {
+            name=e.name;
+            value= interface::type_ptr(e.value.ptr()->copy());
+            constant = e.constant;
+        }
+        memory::memoryObject::operator==(memoryObject&& e)
+        {
+            name=std::move(e.name);
+            value =std::move(e.value);
+            constant=e.constant;
 
-	number_type memory::memory::get(std::string var)
+        }
+	const type*  memory::memory::get(std::string var)
 	{
-	    return this->get_obj(var).value;
+	    return this->get_obj(var).value.ptr();
         }
 	bool memory::memory::exists(std::string var)
         {
@@ -28,7 +47,7 @@
             return (mem_it != mem.end());
         }
         
-        bool memory::memory::set(std::string var, number_type value, bool allocateIfNotFound, bool constant)
+        bool memory::memory::set(std::string var, type* value, bool allocateIfNotFound, bool constant)
 	{
 		mem_it =mem.find(var);
 		if (mem_it == mem.end())
@@ -52,7 +71,7 @@
 				mem_it->second.value = value;
 				return true;
 	}
-        bool memory::memory::set_ignore_const(std::string var, number_type value, bool allocateIfNotFound, bool constant)
+        bool memory::memory::set_ignore_const(std::string var,  type* value, bool allocateIfNotFound, bool constant)
 	{
 		mem_it =mem.find(var);
 		if (mem_it == mem.end())

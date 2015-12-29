@@ -154,7 +154,7 @@ namespace function_helper
 
 	template <typename... argN> struct func_type
 	{
-		 typedef double(*type)(argN...);
+		 typedef type*(*type)(argN...);
 	};
 /**
  * Fills the and parameter package with data. It uses the getData() function to exctract data from the nodes an fills the parameter_package wiith it.

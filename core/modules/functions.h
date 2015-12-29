@@ -49,16 +49,13 @@ namespace math_func
 		std::string tag;
 		std::string doc;
 		std::string disp_name;
-		typedef number_type(*funcPtr)(number_type); /**< @typedef the standard fixed single argument type function. */
 		typedef number_type(*generalFuncPtr)(tree::node_base*); /**< @typedef the extended function type that takes an pointer to an node_base. Used for multi argument functions. */ 
 		union
 		{
-			funcPtr ptr; 
 			generalFuncPtr gptr;
 		        interpreted_func* uptr;
                 };
 		
-		m_function(std::string name,std::string tag,std::string doc,std::string disp_name, funcPtr ptr); 
 		m_function(std::string name,std::string tag,std::string doc,std::string disp_name, generalFuncPtr ptr);
 		m_function(std::string name,std::string tag,std::string doc,std::string disp_name, interpreted_func* ptr);
                 m_function();

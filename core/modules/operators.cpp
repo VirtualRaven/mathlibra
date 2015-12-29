@@ -4,6 +4,8 @@
 #include "core/function_obj.h"
 #include "core/mathNode.h"
 #include "exception_helper.h"
+#include "core/type.h"
+#include "core/type_helper.h"
 namespace operators
 {
 
@@ -11,28 +13,29 @@ namespace operators
 	{
 		__mathlibra__raise<T,STD_OPERATORS>();
 	}
-	number_type add(number_type x, number_type y)
+	type* add(double  x, double y)
 	{
-		return x+y;
+		return make_type(x+y);
+                
 	}
-	number_type __add(tree::nodeDataInterface*n)
+	type* __add(tree::nodeDataInterface*n)
 	{
 		return internal_helper::forward_fast<double,double>(add, n);
 	}
 
-        number_type multi(number_type x, number_type y)
+        type* multi(double x, double y)
 	{
-		return x*y;
+		make_type(x*y);
 	}
-	number_type __multi(tree::nodeDataInterface* n)
+	type* __multi(tree::nodeDataInterface* n)
 	{
 		return internal_helper::forward_fast<number_type, number_type>(multi, n);
 	}
-	number_type divide(number_type x, number_type y)
+	type* divide(double x, double y)
 	{
-		return x/y;
+		make_type(x/y);
 	}
-        number_type declare_func(tree::nodeDataInterface* n)
+        type* declare_func(tree::nodeDataInterface* n)
         {
             tree::node*  node = static_cast<tree::node*>(nodeDataInterface_wrapper_access(n));
             
@@ -48,7 +51,7 @@ namespace operators
                         function_obj::interpreted_func* func= new function_obj::interpreted_func(expr.ptr(),var->get_mem_provider());
                         var->makeFunction(func);  
                         expr.release();   
-                        return 1;
+                        return make_type(1);
                     }
                     else 
                     {
@@ -70,41 +73,41 @@ namespace operators
 		stdOperatorOops<FUNC_OPR_NEED_FUNC_NAME>();
             } 
             
-            return 0;     
+            return make_type(0);     
         }
 
-	number_type __divide(tree::nodeDataInterface* n)
+        type* __divide(tree::nodeDataInterface* n)
 	{
 		return internal_helper::forward_fast<number_type, number_type>(divide, n);
 	}
-	number_type sub(number_type x, number_type y)
+	type* sub(number_type x, number_type y)
 	{
-		return x-y;
+		return make_type(x-y);
 	}
-	number_type __sub(tree::nodeDataInterface* n)
+	type* __sub(tree::nodeDataInterface* n)
 	{
 		return internal_helper::forward_fast<number_type, number_type>(sub, n);
 	}
-	number_type __pow(tree::nodeDataInterface* n)
+	type* __pow(tree::nodeDataInterface* n)
 	{
 		return internal_helper::forward_fast<number_type,number_type>( pow,n);
 	}
 
-	number_type assign(mathNode::mathExpressionNode_variable_interface* var, number_type val)
+	type* assign(mathNode::mathExpressionNode_variable_interface* var, number_type val)
 	{
 		var->set(val);
-		return val;
+		return make_type(val);
 	}
 
-	number_type __assign(tree::nodeDataInterface* n)
+	type* __assign(tree::nodeDataInterface* n)
 	{
 		return internal_helper::forward_fast<mathNode::mathExpressionNode_variable_interface*, number_type>(assign, n);
 	}
 	
 	
-	number_type dummy(tree::nodeDataInterface*n)
+	type* dummy(tree::nodeDataInterface* )
 	{
-		return 0;
+		return nullptr;
 	}
 
     vec_operators std_operators= {
