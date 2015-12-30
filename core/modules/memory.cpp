@@ -1,7 +1,9 @@
 #include "modules/memory.h"
 #include <iostream>
 #include "core/type.h"
-	
+#include "core/type_helper.h"
+using memory::memoryObject;	
+using interface::type_ptr;
 	template<EXCEPTION T> void memoryOops()
 	{
 		__mathlibra__raise<T,MEMORY>();
@@ -9,35 +11,42 @@
 
 	memory::memoryObject::memoryObject(std::string name, number_type value, bool constant):
 	    name(name),
-	    value(interface::type_ptr(base_type<double>(&value,1,1))),
+	    value(interface::type_ptr(new base_type<double>(&value,1,1))),
 	    constant(constant)
 	    {}
-        memory::memoryObject::memoryObject(std::string name, type* value, bool constant):
-	    name(name),
-	    value(value),
+        memory::memoryObject::memoryObject(std::string name, type_ptr&& value, bool constant):
+             name(name),
+	    value(std::move(value)),
 	    constant(constant)
-	    {}
-	
+	    {}    
 	memory::memoryObject::memoryObject() :
 		name(""),
 		value(nullptr),
 		constant(false)
 	{}
-
-        memory::memoryObject::operator==(const memoryObject& e)
+        memory::memoryObject::memoryObject(const memoryObject& e):
+            name(e.name),
+            value(std::move(type_ptr(e.value.ptr()->copy()))),
+            constant(e.constant) {}
+        memory::memoryObject::memoryObject(memoryObject&& e):
+            name(std::move(e.name)),
+            value(std::move(e.value)),
+            constant(e.constant) {}
+        memoryObject& memory::memoryObject::operator=(const memoryObject& e)
         {
             name=e.name;
-            value= interface::type_ptr(e.value.ptr()->copy());
+            value= std::move(interface::type_ptr(e.value.ptr()->copy()));
             constant = e.constant;
+            return *this;
         }
-        memory::memoryObject::operator==(memoryObject&& e)
+        memoryObject& memory::memoryObject::operator=(memoryObject&& e)
         {
             name=std::move(e.name);
             value =std::move(e.value);
             constant=e.constant;
-
+            return *this;
         }
-	const type*  memory::memory::get(std::string var)
+	type*  memory::memory::get(std::string var)
 	{
 	    return this->get_obj(var).value.ptr();
         }
@@ -47,14 +56,18 @@
             return (mem_it != mem.end());
         }
         
-        bool memory::memory::set(std::string var, type* value, bool allocateIfNotFound, bool constant)
+        bool memory::memory::set(std::string var, double value, bool allocateIfNotFound, bool constant)
+        {
+           return this->set(var,type_ptr(make_type(value)),allocateIfNotFound,constant); 
+        }
+        bool memory::memory::set(std::string var, type_ptr&& value, bool allocateIfNotFound, bool constant)
 	{
 		mem_it =mem.find(var);
 		if (mem_it == mem.end())
 		{
 			if (allocateIfNotFound)
 			{
-				mem[var] = memoryObject(var, value, constant);
+				mem[var] = std::move(memoryObject(var, std::move(value), constant));
 				return true;
 			}
 			else
@@ -68,17 +81,21 @@
 					memoryOops<MEM_ALTER_CONST_VAR>();
 					return false;
 				}
-				mem_it->second.value = value;
+				mem_it->second.value = std::move(value);
 				return true;
 	}
-        bool memory::memory::set_ignore_const(std::string var,  type* value, bool allocateIfNotFound, bool constant)
+        bool memory::memory::set_ignore_const(std::string var,  double value, bool allocateIfNotFound, bool constant)
+        {
+            return this->set_ignore_const(var,type_ptr(make_type(value)),allocateIfNotFound,constant);
+        }
+        bool memory::memory::set_ignore_const(std::string var,  type_ptr&& value, bool allocateIfNotFound, bool constant)
 	{
 		mem_it =mem.find(var);
 		if (mem_it == mem.end())
 		{
 			if (allocateIfNotFound)
 			{
-				mem[var] = memoryObject(var, value, constant);
+				mem[var] = std::move(memoryObject(var, std::move(value), constant));
 				return true;
 			}
 			else
@@ -87,7 +104,7 @@
 				return false;
 			}
 		 }
-				mem_it->second.value = value;
+				mem_it->second.value = std::move(value);
 				mem_it->second.constant = constant;
                                 return true;
 	}
@@ -109,7 +126,7 @@
 		this->mem.clear();
 	}
 	 
-	number_type* memory::memory::raw_ptr(std::string var)
+	type* memory::memory::raw_ptr(std::string var)
 	{
 		mem_it = mem.find(var);
 		if (mem_it == mem.end())
@@ -118,7 +135,7 @@
 			return nullptr;
 
 		}
-		else return &mem_it->second.value;
+		else return mem_it->second.value.ptr();
 	}
         memory::memoryObject  memory::memory::get_obj(std::string name)
         {
@@ -126,7 +143,7 @@
 		if (mem_it == mem.end())
 		{
 			memoryOops<MEM_VAR_NOT_FOUND>();
-			return mem_it->second; //Dummy expression to avoid warning, will never be executed
+			return {}; //Dummy expression to avoid warning, will never be executed
 		}
 		else return mem_it->second;	
         } 
@@ -182,7 +199,7 @@
 		mem_it(mem.end()),
 		mem_it2(mem.end()),
 		mem_it2_index(0) {}
-
+/*
 	bool test::memory_module_test1()
 	{
 		//Test allocation
@@ -263,4 +280,4 @@
 		return true;
 
 	}
-                
+  */              

@@ -1,7 +1,10 @@
+#ifndef TYPE_H_INCLUDED
+#define TYPE_H_INCLUDED
 #include "exception_helper.h"
 #include "type_interface.h"
 #include <iterator>
 #include <string>
+#include <cstring> //memcpy
 using interface::type; 
 
 
@@ -39,15 +42,18 @@ template<typename T,typename F> std::string __toString(T* obj, size_t  n, size_t
 }
 
 template<typename T> std::string _t_toString(T*, size_t , size_t  ){ return ""; }
-template<>  std::string _t_toString<char>(char* d, size_t  n, size_t  m)
+
+
+template<>  inline std::string _t_toString<char>(char* d, size_t  n, size_t  m)
 {
     return __toString<char>(d,n,m,[](char x){return x;});
 }
-template<> std::string _t_toString<double>(double* d, size_t  n, size_t  m)
+
+template<> inline std::string _t_toString<double>(double* d, size_t  n, size_t  m)
 {
     return __toString<double>( d, n, m, [](double x){return std::to_string(x);});
 }
-template<> std::string _t_toString<interface::type*>(interface::type** d, size_t  n, size_t  m)
+template<> inline std::string _t_toString<interface::type*>(interface::type** d, size_t  n, size_t  m)
 {
     return __toString<interface::type*>(d,n,m,[](interface::type* t){return t->toString();});
 }
@@ -147,13 +153,21 @@ template<typename T,bool C=false> class type_iterator : std::iterator<std::rando
     
 
 };
-
+template<typename D> double __toNumber(D*)
+{
+         return 0;
+}
+template<> inline double __toNumber<double>(double* x)
+{
+        return x[0];
+}
 template<typename T> class   base_type : public interface::t_type<T>
 {   
     size_t  _m;
     size_t  _n;
     T* _mat;
     std::string _str;
+   
     public:
 
     size_t  sizeN() const
@@ -217,18 +231,12 @@ template<typename T> class   base_type : public interface::t_type<T>
         }
         T   toSingleton() const 
         {
-            if(isSingleton())
-            {
                 return _mat[0];
-            }
         }
 
         double  toNumber() const
         {
-            if(this->isNumber() ) 
-            {
-                return static_cast<double>(toSingleton());
-            }
+            return __toNumber<T>(this->_mat);
         }
         
         const char*   toString()
@@ -239,16 +247,9 @@ template<typename T> class   base_type : public interface::t_type<T>
 
         T   get(size_t  n, size_t m )
         {
-            if(n < this->sizeN() && m < this->sizeM())
-            {
                 return _mat[_n*n+m];
-            } 
-            else
-            {
-
-            }  
         }
-        base_type(T* d,size_t n, size_t m) : 
+        base_type(const T* d,size_t n, size_t m) : 
         _m(m),
         _n(n),    
         _mat(new T[n*m]),
@@ -277,3 +278,4 @@ template<typename T> class   base_type : public interface::t_type<T>
 typedef base_type<char> char_mat;
 typedef base_type<type*> mat_mat;
 typedef base_type<double> num_mat;
+#endif //TYPE_H_INCLUDED

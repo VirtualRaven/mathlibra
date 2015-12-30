@@ -1,9 +1,12 @@
 //#define DEBUG
 #include <iostream>
+
 #include <cstring>
 #include <iomanip> 
 #include "tests.h"
 #include "core/function_obj.h"
+#include "core/type.h"
+#include "core/type_helper.h"
 /* TODO
 	Add function inpterpeting and execution DONE
 	Add varible interpeting and memmory system. DONE
@@ -55,11 +58,6 @@ bool menu(memory::memory& mem,math_func::function_interface& func)
 	}
 	else if (input == "6")
 	{
-		if (!test::memory_module_test1())
-		{
-			std::cin.get();
-			return false;
-		}
 		std::string exr = "x=(sqrt(sqrt(5*5)^2)*100)/5*(sin(PI)^2+cos(PI)^2)";
 		test::profileInterpreter(exr);
 //		test::profileInterpreterVM(exr);
@@ -79,8 +77,7 @@ bool menu(memory::memory& mem,math_func::function_interface& func)
 }
 int main(int argc, char* argv[])
 {
-	
-
+    
 
 	
 	{
@@ -161,7 +158,7 @@ int main(int argc, char* argv[])
 #else
 #error "WARNING, no execution enviroment selected"
 #endif
-					std::cout << expression << " = " << mem.get("ans") << std::endl;
+					std::cout << expression << " = " << mem.get("ans")->toString() << std::endl;
 				
 
 			}

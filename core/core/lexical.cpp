@@ -354,10 +354,6 @@ void parse_func(std::string str,
 	{
 		tmp_ptr = new token::funcToken(startPos, endPos, (token::funcToken::generalFuncPtr)func->get(str));
 	}
-	else if (type == math_func::func_type::FAST)
-	{
-		tmp_ptr = new token::funcToken(startPos, endPos, (token::funcToken::funcPtr)func->get(str));
-	}
         else
         {
             tmp_ptr = new token::funcToken(startPos,endPos,func->getFunctor(str));

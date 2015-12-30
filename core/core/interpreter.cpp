@@ -274,7 +274,7 @@ void debug::check_tree_mem_leak()
 
 
 	}
-	number_type interpreter::exec()
+        interface::type_ptr interpreter::exec()
 	{
         if(!rootEmpty)
         {
@@ -354,15 +354,15 @@ void debug::check_tree_mem_leak()
 		other.startOperatorPos = 0;
 		other.tokens.clear();
 	}
-	interpreter::interpreter(const interpreter& other)
+	interpreter::interpreter(const interpreter& )
 	{
 		interpreterOops<CANT_CPY_OBJ>();
 	}
-	interpreter& interpreter::operator=(const interpreter& other)
+	interpreter& interpreter::operator=(const interpreter& )
 	{
 		return *this;
 	}
-	interpreter& interpreter::operator=(interpreter&& other)
+	interpreter& interpreter::operator=(interpreter&& )
 	{
 		return *this;
 	}

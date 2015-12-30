@@ -27,6 +27,26 @@ template<typename T> class isPointer<T**>
 };
 
 
+template<typename T, bool D> 
+class std_delete
+{
+    public:
+    static void f(T x)
+    {
+        delete x;   
+    }
+};
+
+template<typename T> 
+class std_delete<T,true>
+{
+    public:
+    static void f(T x)
+    {
+        delete[ ]x;;
+    }
+};
+
 template<typename T, bool array_type, bool isPtr=isPointer<T>::ptr>
 class ptr_protect
 {
@@ -39,51 +59,46 @@ class ptr_protect<T,array_type,false>
 
 };
 
+
 /**
  * A smart pointer object
  */
 
-template<typename T>
-class ptr_protect<T,true,true>
+template<typename T,bool B>
+class ptr_protect<T,B,true>
 {
-    public:
-        ptr_protect(T ptr): _ptr(ptr), _enabled(true){};
-        virtual ~ptr_protect()
-        {
-            if(_enabled && _ptr != nullptr)
-            {
-                delete[] _ptr;
-                _ptr=nullptr;
-            }
-        };
-        void release()  {_enabled=false;}; /**< Releases ownership. When called the smart pointer will no longer own the pointer and therefore not delete the object when the smart pointer goes out of scope.*/
-        T ptr(){return _ptr;}; /**< @return An pointer to the object managed by the smart pointer */
     private:
         T _ptr;
         bool _enabled;
-};
-
-template<typename T>
-class ptr_protect<T,false,true>
-{
-    public:
-        ptr_protect(T ptr): _ptr(ptr), _enabled(true){};
-        virtual ~ptr_protect()
+        void __d()
         {
-         if(_enabled && _ptr != nullptr)
+             if(_enabled && _ptr != nullptr)
             {
-                delete _ptr;
+                std_delete<T,B>::f(_ptr);  
                 _ptr=nullptr;
             }
-        };
-        void release()  {_enabled=false;};  /**< Releases ownership. When called the smart pointer will no longer own the pointer and therefore not delete the object when the smart pointer goes out of scope.*/
-        T ptr(){return _ptr;}; /**< @return An pointer to the object managed by the smart pointer */
-		T operator ->(){ return _ptr; }; /**< @return An pointer to the object managed by the smart pointer */
-    private:
-        T _ptr;
-        bool _enabled;
-
-
+        }
+    public:
+        ptr_protect(T ptr): _ptr(ptr), _enabled(true){}
+        ptr_protect(ptr_protect&& x) : _ptr(x._ptr), _enabled(true) {x.release(); x._ptr=nullptr;}
+        ptr_protect(): _ptr(nullptr), _enabled(true){}
+        
+        ~ptr_protect()
+        {
+            __d();    
+        }
+        void release()  {_enabled=false;} /**< Releases ownership. When called the smart pointer will no longer own the pointer and therefore not delete the object when the smart pointer goes out of scope.*/
+        T ptr() const {return _ptr;} /**< @return An pointer to the object managed by the smart pointer */
+        T operator->(){return _ptr;}
+        ptr_protect& operator=(ptr_protect&& x)
+        {
+            __d();
+            this->_ptr = x._ptr;
+            this->_enabled = x._enabled;
+            x.release();
+            x._ptr=nullptr;
+            return *this;
+        }
 };
 
 /**

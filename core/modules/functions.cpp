@@ -1,5 +1,6 @@
 #include "modules/functions.h"
 #include "exception_helper.h"
+#include "core/internal_helper.h"
 //Contains temporary implementation of function module
 namespace math_func
 {
@@ -20,12 +21,12 @@ namespace math_func
 
 	math_func::m_function::~m_function(){}
 
-	math_func::m_function::m_function() :type(func_type::FAST),
+	math_func::m_function::m_function() :type(func_type::GENERAL),
 					     name(), 
 					     tag(),
 					     doc(),
 					     disp_name(),
-					     ptr(nullptr){}
+					     gptr(nullptr){}
         math_func::m_function::m_function(std::string name, std::string tag,std::string doc,std::string disp_name,interpreted_func* ptr): type(func_type::USER),
        				  name(name),
 				  tag(tag),
@@ -66,7 +67,7 @@ namespace math_func
                                 {
 					functionOops<FUNC_NO_CONV_FUNCTOR_VOID_P>();
                                 }
-                                return reinterpret_cast<u_ptr>(cache.ptr);
+                                return reinterpret_cast<u_ptr>(cache.gptr);
 			}
 			else
 			{
@@ -79,7 +80,7 @@ namespace math_func
                                             {
 						functionOops<FUNC_NO_CONV_FUNCTOR_VOID_P>();
                                             }
-					    else return reinterpret_cast<u_ptr>(funcs[i].ptr);
+					    else return reinterpret_cast<u_ptr>(funcs[i].gptr);
 					}
 				}
 				return nullptr;
@@ -109,7 +110,7 @@ namespace math_func
 			std::cout << "-[ function_interface {\n";
 			for (unsigned int i = 0; i < funcs.size(); i++)
 			{
-				std::cout << this->funcs[i].name.c_str() << "\t: " << std::hex << this->funcs[i].ptr << std::dec << "\n";
+				std::cout << this->funcs[i].name.c_str() << "\t: " << std::hex << this->funcs[i].gptr << std::dec << "\n";
 			}
 			std::cout << " }\nLoaded " << this->funcs.size() << " functions]\n";
 
@@ -152,26 +153,78 @@ namespace math_func
 
 
 		}
+                type* __sin(node_base* b)
+                {
+                    return internal_helper::forward_fast<double>(sin,b); 
+                }
+                type*  __cos(node_base *b)
+                {
+                    return internal_helper::forward_fast<double>(cos,b);
+                }
+                type*  __tan(node_base *b)
+                {
+                    return internal_helper::forward_fast<double>(tan,b);
+                }
+
+                type* __asin(node_base *b)
+                {
+                    return internal_helper::forward_fast<double>(asin,b);
+                }
+                type*  __acos(node_base *b)
+                {
+                    return internal_helper::forward_fast<double>(acos,b);
+                }
+                type* __atan(node_base *b)
+                {
+                    return internal_helper::forward_fast<double>(atan,b);
+                }
+                type*  __sqrt(node_base *b)
+                {
+                    return internal_helper::forward_fast<double>(sqrt,b);
+                }
+                type*  __log(node_base *b)
+                {
+                    return internal_helper::forward_fast<double>(log,b);
+                }
+                type* __log10(node_base *b)
+                {
+                    return internal_helper::forward_fast<double>(log10,b);
+                }
+
+                type* __ceil(node_base *b)
+                {
+                    return internal_helper::forward_fast<double>(ceil,b);
+                }
+
+                type* __floor(node_base *b)
+                {
+                    return internal_helper::forward_fast<double>(floor,b);
+                }
+                
+                type* __round(node_base *b)
+                {
+                    return internal_helper::forward_fast<double>(round,b);
+                }
 		 std::vector< math_func::m_function> std_math_trig_func = {
-			 math_func::m_function("sin","trig","sin(double), standard sinus functions","sin", static_cast<double_func>(sin)),
-			 math_func::m_function("cos","trig","cos(double), standard cosinus function","cos", static_cast<double_func>(cos)),
-			 math_func::m_function("tan","trig","tan(double), standard tan function","tan", static_cast<double_func>(tan)),
-			 math_func::m_function("asin","trig","asindouble), inverse sin function","asin", static_cast<double_func>(asin)),
-			 math_func::m_function("acos","trig","acos(double), inverse cosinus function","acos", static_cast<double_func>(acos)),
-			 math_func::m_function("atan","trig","stan(double), inverse tan function","atan", static_cast<double_func>(atan))
+			 math_func::m_function("sin","trig","sin(double), standard sinus functions","sin", __sin),
+			 math_func::m_function("cos","trig","cos(double), standard cosinus function","cos", __cos),
+			 math_func::m_function("tan","trig","tan(double), standard tan function","tan", __tan),
+			 math_func::m_function("asin","trig","asindouble), inverse sin function","asin", __asin),
+			 math_func::m_function("acos","trig","acos(double), inverse cosinus function","acos", __acos),
+			 math_func::m_function("atan","trig","stan(double), inverse tan function","atan", __atan)
 		};
 
 		std::vector<math_func::m_function> std_math_func = {
 			//math_func::m_function("abs", static_cast<double(*)(double)>(abs)), //Only defined with double overload on certain platforms
-			math_func::m_function("sqrt","numeric","sqrt(double), square root function function","\u221A", static_cast<double_func>(sqrt)),
-			math_func::m_function("ln","numeric","ln(double), natural logarithm function","ln", static_cast<double_func>(log)),
-			math_func::m_function("log","numeric","log(double),  logarithm base ten","log", static_cast<double_func>(log10))
+			math_func::m_function("sqrt","numeric","sqrt(double), square root function function","\u221A", __sqrt),
+			math_func::m_function("ln","numeric","ln(double), natural logarithm function","ln", __log),
+			math_func::m_function("log","numeric","log(double),  logarithm base ten","log", __log10)
 		};
 
 		std::vector<math_func::m_function> std_math_num_func = {
-			math_func::m_function("ceil","numeric","ceil(double)","ceil", static_cast<double_func>(ceil)),
-			math_func::m_function("floor","numeric","floor(double)","floor", static_cast<double_func>(floor)),
-			math_func::m_function("round","numeric","round(double)","round", static_cast<double_func>(round))
+			math_func::m_function("ceil","numeric","ceil(double)","ceil", __ceil),
+			math_func::m_function("floor","numeric","floor(double)","floor", __floor),
+			math_func::m_function("round","numeric","round(double)","round", __round)
 		};
 	
 }

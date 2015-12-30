@@ -1,4 +1,5 @@
 #ifndef TREE_INTERFACE_INCLUDED
+
 #define TREE_INTERFACE_INCLUDED
 #include <stack>
 #include "object_counter.h"
@@ -38,8 +39,8 @@ namespace tree
 
 		virtual void bind(node_base * context)=0; /**< Called before operations on the node. The class has an internal pointer pointing back to the node_base which contains the data. This internal pointer needs to be set to the right node before any operations can be carried out. @note Forgetting to call bind before eval causes undefined behaviour. @param context Pointer to the node_base which owns the data. */
 		virtual void destroy()=0; /**< Called upon tree destruction. It shall delete all data allocated by the class and then destroy the interface itself. @note Failure to correctly follow this behaviour causes memory leaks. */
-		virtual double eval()=0; /**< Evaluate node. When called is causes the node to evaluate itself. If the type of the data is one that takes input data the eval method is first called on the child branches of the node_base owning the data. Then this data is evaluated using the acquired data from the child branches. */
-
+		virtual interface::type* eval()=0; /**< Evaluate node. When called is causes the node to evaluate itself. If the type of the data is one that takes input data the eval method is first called on the child branches of the node_base owning the data. Then this data is evaluated using the acquired data from the child branches. */
+                virtual ~nodeDataInterface() = default;
 	};
 
 	/**

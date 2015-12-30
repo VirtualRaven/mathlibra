@@ -2,14 +2,15 @@
 #ifndef TOKENS_H_INCLUDED
 #define TOKENS_H_INCLUDED
 
+#include "core/type_interface.h"
 #include "mathNode.h"
 #include "tree.h"
 #include "modules/operators.h"
 #include "modules/functions.h"
 #include "main.h"
 #include "function_obj.h"
-using mathNode::number_type;
 using tree::tokenType;
+using interface::type;
 /**
  *@namespace token Contains all token types. Tokens are used to identefy parts of strings.
 */
@@ -106,12 +107,10 @@ struct funcToken : public baseToken
 {
        
          
-	typedef number_type(*funcPtr)(number_type); /**< @typedef The standard single argument function. Used by FUNCTION type nodes */
-	typedef number_type(*generalFuncPtr)(tree::node_base*); /** @typedef Special pointer for multi argument functions. Used by FUNCTION_TREE type nodes */
+	typedef interface::type*(*generalFuncPtr)(tree::node_base*); /** @typedef Special pointer for multi argument functions. Used by FUNCTION_TREE type nodes */
         typedef function_obj::interpreted_func* usr_ptr;
 	union
 	{
-		funcPtr ptr;
 		generalFuncPtr gptr;
                 usr_ptr uptr;    
                 
@@ -119,7 +118,6 @@ struct funcToken : public baseToken
 	unsigned short baseWheight; /**< Weight of the operator. Higher weight means higher execution priority.  */
 	tree::nodeDataInterface* node();
 	bool  hasNode();
-	funcToken(short startPos, short endPos, funcPtr ptr);
 	funcToken(short startPos, short endPos, generalFuncPtr ptr);
         funcToken(short startPos,short endPos, usr_ptr ptr);
 	funcToken();

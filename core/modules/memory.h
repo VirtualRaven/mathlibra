@@ -22,10 +22,12 @@ namespace memory
                 interface::type_ptr value;
 		bool constant;
 		memoryObject(std::string name, number_type value, bool constant = false);
-		memoryObject(std::string name, type* value,bool constant = false);
+                memoryObject(std::string name, interface::type_ptr&& value,bool constant = false); /**< Moves the pointer to the object */
                 memoryObject();
-                memoryObject& operator==(const memoryObject&);
-                memoryObject& operator==(memoryObject&&);
+                memoryObject(const memoryObject& e);
+                memoryObject(memoryObject&& e);
+                memoryObject& operator=(const memoryObject&);
+                memoryObject& operator=(memoryObject&&);
 	};
 
 	class memory
@@ -35,9 +37,11 @@ namespace memory
 		std::map<std::string, memoryObject>::iterator mem_it2;
                 size_t mem_it2_index;
 	public:
-		const type* get(std::string var);
-		bool set(std::string var, type* value, bool allocateIfNotFound = true, bool constant = false);
-		bool set_ignore_const(std::string var, type* value, bool allocateIfNotFound=false, bool constant=false);
+		type* get(std::string var);
+		bool set(std::string var, interface::type_ptr&& value, bool allocateIfNotFound = true, bool constant = false);
+		bool set(std::string var, double value, bool allocateIfNotFound = true, bool constant = false);
+		bool set_ignore_const(std::string var, interface::type_ptr&& value, bool allocateIfNotFound=false, bool constant=false);
+		bool set_ignore_const(std::string var, double value, bool allocateIfNotFound=false, bool constant=false);
                 std::vector<std::string> allVars();
 		bool exists(std::string var);
                 void empty();
@@ -52,9 +56,6 @@ namespace memory
 
 }
 
-namespace test
-{
-	bool memory_module_test1();
-}
+
 
 #endif // MEMORY_H_INCLUDED

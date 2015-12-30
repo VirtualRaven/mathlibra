@@ -49,7 +49,7 @@ namespace math_func
 		std::string tag;
 		std::string doc;
 		std::string disp_name;
-		typedef number_type(*generalFuncPtr)(tree::node_base*); /**< @typedef the extended function type that takes an pointer to an node_base. Used for multi argument functions. */ 
+		typedef interface::type*(*generalFuncPtr)(tree::node_base*); /**< @typedef the extended function type that takes an pointer to an node_base. Used for multi argument functions. */ 
 		union
 		{
 			generalFuncPtr gptr;
@@ -73,7 +73,6 @@ namespace math_func
 	{
                 std::vector<m_function> funcs;
 		m_function cache;
-		typedef number_type(*funcPtr)(number_type);
 	public:
 
 		void load(std::vector< m_function>& obj); /**< @param obj An vector of functions to be loaded by the module. */

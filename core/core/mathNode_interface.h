@@ -1,14 +1,12 @@
 #ifndef MATHNODE_INTERFACE_H_INCLUDED
+
 #define MATHNODE_INTERFACE_H_INCLUDED
 #include "tree_interface.h"
 #include <string>
-
+using interface::type;
 using tree::node_base;
 using tree::nodeDataInterface;
-namespace mathNode
-{
-  typedef double number_type;
-}
+
 namespace memory
 {
 	class memory;
@@ -16,7 +14,7 @@ namespace memory
 
 namespace operators
 {
-	typedef mathNode::number_type (*generic_oper_ptr) (tree::nodeDataInterface*);
+	typedef type* (*generic_oper_ptr) (tree::nodeDataInterface*);
 }
 
 namespace mathNode
@@ -29,9 +27,10 @@ namespace mathNode
 	 */
 	class mathExpressionNode_val_interface : public tree::nodeDataInterface
 	{
-	public:
-		number_type value;
-		virtual number_type eval()=0;
+            protected:
+                interface::type_ptr value;
+	    public:
+		virtual interface::type* eval()=0;
 	};
 	/**
      *	Interface for variable type nodes.
@@ -41,8 +40,8 @@ namespace mathNode
 
 	public:
 		std::string name;
-		virtual void set(number_type) = 0; /**<Sets the value of the variable*/
-		virtual number_type eval()=0;
+		virtual void set(interface::type_ptr) = 0; /**<Sets the value of the variable. Creates an local copy of the data provided*/
+		virtual interface::type* eval()=0;
                 virtual bool is_undefined()=0;
 		virtual bool is_pushable()=0; /**< @return True if variable can be pushed to the stack of the virtual machine. */
 
@@ -58,35 +57,20 @@ namespace mathNode
 		operators::generic_oper_ptr ptr;
 		bool assignB; /**< True if the currently contained function in the node is of assigmentPtr type, else false. */
 		
-		virtual number_type eval()=0;
+		virtual interface::type* eval()=0;
 
 	};
-	/**
-	 * Interface for function type nodes. 
-	 *  Only functions accepting an single argument are allowed in this node.
-	 */
-	class mathExpressionNode_func_interface : public tree::nodeDataInterface
-	{
-	public:
-		number_type(*func)(number_type);
-		typedef number_type(*funcPtr)(number_type);
-		virtual number_type eval()=0;
-	};
-	/**
-	 * Interface for function_tree type nodes.
-	 * Functions accepting an variable number of arguments are allowed in this node 
-	 */
 	class mathExpressionNode_func_tree_interface : public tree::nodeDataInterface
 	{
 	public:
-		number_type(*func)(tree::node_base*);
-		typedef number_type(*funcPtr)(tree::node_base*);
-		virtual number_type eval()=0;
+            interface::type*(*func)(tree::node_base*);
+		typedef interface::type*(*funcPtr)(tree::node_base*);
+		virtual interface::type* eval()=0;
 	};
         
         class mathExpressionNode_func_user_interface : public tree::nodeDataInterface
         {
-            virtual number_type eval()=0;
+            virtual interface::type* eval()=0;
         };
 
         	
@@ -106,10 +90,6 @@ namespace mathNode
 			 * Contains the tokenType of T.
 			 */
 		 	static const tree::tokenType TYPE = tree::UNKNOWN;
-		};
-		template<> struct enum_type < mathNode::mathExpressionNode_func_interface* >
-		{
-			static const tree::tokenType TYPE = tree::FUNCTION;
 		};
 		template<> struct enum_type < mathNode::mathExpressionNode_func_tree_interface* >
 		{

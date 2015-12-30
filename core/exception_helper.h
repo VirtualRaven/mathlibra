@@ -48,7 +48,8 @@ enum EXCEPTION {
 	NODE_EVAL_UNDEFINED_FUNC,
 	TOKEN_NO_MEM_MODULE,
 	TOKEN_FUNCTION_NULL_POINTER,
-        REALLOC_NO_RULE
+        REALLOC_NO_RULE,
+        USER_DEFINED_FUNCTION_TAKES_NUMBER
 	};
 
 //* Lists all possible exception owners
@@ -512,7 +513,16 @@ declare_exception(SYNTAX_EXPECTED_FUNC_ARG)
 declare_exception(REALLOC_NO_RULE)
 {
         str_property info = "No rule found for reallocation current object";
-        bool_property critical = "True";
+        bool_property critical = true;
         owner_property owner = TREE;
+};
+
+declare_exception(USER_DEFINED_FUNCTION_TAKES_NUMBER)
+{   
+    str_property info = "A user defined function can only take single number";
+    bool_property critical = false;
+    owner_property owner = NODE;
+
+
 };
 #endif //EXCEPTION_HELPER_INCLUDED

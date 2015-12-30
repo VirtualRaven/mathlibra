@@ -105,56 +105,60 @@ namespace function_helper
         template<typename T> T convertData(node_base* n )
         {
             auto tmp = n->data->eval();
-           if(tmp->stores() == interface::get_storage<T> )
+           if(tmp->stores() == interface::get_storage<T>::t() )
            {
-                auto tmp2 = base_type<T>(*static_cast<base_type<T*>>(tmp));
+                auto tmp2 = T(*static_cast<T*>(tmp)); 
                 n->free_type(tmp);
                 return tmp2;
            }
            else
            {
-                n->free_type(n);
+                n->free_type(tmp);
                 throw exception("Expected argument of type mat_mat");
            } 
         }
 
-	template<> nodeDataInterface* getData<nodeDataInterface*>(node_base * n)
+	template<> inline nodeDataInterface* getData<nodeDataInterface*>(node_base * n)
 	{
 		return n->data;
 	}
          
-        template<> mat_mat getData<mat_mat>(node_base *n)
+        template<> inline mat_mat getData<mat_mat>(node_base *n)
         {
              return convertData<mat_mat>(n); 
         }
-        template<> char_mat getData<char_mat>(node_base *n)
+        template<> inline char_mat getData<char_mat>(node_base *n)
         {
             return convertData<char_mat>(n);
         }
-        template<> num_mat getData<num_mat>(node_base* n)
+        template<> inline num_mat getData<num_mat>(node_base* n)
         {
             return convertData<num_mat>(n);
         }
-	template<> double getData<double>(node_base * n)
+	template<> inline double getData<double>(node_base * n)
 	{
 	    auto tmp = n->data->eval();
             double res=0;
-            if(tmp.isValue())
+            if(tmp->isNumber())
             {
-                res=tmp.toValue();   
+                res=tmp->toNumber();   
+                n->free_type(tmp);
+                return res;
             }
-            n->free_type(tmp);
-            if(!tmp.isSingleton)
-            {
+            else
+            {   
+                n->free_type(tmp);
                 throw exception("Expected type convertaible to bool");
             }
-            return res;
 	}
 
-
+        template <typename... argN> struct func_type_double
+        {
+            typedef double(*f_type)(argN...);
+        };
 	template <typename... argN> struct func_type
 	{
-		 typedef type*(*type)(argN...);
+		 typedef interface::type*(*f_type)(argN...);
 	};
 /**
  * Fills the and parameter package with data. It uses the getData() function to exctract data from the nodes an fills the parameter_package wiith it.
@@ -186,7 +190,7 @@ template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> paramet
 	 *
 	 */
 	
-	template< typename... argN> type* forward(typename func_type<argN...>::type  func, node_base * n)
+	template< typename... argN> type* forward(typename func_type<argN...>::f_type  func, node_base * n)
 	{
 		auto args = n->getArgs();
 		if (args.size() != sizeof...(argN))
@@ -197,7 +201,7 @@ template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> paramet
 		parameter_package::package<argN...> pack = fillPackage<argN...>(args);
 		try
 		{
-			auto tmp =parameter_package::package_forward<type*, typename func_type<argN...>::type>(func, pack);
+			auto tmp =parameter_package::package_forward<type*, typename func_type<argN...>::f_type>(func, pack);
                         return n->realloc(tmp);
 		}
 		catch (std::exception& e)

@@ -32,7 +32,7 @@ namespace interface
 
 		//Basic controll functions for the interpreter
 		virtual void interpret() = 0; //Interprets expression provided by set
-		virtual number_type exec() = 0; //Evaluates and returns the value of the expression
+		virtual interface::type_ptr exec() = 0; //Evaluates and returns the value of the expression
 		virtual void set(const char * expression, unsigned short lenght) = 0; //Sets the expression to be interpret
 		virtual ~interpreter_interface();
 		

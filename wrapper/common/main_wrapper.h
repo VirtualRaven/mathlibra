@@ -2,6 +2,7 @@
 #define LIB_INTERFACE_INCLUED
 #include <vector>
 #include <string>
+#include "core/core/type_interface.h"
 namespace interface
 {
 
@@ -15,7 +16,7 @@ namespace interface
         struct mem_obj_api
         {
             std::string name;
-            double value;
+            type* value;
             bool    isConst;
         };
 
@@ -32,7 +33,7 @@ namespace interface
 	public:
 		virtual void set_arg(std::string str) = 0;
 		virtual void interpret_arg() = 0;
-		virtual double execute_arg() = 0;
+		virtual interface::type_ptr execute_arg() = 0;
 		virtual wrapper_exception_info get_exception_info() = 0;
 		virtual bool exceptionOccured() = 0;
 
@@ -43,11 +44,11 @@ namespace interface
 
 		//Memroy unit 
 		virtual std::vector<std::string> getVariableNames() = 0;
-		virtual double getVariableValue(std::string  name) = 0;
+		virtual type* getVariableValue(std::string  name) = 0;
                 virtual mem_obj_api getVariable(std::string name)=0;
                 virtual mem_obj_api getVariable(size_t index)=0;
-		virtual void setVariable(std::string name, double value) = 0;
-		virtual void createVariable(std::string name, double value) = 0;
+		virtual void setVariable(std::string name, type* value) = 0;
+		virtual void createVariable(std::string name, type* value) = 0;
 		virtual void clearVariables() = 0;
                 
                 virtual void manageVariable(std::string name,double value,bool isConst)=0;

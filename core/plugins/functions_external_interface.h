@@ -1,15 +1,15 @@
 
 #ifndef PLUGIN_SYSTEM_INCLUDED
 #define PLUGIN_SYSTEM_INCLUDED
-
+#include "core/type_interface.h"
+#include "core/tree_interface.h"
 #include <vector>
 /**
  * @namespace plugin Contains all plugin related functions
  */
 namespace plugin
 { 
-        typedef double number_type;
-	typedef number_type(*function_pointer)(tree::node_base*);
+	typedef interface::type*(*function_pointer)(tree::node_base*);
 	struct function
 	{
 		
@@ -29,7 +29,7 @@ namespace plugin
 	class function_plugin_base
 	{		
 	public:
-		virtual const unsigned int function_size() = 0;
+		virtual  unsigned int function_size() = 0;
 		virtual function* get_funcs() = 0;/**< @return Pointer to a list of the functions the plug-in provides*/
 		virtual void plugin_init_event() = 0; /**< Called when before the plug-in is loaded. Can be used to initilize memory storage or similar*/
 		virtual void plugin_destruction_event() = 0; /**< Called when the plug-in is about to be unloaded. Must finish with "destroy this" */

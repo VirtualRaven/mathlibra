@@ -20,7 +20,6 @@ namespace mathNode
 {
 
 
-typedef double number_type;
 
 
    class mathExpressionNode_val : public mathNode::mathExpressionNode_val_interface
@@ -28,9 +27,9 @@ typedef double number_type;
 	public:
 	
 		mathExpressionNode_val();
-		mathExpressionNode_val(number_type val);
+		mathExpressionNode_val(interface::type* val);
 		virtual ~mathExpressionNode_val();
-		number_type eval();
+                interface::type* eval();
 		void bind(node_base * context);
 		void destroy();
 
@@ -52,10 +51,10 @@ class mathExpressionNode_opr;
 		
                 mathExpressionNode_variable(std::string var, memory::memory* mem, bool b,math_func::function_interface * func);
 		virtual ~mathExpressionNode_variable();
-		number_type eval();
+                interface::type* eval();
 		bool is_pushable();
                 bool is_undefined();
-		void set(number_type);
+		void set(interface::type_ptr);
 		void set_mem_provider(memory::memory* mem_provider);
                 memory::memory* get_mem_provider();
 		mathExpressionNode_variable(const mathExpressionNode_variable&);
@@ -74,24 +73,13 @@ class mathExpressionNode_opr;
 		mathExpressionNode_opr(operators::generic_oper_ptr ptr);
         mathExpressionNode_opr(void);
 		virtual  ~mathExpressionNode_opr();
-		number_type eval();
+                interface::type* eval();
 		void bind(node_base * context);
 		void destroy();
 	};
 
 
 
-	class mathExpressionNode_func :  public mathNode::mathExpressionNode_func_interface
-	{
-	public:
-		
-		mathExpressionNode_func();
-		mathExpressionNode_func(funcPtr operation);
-		virtual ~mathExpressionNode_func();
-		number_type eval();
-		void bind(node_base * context);
-		void destroy();
-	};
 
 	class mathExpressionNode_func_tree : public mathNode::mathExpressionNode_func_tree_interface
 	{
@@ -100,7 +88,7 @@ class mathExpressionNode_opr;
 		mathExpressionNode_func_tree();
 		mathExpressionNode_func_tree(funcPtr operation);
 		virtual ~mathExpressionNode_func_tree();
-		number_type eval();
+                interface::type* eval();
 		void bind(node_base * context);
 		void destroy();
 	};
@@ -113,7 +101,7 @@ class mathExpressionNode_opr;
             mathExpressionNode_func_user();
             void bind(node_base * context);
             mathExpressionNode_func_user(function_obj::interpreted_func* ptr);
-            number_type eval();
+            interface::type* eval();
             void destroy();       
 
         };        

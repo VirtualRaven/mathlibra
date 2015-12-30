@@ -1,4 +1,5 @@
 #ifndef interpreter_H_INCLUDED
+
 #define interpreter_H_INCLUDED
 #include <stdlib.h>
 #include <string>
@@ -14,7 +15,6 @@
 #include "interface/interpreter_interface.h"
 #include "corax_virtual_machine.h"
 #include "core/function_obj.h"
-using mathNode::number_type;
 using tree::rootNode;
 using tree::node;
 
@@ -99,7 +99,7 @@ public:
 	void setMemory(memory::memory* mem_); /**< Load memory module. @param mem_ Pointer to the module to load. @note does not copy the module, therefore the pointer must remain valid through the lifetime of the interpeter. */
 	void setFunction(math_func::function_interface* functions); /**< Load function module. @param operators Pointer to the  module to load. @note does not copy the module, therefore the pointer must remain valid through the lifetime of the interpeter. */
 	void interpret(); /**< Construct the abstract syntax tree.  @note The tree remains until the next call to interpret() or the destructor. Thus several calls can be made to exec cheaply after the construction.*/
-	number_type exec(); /**< Evaluate the abstract syntax tree. @return The result of the tree evaluation. */
+        interface::type_ptr  exec(); /**< Evaluate the abstract syntax tree. @return The result of the tree evaluation. */
 	void set(const char * expression_, unsigned short lenght); /**< Sets the expression to interpret. @param expression_ Pointer to an c-style string. @param lenght the lenght of the string excluding any termination characters.*/
 	interpreter();
 	interpreter(interpreter&& other);

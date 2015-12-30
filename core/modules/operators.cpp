@@ -25,7 +25,7 @@ namespace operators
 
         type* multi(double x, double y)
 	{
-		make_type(x*y);
+		return make_type(x*y);
 	}
 	type* __multi(tree::nodeDataInterface* n)
 	{
@@ -33,7 +33,7 @@ namespace operators
 	}
 	type* divide(double x, double y)
 	{
-		make_type(x/y);
+		return make_type(x/y);
 	}
         type* declare_func(tree::nodeDataInterface* n)
         {
@@ -95,7 +95,7 @@ namespace operators
 
 	type* assign(mathNode::mathExpressionNode_variable_interface* var, number_type val)
 	{
-		var->set(val);
+		var->set(interface::type_ptr(make_type(val)));
 		return make_type(val);
 	}
 

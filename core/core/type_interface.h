@@ -1,3 +1,5 @@
+#ifndef TYPE_INTERFACE_H_INCLUDED
+#define TYPE_INTERFACE_H_INCLUDED
 #include <string>
 #include "ptr_protect.h"
 namespace interface
@@ -25,7 +27,7 @@ namespace interface
     {
         static constexpr storage_types t() { return CHAR;}
     };
-    template<>  struct get_storage<type>
+    template<>  struct get_storage<type*>
     {
         static constexpr storage_types t() { return  TYPE;}
     };
@@ -83,3 +85,4 @@ namespace interface
 
    
     }
+#endif //TYPE_INTERFACE_H_INCLUDED

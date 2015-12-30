@@ -60,7 +60,7 @@ namespace tree
 #endif
 
 
-        interface::type* realloc(interface::type* t)
+        interface::type* node::realloc(interface::type* t)
         {
             switch(t->stores())
             {
@@ -84,7 +84,7 @@ namespace tree
                     return nullptr;
             }
         }
-        void    free_type(interface::type* t)
+        void    node::free_type(interface::type* t)
         {
             delete t;
         }
