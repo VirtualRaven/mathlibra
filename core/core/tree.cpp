@@ -154,9 +154,9 @@ namespace tree
 	{
 
 	}
-	void node::set(nodeDataInterface* data)
+	void node::set(nodeDataInterface* data_)
 	{
-		this->data = data;
+		this->data = data_;
 		this->data->bind(this);
 	}
 

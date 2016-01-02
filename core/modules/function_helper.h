@@ -98,7 +98,6 @@ namespace function_helper
 		else
 		{
 			throw exception("Wrong argument type");
-			return nullptr;
 		}
 	}
         

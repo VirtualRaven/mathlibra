@@ -229,6 +229,7 @@ namespace math_func
 	
 }
 
+/*
 bool test::function_module_test1()
 {
 	math_func::function_interface func;
@@ -249,3 +250,5 @@ bool test::function_module_test1()
 	}
 	return false;
 }
+
+*/

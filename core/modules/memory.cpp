@@ -137,18 +137,18 @@ using interface::type_ptr;
 		}
 		else return mem_it->second.value.ptr();
 	}
-        memory::memoryObject  memory::memory::get_obj(std::string name)
+        memory::memoryObject&  memory::memory::get_obj(std::string name)
         {
 		mem_it = mem.find(name);
 		if (mem_it == mem.end())
 		{
 			memoryOops<MEM_VAR_NOT_FOUND>();
-			return {}; //Dummy expression to avoid warning, will never be executed
+			//return {}; //Dummy expression to avoid warning, will never be executed
 		}
 		else return mem_it->second;	
         } 
         
-        memory::memoryObject  memory::memory::get_obj(size_t index)
+        memory::memoryObject&  memory::memory::get_obj(size_t index)
         {
             if (index >= this->get_size())
             {
