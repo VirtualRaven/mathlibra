@@ -52,7 +52,7 @@ state lexical(const char * expr,
 	pstack paran;
 	
 	size_t oper_w_extra=0;
-	size_t oper_w_lowset=~0;
+	size_t oper_w_lowset=99999999;
 	size_t i=0;
 	size_t start=0;
 	i_state s = { &oper_w_extra, &i,&oper_w_lowset, &expr_len,&start};
@@ -266,7 +266,7 @@ void parse_number(const char * expr, tvec& tokens, i_state& s,operators::operato
 			valueLength++;
 	}
 	tmp->endPos = *(s.i)+valueLength;
-	short tmp_str_length = tmp->endPos+1 - tmp->startPos;
+	size_t tmp_str_length = tmp->endPos+1 - tmp->startPos;
 	//Create a temporary string from which we can convert the string to a double
 	char* tmp_str = nullptr;
         tmp_str = new char[tmp_str_length+1];

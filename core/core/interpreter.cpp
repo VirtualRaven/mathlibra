@@ -137,7 +137,7 @@ void debug::check_tree_mem_leak()
 			expressionLength =0;
 		}
 	}
-	void interpreter::allocExpression(short lenght )
+	void interpreter::allocExpression(size_t lenght )
 	{
 		if(expression)
 		{
@@ -288,7 +288,7 @@ void debug::check_tree_mem_leak()
 		interpreterOops<EXEC_UNFINISHED_EXPR>();
 		return 0;
 	}
-	void interpreter::set(const char * expression_, unsigned short lenght)
+	void interpreter::set(const char * expression_, size_t lenght)
 	{
 		if (lenght > 0)
 		{

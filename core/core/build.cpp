@@ -21,14 +21,14 @@ buildVector::buildVector(size_t lowLimit, size_t hiLimit, size_t vecOffset, std:
 	vecPtr(nullptr)
 	{}
 	//Return types, -1 error, >0 next operator index
-	size_t buildVector::calculateNextOperation(size_t lowLimit, size_t hiLimit)
+	size_t buildVector::calculateNextOperation(size_t _lowLimit, size_t _hiLimit)
 	{
 		size_t lowWheight = 9999;
-		size_t nextOperation = -2;
+		size_t nextOperation = 0;
 		size_t lenght = 0;
 		size_t values = 0;
 		token::baseToken* basePtr = nullptr;
-		for (size_t i = lowLimit; i < hiLimit; i++)
+		for (size_t i = _lowLimit; i < _hiLimit; i++)
 		{
 			 
 			basePtr = vecPtr->operator[](i);
@@ -66,7 +66,7 @@ buildVector::buildVector(size_t lowLimit, size_t hiLimit, size_t vecOffset, std:
 		}
 		else if (values == 1 && lenght == 1)	//There is nothing more to do, a value is the only member of the interval
 		{
-			for (size_t i = lowLimit; i < hiLimit; i++)
+			for (size_t i = _lowLimit; i < _hiLimit; i++)
 			{
 				basePtr = vecPtr->operator[](i);
 				if (basePtr->type == tree::VALUE || basePtr->type == tree::VARIABLE)

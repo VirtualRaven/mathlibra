@@ -68,7 +68,7 @@
 	{
 		return nullptr;
 	}
-	 token::parenthesesToken::parenthesesToken(short startPos, short endPos)
+	 token::parenthesesToken::parenthesesToken(size_t startPos, size_t endPos)
 	: baseToken(),
     opposit(0)
 	{
@@ -95,7 +95,7 @@
 	{
 		return true;
 	}
-	 token::valueToken::valueToken(short startPos, short endPos)
+	 token::valueToken::valueToken(size_t startPos, size_t endPos)
 	:baseToken(),
 	value(0)
 	{
@@ -129,7 +129,7 @@
 	{
 		return true;
 	}
-	 token::variableToken::variableToken(short startPos, short endPos, memory::memory* mem, math_func::function_interface* func)
+	 token::variableToken::variableToken(size_t startPos, size_t endPos, memory::memory* mem, math_func::function_interface* func)
 	:baseToken(),
         func(func),
 	variableName(""),
@@ -193,7 +193,7 @@ using token::ptr_type_enum;
 	{
 		return true;
 	}
-	 	 token::funcToken::funcToken(short startPos, short endPos, generalFuncPtr ptr)
+	 	 token::funcToken::funcToken(size_t startPos, size_t endPos, generalFuncPtr ptr)
 	:gptr(ptr),
 	baseWheight(4),
 	ptr_type(ptr_type_enum::gen)
@@ -202,7 +202,7 @@ using token::ptr_type_enum;
 		this->startPos = startPos;
 		this->type = tree::FUNCTION;
 	}
-        token::funcToken::funcToken(short startPos, short endPos,usr_ptr ptr)
+        token::funcToken::funcToken(size_t startPos, size_t endPos,usr_ptr ptr)
         : uptr(ptr),
         baseWheight(4),
         ptr_type(ptr_type_enum::usr)

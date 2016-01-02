@@ -70,11 +70,11 @@ namespace parameter_package
  */
 namespace function_helper
 {
-        class exception : std::exception
+        class f_exception : public std::exception
         {
             std::string _str;
             public:
-            exception(std::string e):_str(e) {}
+            f_exception(std::string e):_str(e) {}
             virtual const char* what() const noexcept
             {
                 return _str.c_str();
@@ -97,7 +97,7 @@ namespace function_helper
 		}
 		else
 		{
-			throw exception("Wrong argument type");
+			throw f_exception("Wrong argument type");
 		}
 	}
         
@@ -113,7 +113,7 @@ namespace function_helper
            else
            {
                 n->free_type(tmp);
-                throw exception("Expected argument of type mat_mat");
+                throw f_exception("Expected argument of type mat_mat");
            } 
         }
 
@@ -147,7 +147,7 @@ namespace function_helper
             else
             {   
                 n->free_type(tmp);
-                throw exception("Expected type convertaible to bool");
+                throw f_exception("Expected type convertaible to bool");
             }
 	}
 
