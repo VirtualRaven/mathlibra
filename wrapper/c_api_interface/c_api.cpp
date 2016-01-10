@@ -2,16 +2,35 @@
 #include "native_class_wrapper.h"
 #include <cstring>
 
+struct return_obj
+{
+	interface::type_ptr x;
+};
 
 struct handle_obj
 {
  	native::core_native_wrapper wrp;
+	return_obj __return_val;
 };
 
+const char* toStr(ret t)
+{
+	return t->x->toString();
+}
+bool   isNumber(ret t)
+{
+	return t->x->isNumber();
+}
+double toNumber(ret t)
+{
+	return t->x->toNumber();
+}
 
 mem_obj to_c_struct(interface::mem_obj_api obj)
 {
-    mem_obj tmp = {new char[obj.name.size()],obj.value,obj.isConst};
+    ret val = new return_obj {interface::type_ptr(obj.value)} ;
+    val->x.release(); //We don't own the pointer in obj so we have to make sure type_ptr does not free it. 
+    mem_obj tmp = {new char[obj.name.size()],val,obj.isConst};
     strcpy(tmp.name, obj.name.c_str()); 
     return tmp;
 
@@ -26,7 +45,8 @@ const char* to_c_str(std::string x)
 
 void free_mem_obj(mem_obj obj)
 {
-    delete obj.name;   
+    delete[] obj.name;  
+    delete  obj.value;
 }
 
 handle create_handle()
@@ -43,9 +63,10 @@ void interpret_arg(handle hwn,char * str)
 	hwn->wrp.set_arg(str);
 	hwn->wrp.interpret_arg();		
 }
-double execute_arg(handle hwn)
+ret execute_arg(handle hwn)
 {
-	return hwn->wrp.execute_arg();	
+	hwn->__return_val.x =  hwn->wrp.execute_arg();
+	return &hwn->__return_val;
 }
 bool mathlibra_error(handle hwn)
 {
@@ -58,10 +79,7 @@ error_obj  mathlibra_error_info(handle hwn)
         //Initlize an new error_obj struct and return it
         return {x.type, x.desc,x.isCritical, x.id };        
 }	
-void free_error_info(const char * info)
-{
-	delete info;
-}
+
 void enable_plugins(handle hwn)
 {
 	hwn->wrp.enablePlugins();
@@ -99,7 +117,7 @@ mem_obj mem_get(handle hwn,char* name)
 }
 void    mem_set(handle hwn,mem_obj obj)
 {
-    hwn->wrp.manageVariable(std::string(obj.name),obj.val,obj.const_specifier);       
+    hwn->wrp.manageVariable(std::string(obj.name),interface::type_ptr(obj.value->x->copy()),obj.const_specifier);       
 }
 
 func_obj_array func_get(handle hwn)

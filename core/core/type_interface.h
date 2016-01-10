@@ -2,6 +2,9 @@
 #define TYPE_INTERFACE_H_INCLUDED
 #include <string>
 #include "ptr_protect.h"
+#ifdef TYPE_MEM_TEST
+#include "core/object_counter.h"
+#endif
 namespace interface
 {
     
@@ -32,13 +35,11 @@ namespace interface
         static constexpr storage_types t() { return  TYPE;}
     };
     
-    template<typename T> class iterator
-    {
-
-    };
-
-
+ 
     class type
+#ifdef TYPE_MEM_TEST
+	:public util::countable<type>
+#endif
     {
         public:
         virtual size_t  sizeN() const =0;

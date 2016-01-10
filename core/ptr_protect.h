@@ -1,5 +1,6 @@
 #ifndef PTR_PROTECT_H
 #define PTR_PROTECT_H
+#include "exception_helper.h"
 /**
  *This file contains templates for implementing a simple smart pointer interface
  */
@@ -79,8 +80,16 @@ class ptr_protect<T,B,true>
             }
         }
     public:
-        ptr_protect(T ptr): _ptr(ptr), _enabled(true){}
-        ptr_protect(ptr_protect&& x) : _ptr(x._ptr), _enabled(true) {x.release(); x._ptr=nullptr;}
+        explicit ptr_protect(T ptr): _ptr(ptr), _enabled(true){}
+        ptr_protect(ptr_protect&& x) : _ptr(x._ptr), _enabled(true)
+	{
+		if(!x._enabled)
+		{
+			x.release();	
+			__mathlibra__raise<PTR_PROTECT_MOVED_FREED_PTR,PTR_PROTECT>();
+		}
+		x.release(); x._ptr=nullptr;
+	}
         ptr_protect(): _ptr(nullptr), _enabled(true){}
         
         ~ptr_protect()

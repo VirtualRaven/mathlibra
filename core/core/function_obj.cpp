@@ -41,7 +41,7 @@ void interpreted_func::__prepare_function()
 {
 	for (auto var : this->global_mem->allVars())
 	{
-		this->local_mem.set(var, this->global_mem->get(var), true, true);
+		this->local_mem.set(var, interface::type_ptr(this->global_mem->get(var)->copy()), true, true);
 	}
 	this->__make_local_context(&this->__tree);
 }

@@ -23,16 +23,23 @@ template<EXCEPTION T> void interpreterOops()
 
 
 	class interpreter;
-
-
-void debug::check_tree_mem_leak()
+template<typename T> void leak_check(util::object_stats<T> stats)
 {
-	util::object_stats<tree::nodeDataInterface> stats;
 	std::cout << "COUNTABLE ASSERT RUNNING\n" << "STATS: \n" << "total: " << stats.get_total() << "\ncurrent: " << stats.get_current() << "\ndeleted: " << stats.get_deleted() << std::endl;
 	if(stats.get_total() != stats.get_deleted())
 	{
 		interpreterOops<MEMORY_LEAK_ASSERT>();
 	}	
+}
+
+void debug::check_tree_mem_leak()
+{
+	std::cout << "DEBUG LEAK CHECK\nNodes:\n";
+	leak_check(util::object_stats<tree::nodeDataInterface>());
+	#ifdef TYPE_MEM_TEST
+	std::cout << "Types:\n";
+	leak_check(util::object_stats<interface::type>());
+	#endif
 }
 
 
@@ -282,11 +289,11 @@ void debug::check_tree_mem_leak()
             this->root.integrityTest();
 #endif
 			this->root.TakeContext();
-			return this->root.data->eval();
+			return interface::type_ptr(this->root.data->eval());
 
         }
 		interpreterOops<EXEC_UNFINISHED_EXPR>();
-		return 0;
+		return interface::type_ptr(nullptr);
 	}
 	void interpreter::set(const char * expression_, size_t lenght)
 	{

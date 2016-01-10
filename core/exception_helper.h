@@ -49,7 +49,8 @@ enum EXCEPTION {
 	TOKEN_NO_MEM_MODULE,
 	TOKEN_FUNCTION_NULL_POINTER,
         REALLOC_NO_RULE,
-        USER_DEFINED_FUNCTION_TAKES_NUMBER
+        USER_DEFINED_FUNCTION_TAKES_NUMBER,
+	PTR_PROTECT_MOVED_FREED_PTR
 	};
 
 //* Lists all possible exception owners
@@ -63,7 +64,8 @@ enum EXCEPTION_TYPE {
 		BUILD,
 		NODE,
 		TOKEN,
-                TYPE
+                TYPE,
+		PTR_PROTECT
 };
 
 
@@ -191,9 +193,20 @@ declare_exception_owner(TYPE)
 {
     str_property str = "Type Oops";
 };
+
+declare_exception_owner(PTR_PROTECT)
+{
+	str_property str = "Ptr protect Oops (Severe bug)";
+};
 /***************************************************************
 *              LIST OF EXCEPTIONS
 **************************************************************/
+declare_exception(PTR_PROTECT_MOVED_FREED_PTR)
+{
+	str_property info = "Tried to move released pointer";
+	bool_property critical = true;
+	owner_property owner = PTR_PROTECT;
+};
 declare_exception(MEMORY_LEAK_ASSERT)
 {
 	str_property info = "ASSERT FAILURE,possible memory leak in program";

@@ -2,7 +2,7 @@
 #define LIB_INTERFACE_INCLUED
 #include <vector>
 #include <string>
-#include "core/core/type_interface.h"
+#include "core/type_interface.h"
 namespace interface
 {
 
@@ -47,11 +47,11 @@ namespace interface
 		virtual type* getVariableValue(std::string  name) = 0;
                 virtual mem_obj_api getVariable(std::string name)=0;
                 virtual mem_obj_api getVariable(size_t index)=0;
-		virtual void setVariable(std::string name, type* value) = 0;
-		virtual void createVariable(std::string name, type* value) = 0;
+		virtual void setVariable(std::string name, interface::type_ptr&& value) = 0;
+		virtual void createVariable(std::string name, interface::type_ptr&& value) = 0;
 		virtual void clearVariables() = 0;
                 
-                virtual void manageVariable(std::string name,double value,bool isConst)=0;
+                virtual void manageVariable(std::string name,interface::type_ptr&& value,bool isConst)=0;
                 virtual bool  isConstVariable(std::string name)=0;
                 virtual unsigned int getNumVariables()=0;
                 virtual bool isDefined(std::string name)=0;

@@ -59,7 +59,7 @@ namespace native
 		}
 
 	}
-	double core_native_wrapper::execute_arg()
+	interface::type_ptr core_native_wrapper::execute_arg()
 	{
 		
 		try
@@ -70,7 +70,7 @@ namespace native
 		catch (exception& e)
 		{
 		    this->__handle(e);
-			return 0;
+		    return interface::type_ptr(nullptr);
 		}
 	}
 
@@ -102,7 +102,7 @@ namespace native
 		}
 	}
 
-	double core_native_wrapper::getVariableValue(std::string  name)
+	interface::type* core_native_wrapper::getVariableValue(std::string  name)
 	{
 		try
 		{
@@ -115,11 +115,11 @@ namespace native
 		}
 		
 	}
-	void core_native_wrapper::setVariable(std::string name, double value)
+	void core_native_wrapper::setVariable(std::string name, interface::type_ptr&& value)
 	{
 		try
 		{
-			this->mem.set_ignore_const(name,value,false,false);
+			this->mem.set_ignore_const(name,std::move(value),false,false);
 		}
 		catch (exception& e)
 		{
@@ -127,11 +127,11 @@ namespace native
 			return;
 		}
 	}
-	void core_native_wrapper::createVariable(std::string name, double value)
+	void core_native_wrapper::createVariable(std::string name, interface::type_ptr&& value)
 	{
 		try
 		{
-			this->mem.set(name,value,true,false);
+			this->mem.set(name,std::move(value),true,false);
 		}
 		catch (exception& e)
 		{
@@ -199,11 +199,11 @@ namespace native
                     return std::vector<interface::func_obj_api>();
 		}
 	}
-	void core_native_wrapper::manageVariable(std::string name,double value,bool isConst)
+	void core_native_wrapper::manageVariable(std::string name,interface::type_ptr&& value,bool isConst)
         {
             try
             {
-               this->mem.set_ignore_const(name,value,true,isConst);
+               this->mem.set_ignore_const(name,std::move(value),true,isConst);
             }
             catch (exception& e)
 	    {
@@ -214,7 +214,7 @@ namespace native
         {
             try
             {
-                auto obj = this->mem.get_obj(name);
+		memory::memoryObject& obj = this->mem.get_obj(name);
                 return obj.constant;
             }
             catch (exception& e)
@@ -244,9 +244,9 @@ namespace native
           
             try
             {
-               auto obj = this->mem.get_obj(name);
+               memory::memoryObject& obj = this->mem.get_obj(name);
                mem_obj_api tmp_obj;
-               tmp_obj.value = obj.value;
+               tmp_obj.value = obj.value.ptr();
                tmp_obj.isConst = obj.constant;
                tmp_obj.name = obj.name;
                return tmp_obj;
@@ -261,9 +261,9 @@ namespace native
         {
             try
             {
-               auto obj = this->mem.get_obj(index);
+	       memory::memoryObject& obj = this->mem.get_obj(index);
                mem_obj_api tmp_obj;
-               tmp_obj.value = obj.value;
+               tmp_obj.value = obj.value.ptr();
                tmp_obj.isConst = obj.constant;
                tmp_obj.name = obj.name;
                 return tmp_obj; 
