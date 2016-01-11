@@ -64,7 +64,6 @@ enum EXCEPTION_TYPE {
 		BUILD,
 		NODE,
 		TOKEN,
-                TYPE,
 		PTR_PROTECT
 };
 
@@ -189,10 +188,6 @@ declare_exception_owner(TOKEN)
 	str_property str = "Token Oops";
 };
 
-declare_exception_owner(TYPE)
-{
-    str_property str = "Type Oops";
-};
 
 declare_exception_owner(PTR_PROTECT)
 {

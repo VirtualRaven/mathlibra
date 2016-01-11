@@ -64,17 +64,17 @@ namespace tree
         {
             switch(t->stores())
             {
-                case interface::CHAR:
+                case T_CHAR:
                     {
                         auto tmp = static_cast<base_type<char>*>(t);
                         return new base_type<char>(*tmp);         
                     }          
-                case interface::TYPE:
+                case T_TYPE:
                     {
                         auto tmp = static_cast<base_type<type*>*>(t);
                         return new base_type<type*>(*tmp);         
                     }          
-                case interface::DOUBLE:
+                case T_DOUBLE:
                     {
                         auto tmp = static_cast<base_type<double>*>(t);
                         return new base_type<double>(*tmp);         

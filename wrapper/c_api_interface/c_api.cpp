@@ -2,36 +2,98 @@
 #include "native_class_wrapper.h"
 #include <cstring>
 
-struct return_obj
-{
-	interface::type_ptr x;
-};
+using  interface::type;
+
 
 struct handle_obj
 {
  	native::core_native_wrapper wrp;
-	return_obj __return_val;
+	interface::type_ptr __return_val;
 };
 
 const char* toStr(ret t)
 {
-	return t->x->toString();
+	return static_cast<type*>(t)->toString();
 }
 bool   isNumber(ret t)
 {
-	return t->x->isNumber();
+	return static_cast<type*>(t)->isNumber();
 }
 double toNumber(ret t)
 {
-	return t->x->toNumber();
+	return static_cast<type*>(t)->toNumber();
 }
+
+extern unsigned int sizeM(ret t)
+{
+	return static_cast<type*>(t)->sizeM();
+}
+extern unsigned int sizeN(ret t)
+{
+	return static_cast<type*>(t)->sizeN();
+}
+extern storage_types getStorage(ret t)
+{
+	return static_cast<type*>(t)->stores();
+}
+
+extern double* getDoubleArray(ret t)
+{	
+	auto tm = static_cast<type*>(t);
+#ifndef UNSAFE_C_API
+if (tm->stores() == storage_types::T_DOUBLE)
+{
+#endif
+	return static_cast<num_mat*>(tm)->raw();
+#ifndef UNSAFE_C_API
+}
+else
+{
+	return nullptr;
+}
+#endif
+}
+
+extern char* getCharArray(ret t)
+{
+	auto tm = static_cast<type*>(t);
+#ifndef UNSAFE_C_API
+	if (tm->stores() == storage_types::T_CHAR)
+	{
+#endif
+		return static_cast<char_mat*>(tm)->raw();
+#ifndef UNSAFE_C_API
+	}
+	else
+	{
+		return nullptr;
+	}
+#endif
+}
+
+extern ret getTypeArray(ret t)
+{
+	auto tm = static_cast<type*>(t);
+#ifndef UNSAFE_C_API
+	if (tm->stores() == storage_types::T_TYPE)
+	{
+#endif
+		return static_cast<mat_mat*>(tm)->raw();
+#ifndef UNSAFE_C_API
+	}
+	else
+	{
+		return nullptr;
+	}
+#endif
+}
+
+
 
 mem_obj to_c_struct(interface::mem_obj_api obj)
 {
-    ret val = new return_obj {interface::type_ptr(obj.value)} ;
-    val->x.release(); //We don't own the pointer in obj so we have to make sure type_ptr does not free it. 
-    mem_obj tmp = {new char[obj.name.size()],val,obj.isConst};
-    strcpy(tmp.name, obj.name.c_str()); 
+    mem_obj tmp = {new char[obj.name.size()],obj.value,obj.isConst};
+    strncpy(tmp.name, obj.name.c_str(), obj.name.size());
     return tmp;
 
 }
@@ -39,14 +101,13 @@ mem_obj to_c_struct(interface::mem_obj_api obj)
 const char* to_c_str(std::string x)
 {
   char * str = new char[x.size()];
-  strcpy(str,x.c_str());
+  strncpy(str,x.c_str(), x.size());
   return str;
 }
 
 void free_mem_obj(mem_obj obj)
 {
-    delete[] obj.name;  
-    delete  obj.value;
+    delete[] obj.name;
 }
 
 handle create_handle()
@@ -65,7 +126,7 @@ void interpret_arg(handle hwn,char * str)
 }
 ret execute_arg(handle hwn)
 {
-	hwn->__return_val.x =  hwn->wrp.execute_arg();
+	hwn->__return_val =  hwn->wrp.execute_arg();
 	return &hwn->__return_val;
 }
 bool mathlibra_error(handle hwn)
@@ -117,7 +178,9 @@ mem_obj mem_get(handle hwn,char* name)
 }
 void    mem_set(handle hwn,mem_obj obj)
 {
-    hwn->wrp.manageVariable(std::string(obj.name),interface::type_ptr(obj.value->x->copy()),obj.const_specifier);       
+    hwn->wrp.manageVariable(std::string(obj.name),
+						interface::type_ptr(static_cast<type*>(obj.value)->copy()),
+						obj.const_specifier);       
 }
 
 func_obj_array func_get(handle hwn)

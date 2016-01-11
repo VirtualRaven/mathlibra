@@ -2,6 +2,7 @@
 #define TYPE_INTERFACE_H_INCLUDED
 #include <string>
 #include "ptr_protect.h"
+#include "core/type_enum.h"
 #ifdef TYPE_MEM_TEST
 #include "core/object_counter.h"
 #endif
@@ -10,29 +11,23 @@ namespace interface
     
     class type;
 
-    enum storage_types
-    {
-        UNKN,
-        DOUBLE,
-        CHAR,
-        TYPE
-    };
+
 
     template<typename T> struct get_storage
     {
-        static constexpr storage_types t() {return UNKN;} 
+        static constexpr storage_types t() {return T_UNKN;} 
     };
     template<>  struct get_storage<double>
     {
-        static constexpr storage_types t() { return DOUBLE;}
+        static constexpr storage_types t() { return T_DOUBLE;}
     };
     template<> struct get_storage<char>
     {
-        static constexpr storage_types t() { return CHAR;}
+        static constexpr storage_types t() { return T_CHAR;}
     };
     template<>  struct get_storage<type*>
     {
-        static constexpr storage_types t() { return  TYPE;}
+        static constexpr storage_types t() { return  T_TYPE;}
     };
     
  

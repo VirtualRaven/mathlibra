@@ -175,7 +175,10 @@ template<typename T> class   base_type : public interface::t_type<T>
     std::string _str;
    
     public:
-
+		T* raw()
+		{
+			return _mat;
+		}
     size_t  sizeN() const
     {
         return _n;
@@ -229,11 +232,11 @@ template<typename T> class   base_type : public interface::t_type<T>
         }
         bool    isString() const 
         {
-            return isList() && this->stores() == interface::storage_types::CHAR;
+            return isList() && this->stores() == storage_types::T_CHAR;
         }
         bool    isNumber() const
         {
-            return isSingleton() && this->stores() == interface::storage_types::DOUBLE;
+            return isSingleton() && this->stores() == storage_types::T_DOUBLE;
         }
         T   toSingleton() const 
         {
