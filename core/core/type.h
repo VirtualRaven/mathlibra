@@ -13,13 +13,13 @@ template<typename T,typename F> std::string __toString(T* obj, size_t  n, size_t
 {
     std::string tmp;
     tmp.reserve(4*n*m);
-	if (n > 1)
+	if (n > 1 && m != 1)
 	{
 		tmp.push_back('[');
 	}
 	for(size_t  i = 0; i < n; i++)
     {   
-        if( m > 1 &&  n != 1)
+        if( m > 1)
         {
             tmp.push_back('[');
         }
@@ -31,7 +31,7 @@ template<typename T,typename F> std::string __toString(T* obj, size_t  n, size_t
                 tmp.push_back(',');
             }
         }
-        if(m > 1&& n != 1) 
+        if(m > 1) 
         {
             tmp.push_back(']');
         }
@@ -40,7 +40,7 @@ template<typename T,typename F> std::string __toString(T* obj, size_t  n, size_t
             tmp.push_back(',');
         }  
     }
-	if (n > 1)
+	if (n > 1 && m != 1)
 	{
 		tmp.push_back(']');
 	}

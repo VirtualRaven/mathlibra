@@ -27,7 +27,7 @@ bool menu(memory::memory& mem,math_func::function_interface& func)
 		std::vector<std::string> vars = mem.allVars();
 		for (unsigned int i = 0; i < vars.size(); i++)
 		{
-			std::cout <<"Variable "<<i+1 << ": " << vars[i] << " = " << mem.get(vars[i]) << "\n";
+			std::cout <<"Variable "<<i+1 << ": " << vars[i] << " = " << mem.get(vars[i])->toString() << "\n";
 		}
 		if (vars.size() == 0)
 		{
@@ -130,7 +130,7 @@ int main(int argc, char* argv[])
 
 
 	bool exit = false;
-     std::cout << "Calculator backend test\nLukas Rahmn 2015\n\nEnter an expression or write menu to open the menu\n\n";
+     std::cout << "Calculator backend test\nLukas Rahmn 2016\n\nEnter an expression or write menu to open the menu\n\n";
 	do
 	{
 

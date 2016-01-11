@@ -89,7 +89,7 @@
 
 	 tree::nodeDataInterface* token::valueToken::node()
 	{
-		return new mathNode::mathExpressionNode_val(make_type(this->value));
+		return new mathNode::mathExpressionNode_val(this->value->copy());
 	}
 	 bool token::valueToken::hasNode()
 	{
@@ -97,7 +97,7 @@
 	}
 	 token::valueToken::valueToken(size_t startPos, size_t endPos)
 	:baseToken(),
-	value(0)
+	value(nullptr)
 	{
 
 		this->endPos = endPos;

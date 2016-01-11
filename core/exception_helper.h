@@ -48,9 +48,10 @@ enum EXCEPTION {
 	NODE_EVAL_UNDEFINED_FUNC,
 	TOKEN_NO_MEM_MODULE,
 	TOKEN_FUNCTION_NULL_POINTER,
-        REALLOC_NO_RULE,
-        USER_DEFINED_FUNCTION_TAKES_NUMBER,
-	PTR_PROTECT_MOVED_FREED_PTR
+    REALLOC_NO_RULE,
+    USER_DEFINED_FUNCTION_TAKES_NUMBER,
+	PTR_PROTECT_MOVED_FREED_PTR,
+	SYNTAX_EXPECTED_END_OF_STRING
 	};
 
 //* Lists all possible exception owners
@@ -67,6 +68,7 @@ enum EXCEPTION_TYPE {
 		PTR_PROTECT
 };
 
+extern char __exception_buffer[128];
 
 
 	//* Property class which holds properties for EXCEPTION_TYPE
@@ -98,10 +100,11 @@ template<EXCEPTION T,EXCEPTION_TYPE X,short assert=StaticAssert<exception_proper
 //Exceptions thrown by this function has to implement all properties except info.
 template<EXCEPTION T,EXCEPTION_TYPE X,short assert=StaticAssert<exception_property<T>::owner==X>::assert> inline void __mathlibra__runtime__raise(const char * message)
 {
+	strncpy(&__exception_buffer[0], message, 127);
 
 	//Terribly sorry that we had to end it likes this :/
 	throw exception(exception_type_prop<exception_property<T>::owner>::str,
-			message,
+			&__exception_buffer[0],
 			exception_property<T>::critical,
 			T);
 }
@@ -531,6 +534,14 @@ declare_exception(USER_DEFINED_FUNCTION_TAKES_NUMBER)
     bool_property critical = false;
     owner_property owner = NODE;
 
+
+};
+
+declare_exception(SYNTAX_EXPECTED_END_OF_STRING)
+{
+	str_property info = "Expected ending \" at end of string";
+	bool_property critical = false;
+	owner_property owner = INTERPRETER;
 
 };
 #endif //EXCEPTION_HELPER_INCLUDED

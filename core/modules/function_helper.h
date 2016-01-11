@@ -113,7 +113,7 @@ namespace function_helper
            else
            {
                 n->free_type(tmp);
-                throw f_exception("Expected argument of type mat_mat");
+                throw f_exception("Wrong argument type");
            } 
         }
 
@@ -134,6 +134,7 @@ namespace function_helper
         {
             return convertData<num_mat>(n);
         }
+	
 	template<> inline double getData<double>(node_base * n)
 	{
 	    auto tmp = n->data->eval();
@@ -147,7 +148,7 @@ namespace function_helper
             else
             {   
                 n->free_type(tmp);
-                throw f_exception("Expected type convertaible to bool");
+                throw f_exception("Expected type convertaible to double");
             }
 	}
 

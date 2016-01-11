@@ -16,21 +16,43 @@ namespace internal_helper
 	template<typename T, typename T2> type* forward_fast(typename function_helper::func_type<T, T2>::f_type func, tree::nodeDataInterface*n)
 	{
 		auto wrapper = tree::nodeDataInterface_wrapper_access(n);
-		
-		return func(function_helper::getData<T>(wrapper->sub1()), function_helper::getData<T2>(wrapper->sub2()));
+		try
+		{
+			return func(function_helper::getData<T>(wrapper->sub1()), function_helper::getData<T2>(wrapper->sub2()));
+		}
+		catch (std::exception& e)
+		{
+			wrapper->raiseException(e.what());
+			return nullptr;
+		}	
 	}
         
 	template<typename T, typename T2> type* forward_fast(typename function_helper::func_type_double<T, T2>::f_type func, tree::nodeDataInterface*n)
 	{
 		auto wrapper = tree::nodeDataInterface_wrapper_access(n);
-		
-		return make_type(func(function_helper::getData<T>(wrapper->sub1()), function_helper::getData<T2>(wrapper->sub2())));
+		try
+		{
+			return make_type(func(function_helper::getData<T>(wrapper->sub1()), function_helper::getData<T2>(wrapper->sub2())));
+		}
+		catch (std::exception& e)
+		{
+			wrapper->raiseException(e.what());
+			return nullptr;
+		}	
 	}
 
 
         template<typename T> type* forward_fast(typename  function_helper::func_type_double<T>::f_type func, tree::node_base* n)
         {
-            return make_type(func(function_helper::getData<T>(n->sub1())));
+			try
+			{
+				return make_type(func(function_helper::getData<T>(n->sub1())));
+			}
+			catch (std::exception& e)
+			{
+				n->raiseException(e.what());
+				return nullptr;
+			}
         }
     
 }

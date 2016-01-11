@@ -71,7 +71,7 @@ struct parenthesesToken : public baseToken
 
 struct valueToken : public baseToken
 {
-	double value; /**< The value of the token, for example 1 or 4e100 */
+	interface::type_ptr value; /**< The value of the token, for example 1 or 4e100 */
 
 	tree::nodeDataInterface* node();
 	bool  hasNode();

@@ -19,6 +19,7 @@ namespace __internal
 	void pushValue(tvec&,i_state&,double val);
 	void updateStartPoint(tvec&,i_state&,size_t w);
 	//Parsers
+	void parse_string(const char * expr, tvec& tokens, i_state& s);
 	void parse_parantheses1(tvec&,i_state&, pstack&, operators::operators_interface*);
 	void parse_parantheses2(tvec&,i_state&, pstack&);
 	void parse_number(const char*,tvec&, i_state&,operators::operators_interface*);  
