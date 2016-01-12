@@ -84,10 +84,18 @@ namespace tree
                     return nullptr;
             }
         }
-        void    node::free_type(interface::type* t)
+        void    __free_type(interface::type* t)
         {
             delete t;
         }
+		void node::free_type(interface::type* t)
+		{
+			delete  t;
+		}
+		tree::node_base::free_func node::get_free_func()
+		{
+			return __free_type;
+		}
 	node * node::sub1()
 	{
 		return nodePtr1;

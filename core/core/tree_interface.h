@@ -56,8 +56,10 @@ namespace tree
 		virtual node_base * sub2()=0; /**< Gets the second child branch. @return Pointer to the second child branch.*/
 		virtual std::stack<tree::node_base*> getArgs() = 0; /**<Used for multi argument functions. It searches the child branches an splits for DUMMY nodes. @see DUMMY. Using the dummy node it splits up the child-branches in several "sub trees" each coresonding to an argument for an function. @see FUNCTION_TREE. */
 		virtual void raiseException(const char * inf)=0; /**<Raise an exception. This function is used to created an exception inside the core. @note It is primary thought to be used for passing exception over DLL-bundries, it is not made for internal use. \ For internal exceptions, overload the standard exception instead. @see exception. */
-                virtual interface::type* realloc(interface::type* t)=0; /**< Reallocates the the type by deepcopying the object. Used to tranfer object allocation form shared library memory space to mathlibra's memoryspace */
-                virtual void    free_type(interface::type* t)=0; /**< Deletes an type object. Used to free type object over dll bunderies" */
+        virtual interface::type* realloc(interface::type* t)=0; /**< Reallocates the the type by deepcopying the object. Used to tranfer object allocation form shared library memory space to mathlibra's memoryspace */
+		typedef void(*free_func)(interface::type*);
+		virtual void free_type(interface::type*) = 0;
+		virtual  free_func get_free_func()=0; /**< Get an pointer to an free function which deletes an type object. Used to free type object over dll bunderies" */
 	};
 }
 

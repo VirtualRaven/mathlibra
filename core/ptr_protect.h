@@ -68,20 +68,32 @@ class ptr_protect<T,array_type,false>
 template<typename T,bool B>
 class ptr_protect<T,B,true>
 {
+	typedef void(*del_func)(T);
     private:
         T _ptr;
         bool _enabled;
+		del_func _f;
         void __d()
         {
              if(_enabled && _ptr != nullptr)
             {
-                std_delete<T,B>::f(_ptr);  
-                _ptr=nullptr;
+				if (_f == nullptr)
+				{
+					std_delete<T, B>::f(_ptr);
+					_ptr = nullptr;
+				}
+				else
+				{
+					_f(_ptr);
+					_ptr = nullptr;
+				}
             }
         }
     public:
-        explicit ptr_protect(T ptr): _ptr(ptr), _enabled(true){}
-        ptr_protect(ptr_protect&& x) : _ptr(x._ptr), _enabled(true)
+		
+        explicit ptr_protect(T ptr): _ptr(ptr), _enabled(true), _f(nullptr){}
+		ptr_protect(T ptr,del_func f): _ptr(ptr), _enabled(true), _f(f){}
+        ptr_protect(ptr_protect&& x) : _ptr(x._ptr), _enabled(true), _f(x._f)
 	{
 		if(!x._enabled)
 		{
@@ -104,7 +116,8 @@ class ptr_protect<T,B,true>
             __d();
             this->_ptr = x._ptr;
             this->_enabled = x._enabled;
-            x.release();
+			this->_f = x._f;
+			x.release();
             x._ptr=nullptr;
             return *this;
         }

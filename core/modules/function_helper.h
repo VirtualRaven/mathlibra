@@ -134,6 +134,10 @@ namespace function_helper
         {
             return convertData<num_mat>(n);
         }
+		template<> inline interface::type_ptr getData<interface::type_ptr>(node_base* n)
+		{
+			return interface::type_ptr(n->data->eval(), n->get_free_func());
+		}
 	
 	template<> inline double getData<double>(node_base * n)
 	{

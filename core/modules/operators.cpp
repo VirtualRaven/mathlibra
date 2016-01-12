@@ -93,15 +93,17 @@ namespace operators
 		return internal_helper::forward_fast<number_type,number_type>( pow,n);
 	}
 
-	type* assign(mathNode::mathExpressionNode_variable_interface* var, number_type val)
+	type* assign(mathNode::mathExpressionNode_variable_interface* var, interface::type_ptr val)
 	{
-		var->set(interface::type_ptr(make_type(val)));
-		return make_type(val);
+		auto tmp = val->copy();
+		var->set(std::move(val));
+
+		return tmp;
 	}
 
 	type* __assign(tree::nodeDataInterface* n)
 	{
-		return internal_helper::forward_fast<mathNode::mathExpressionNode_variable_interface*, number_type>(assign, n);
+		return internal_helper::forward_fast<mathNode::mathExpressionNode_variable_interface*, interface::type_ptr>(assign, n);
 	}
 	
 	
