@@ -2,7 +2,9 @@
 
 #define TREE_INTERFACE_INCLUDED
 #include <stack>
+#ifdef TYPE_MEM_TEST
 #include "object_counter.h"
+#endif
 #include "core/type_interface.h"
 /**
  *@namespace tree Contains the tree classes. Provides the data types to orgenize data in a tree structure.
@@ -29,7 +31,10 @@ namespace tree
 	/**
 	 * A data interface for nodes. All nodes have to contain data which is of the type nodeDataInterface. Data like values, variables and function names are all stored using this interface.
 	 */
-	class nodeDataInterface: util::countable<nodeDataInterface>
+	class nodeDataInterface
+#ifdef TYPE_MEM_TEST
+		: util::countable<nodeDataInterface>
+#endif
 	{
 	protected:
 		node_base * wrapperNode;

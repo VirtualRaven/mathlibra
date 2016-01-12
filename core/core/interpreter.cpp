@@ -34,12 +34,14 @@ template<typename T> void leak_check(util::object_stats<T> stats)
 
 void debug::check_tree_mem_leak()
 {
-	std::cout << "DEBUG LEAK CHECK\nNodes:\n";
+#ifdef TYPE_MEM_TEST
+	std::cout << "DEBUG LEAK CHECK\n\nNodes:\n";
 	leak_check(util::object_stats<tree::nodeDataInterface>());
-	#ifdef TYPE_MEM_TEST
-	std::cout << "Types:\n";
+	std::cout << "\nTypes:\n";
 	leak_check(util::object_stats<interface::type>());
-	#endif
+#else
+	std::cout << "This library was built with memory leak check disabled\n"
+#endif
 }
 
 
