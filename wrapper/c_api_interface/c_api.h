@@ -39,7 +39,7 @@ extern "C"
 	extern char*   getCharArray(ret); /**< Same as getDoubleArray(ret) but for char types.  
 									  @see  getDoubleArray(ret) */
 	extern ret    getTypeArray(ret); /**< Same as getDoubleArray(ret) but for recursive ret types.
-									  @see  getDoubleArray(ret) /
+									  @see  getDoubleArray(ret) */
 	/*
 	 * Error handling functions.
 	 */

@@ -1,6 +1,7 @@
 #ifndef EXCEPTION_HELPER_INCLUDED
 #define EXCEPTION_HELPER_INCLUDED
 #include "exception.h"
+#include <cstring>
 //* All exceptions that can be thrown is decalared in this enum
 enum EXCEPTION {
 	MEMORY_LEAK_ASSERT,
