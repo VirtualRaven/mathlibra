@@ -26,7 +26,7 @@ template<typename T,typename F> std::string __toString(T* obj, size_t  n, size_t
         }
         for(size_t  j =0; j < m; j++)
         {
-            tmp += f(obj[i*n+j]);
+            tmp += f(obj[i*(n-1)+j]);
             if(j != m-1)
             {
                 tmp.push_back(',');
@@ -38,7 +38,7 @@ template<typename T,typename F> std::string __toString(T* obj, size_t  n, size_t
         }
         if(i != n -1)
         {
-            tmp.push_back(',');
+            tmp.push_back('|');
         }  
     }
 	if (n > 1 && m != 1)
@@ -253,7 +253,7 @@ template<typename T> class   base_type : public interface::t_type<T>
 
         T   get(size_t  n, size_t m )
         {
-                return _mat[_n*n+m];
+                return _mat[(_n-1)*n+m];
         }
         base_type(const T* d,size_t n, size_t m) : 
         _m(m),
