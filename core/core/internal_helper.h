@@ -41,6 +41,18 @@ namespace internal_helper
 		}	
 	}
 
+        template<typename T> type* forward_fast(typename  function_helper::func_type<T>::f_type func, tree::node_base* n)
+        {
+			try
+			{
+				return func(function_helper::getData<T>(n->sub1()));
+			}
+			catch (std::exception& e)
+			{
+				n->raiseException(e.what());
+				return nullptr;
+			}
+        }
 
         template<typename T> type* forward_fast(typename  function_helper::func_type_double<T>::f_type func, tree::node_base* n)
         {

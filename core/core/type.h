@@ -2,6 +2,7 @@
 #define TYPE_H_INCLUDED
 #include "exception_helper.h"
 #include "type_interface.h"
+#include "ptr_protect.h"
 #include <iterator>
 #include <string>
 #include <cstring> //memcpy
@@ -43,6 +44,7 @@ template<typename T,typename F> std::string __toString(T* obj, size_t  n, size_t
 	if (n > 1 && m != 1)
 	{
 		tmp.push_back(']');
+		tmp.push_back('\n');
 	}
     return tmp;
 }
@@ -66,7 +68,7 @@ template<> inline std::string _t_toString<interface::type*>(interface::type** d,
 
 
 
-template<typename T,bool C=false> class type_iterator : std::iterator<std::random_access_iterator_tag,T>
+template<typename T,bool C=false> class type_iterator : public std::iterator<std::random_access_iterator_tag,T>
 {   
     int _m;
     int _n;
@@ -86,42 +88,46 @@ template<typename T,bool C=false> class type_iterator : std::iterator<std::rando
     }
 
     public: 
-    friend int operator-(const type_iterator<T>& x,const type_iterator<T>& y)
+    friend int operator-(const type_iterator& x,const type_iterator& y)
     {
         return x._i - y._i;   
     }
-    friend type_iterator<T,C> operator+(type_iterator<T,C> x, const int& n)
+    friend type_iterator operator+(type_iterator x, const int& n)
     {
         x._i+=n;
     }
-    friend type_iterator<T,C> operator+(const int& n, type_iterator<T,C> x)
+    friend type_iterator operator+(const int& n, type_iterator x)
     {
         return x+n;
     }
-    friend type_iterator<T,C> operator-(type_iterator<T,C> x, const int& n)
+    friend type_iterator operator-(type_iterator x, const int& n)
     {
         return x+(-n);
     }
-    friend bool operator<(const type_iterator<T,C>& x, const type_iterator<T,C>& y)
+    friend bool operator<(const type_iterator& x, const type_iterator& y)
     {
         return x._i < y._i;
     } 
-    friend bool operator >(const type_iterator<T,C>& x, const type_iterator<T,C>& y)
+    friend bool operator >(const type_iterator& x, const type_iterator& y)
     {
         return x._i > y._i;
     }
-    friend bool operator>=(const type_iterator<T,C>& x, const type_iterator<T,C>& y)
+    friend bool operator>=(const type_iterator& x, const type_iterator& y)
     {
         return x._i >=  y._i;
     }
     
-    friend bool operator<=(const type_iterator<T,C>& x, const type_iterator<T,C>& y)
+    friend bool operator<=(const type_iterator& x, const type_iterator& y)
     {
         return x._i <= y._i;
     }
     T& operator*()
     {
         return (*this)[_i];
+    }
+    T* operator->()
+    {
+    	return _mat+_to_index(_i);
     }
     T& operator[](int n)
     {
@@ -190,31 +196,22 @@ template<typename T> class   base_type : public interface::t_type<T>
     /*
      *  Iterators
      */
-
-    type_iterator<T> begin()
+    template<bool by_column=false> 
+    type_iterator<T,by_column> begin()
     {
-        return type_iterator<T>(_m,_n,0,_mat);
+        return type_iterator<T,by_column>(_m,_n,0,_mat);
     }
-    type_iterator<T> end()
+    template<bool by_column=false> 
+    type_iterator<T,by_column> end()
     {
-        return type_iterator<T>(_m,_n,_m*_n,_mat);
+        return type_iterator<T,by_column>(_m,_n,_m*_n,_mat);
     }
-    type_iterator<T> back()
+    template<bool by_column=false> 
+    type_iterator<T,by_column> back()
     {
-        return --this->end();
+        return --this->end<T,by_column>();
     }
-    type_iterator<T,true> begin_c()
-    {
-        return type_iterator<T,true>(_m,_n,0,_mat);
-    }
-    type_iterator<T,true> end_c()
-    {
-        return type_iterator<T,true>(_m,_n,_m*_n,_mat);
-    }
-    type_iterator<T,true> back_c()
-    {
-        return --this->end_c();
-    }
+    
     /*
      *  Properties
      */
@@ -266,6 +263,17 @@ template<typename T> class   base_type : public interface::t_type<T>
         {
                 memcpy(_mat, d,m*n*sizeof(T)); 
         }
+	base_type(size_t n, size_t m) :
+	_m(m),
+	_n(n),
+	_mat(new T[n*m]),
+	_str()
+	{}
+	base_type(ptr_protect<T*,false>&& d,size_t n,size_t m): 
+		base_type(d.ptr(),n,m)
+	{
+		d.release();
+	}
         base_type(const base_type& b) : base_type(b._mat,b._n,b._m) {};   
         base_type(base_type&& b):
             base_type(b._mat,b.sizeN(),b.sizeM())

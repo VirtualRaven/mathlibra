@@ -106,7 +106,7 @@ int main(int argc, char* argv[])
 	functions.load(math_func::std_math_trig_func); // Load std_math_trig_funct into function unit
 	functions.load(math_func::std_math_func);
 	functions.load(math_func::std_math_num_func);
-	
+	functions.load(math_func::mathlibra_data_constructors);
 	inter.setFunction(&functions);
 	auto my_manager = plugin::get_platform_specific_manager();
 	if(my_manager != nullptr)

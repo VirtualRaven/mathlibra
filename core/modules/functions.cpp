@@ -1,6 +1,7 @@
 #include "modules/functions.h"
 #include "exception_helper.h"
 #include "core/internal_helper.h"
+#include <algorithm>
 //Contains temporary implementation of function module
 namespace math_func
 {
@@ -110,7 +111,7 @@ namespace math_func
 			std::cout << "-[ function_interface {\n";
 			for (unsigned int i = 0; i < funcs.size(); i++)
 			{
-				std::cout << this->funcs[i].name.c_str() << "\t: " << std::hex << this->funcs[i].gptr << std::dec << "\n";
+				std::cout << this->funcs[i].name.c_str() << "\t: " <<  this->funcs[i].tag   << "\n";
 			}
 			std::cout << " }\nLoaded " << this->funcs.size() << " functions]\n";
 
@@ -205,6 +206,84 @@ namespace math_func
                 {
                     return internal_helper::forward_fast<double>(round,b);
                 }
+		type* size(interface::type_ptr x)
+		{
+			auto tmp = new num_mat(1,2);
+			auto it = tmp->begin();
+			*it++=x->sizeN();
+			*it=x->sizeM();
+			return tmp;
+		}	
+		type* __size(node_base* n)
+		{
+			return internal_helper::forward_fast<interface::type_ptr>(&size,n);
+		}
+		template<bool B> size_t choose(size_t x, size_t)
+		{
+			return x;
+		}
+		template<> size_t choose<false>(size_t, size_t y)
+		{
+			return y;
+		}
+		template<bool B>	
+		type* num_matrix_constructor(node_base *b)
+		{
+			std::stack<tree::node_base*>  args= b->getArgs();
+			if(args.empty())
+			{
+				functionOops<EMPTY_MAT_INIT>();
+			}
+			auto tmp = interface::type_ptr(args.top()->data->eval());
+			size_t args_len= args.size();
+			args.pop();
+			switch (tmp->stores())
+			{
+				case T_DOUBLE:
+				{
+					std::vector<interface::type_ptr> vec;
+					vec.reserve(args_len);
+					
+					auto n = tmp->sizeN();
+					auto m = tmp->sizeM();
+					auto totalM = choose<B>(m,n);
+					vec.push_back(std::move(tmp));
+					for(size_t i=0; i< args_len-1; i++ )
+					{
+						auto tmp2 = interface::type_ptr(args.top()->data->eval());
+						auto n2 = tmp2->sizeN();
+						auto m2 = tmp2->sizeM();
+						args.pop();
+						if(choose<B>(n2,m2) != choose<B>(n,m))
+						{
+							functionOops<DIFFERENT_N_MAT_INIT>();	
+						}
+						else if(tmp2->stores() != T_DOUBLE)
+						{
+							functionOops<DOUBLE_REQUIRED_MAT_INIT>();		
+						}
+						else
+						{
+							totalM += choose<B>(m2,n2);
+							vec.push_back(std::move(tmp2));
+						}
+					}
+					num_mat* mat = new num_mat(choose<B>(n,totalM),choose<B>(totalM,m));
+					auto it = mat->begin<true>();
+					for(size_t i=0; i<args_len; i++)
+					{
+					      it= std::copy(static_cast<num_mat*>(vec[i].ptr())->begin<B>(),	
+							static_cast<num_mat*>(vec[i].ptr())->end<B>(),
+							it);
+					}			
+					return mat;
+				}break;
+
+				default:
+					functionOops<MATRICE_MUST_BE_DOUBLE_MAT_INIT>();
+			}
+			return nullptr;
+		}
 		 std::vector< math_func::m_function> std_math_trig_func = {
 			 math_func::m_function("sin","trig","sin(double), standard sinus functions","sin", __sin),
 			 math_func::m_function("cos","trig","cos(double), standard cosinus function","cos", __cos),
@@ -226,7 +305,12 @@ namespace math_func
 			math_func::m_function("floor","numeric","floor(double)","floor", __floor),
 			math_func::m_function("round","numeric","round(double)","round", __round)
 		};
-	
+		
+		std::vector<math_func::m_function> mathlibra_data_constructors = {
+			math_func::m_function("mat","built_in","mat(mat_double...)","mat",&num_matrix_constructor<true>),
+			math_func::m_function("matc","built_in","matc(mat_double...)","matc",&num_matrix_constructor<false>),
+			math_func::m_function("size","built_in","size(mat)","size",__size)
+		};	
 }
 
 /*

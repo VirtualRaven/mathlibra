@@ -52,7 +52,11 @@ enum EXCEPTION {
     REALLOC_NO_RULE,
     USER_DEFINED_FUNCTION_TAKES_NUMBER,
 	PTR_PROTECT_MOVED_FREED_PTR,
-	SYNTAX_EXPECTED_END_OF_STRING
+	SYNTAX_EXPECTED_END_OF_STRING,
+	EMPTY_MAT_INIT,
+	DIFFERENT_N_MAT_INIT,
+	DOUBLE_REQUIRED_MAT_INIT,
+	MATRICE_MUST_BE_DOUBLE_MAT_INIT
 	};
 
 //* Lists all possible exception owners
@@ -544,5 +548,33 @@ declare_exception(SYNTAX_EXPECTED_END_OF_STRING)
 	bool_property critical = false;
 	owner_property owner = INTERPRETER;
 
+};
+
+declare_exception(EMPTY_MAT_INIT)
+{
+	str_property info = "Cannot create an empty matrice";
+	bool_property critical = false;
+	owner_property owner = FUNCTION;
+
+};
+declare_exception(DIFFERENT_N_MAT_INIT)
+{
+	str_property info = "All matrices in bracket initilization must be of same type";
+	bool_property critical = false;
+	owner_property owner = FUNCTION;
+
+};
+declare_exception(DOUBLE_REQUIRED_MAT_INIT)
+{
+	str_property info = "All element in bracket initilization must be of double matrice or double type";
+	bool_property critical = false;
+	owner_property owner = FUNCTION;
+
+};
+declare_exception(MATRICE_MUST_BE_DOUBLE_MAT_INIT)
+{
+	str_property info = "Bracket matrix initilization can only create double matrix";
+	bool_property critical = false;
+	owner_property owner = FUNCTION;
 };
 #endif //EXCEPTION_HELPER_INCLUDED
