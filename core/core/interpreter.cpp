@@ -42,7 +42,7 @@ void debug::check_tree_mem_leak()
 	std::cout << "\nTypes:\n";
 	leak_check(util::object_stats<interface::type>());
 #else
-	std::cout << "This library was built with memory leak check disabled\n"
+	std::cout << "This library was built with memory leak check disabled\n";
 #endif
 }
 
