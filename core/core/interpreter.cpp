@@ -23,6 +23,7 @@ template<EXCEPTION T> void interpreterOops()
 
 
 	class interpreter;
+#ifdef TYPE_MEM_TEST
 template<typename T> void leak_check(typename util::object_stats<T> stats)
 {
 	std::cout << "COUNTABLE ASSERT RUNNING\n" << "STATS: \n" << "total: " << stats.get_total() << "\ncurrent: " << stats.get_current() << "\ndeleted: " << stats.get_deleted() << std::endl;
@@ -31,6 +32,7 @@ template<typename T> void leak_check(typename util::object_stats<T> stats)
 		interpreterOops<MEMORY_LEAK_ASSERT>();
 	}	
 }
+#endif
 
 void debug::check_tree_mem_leak()
 {
