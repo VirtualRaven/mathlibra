@@ -24,3 +24,4 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/mathNode_interface.h  ${PLUGIN_A
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/object_counter.h  ${PLUGIN_API_INCLUDE}/object_counter.h COPYONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/modules/function_helper.h  ${PLUGIN_API_INCLUDE}/function_helper.h COPYONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/plugins/functions_external_interface.h  ${PLUGIN_API_INCLUDE}/functions_external_interface.h COPYONLY)
+
