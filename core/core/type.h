@@ -5,10 +5,21 @@
 #include "ptr_protect.h"
 #include <iterator>
 #include <string>
+#include <sstream>
 #include <cstring> //memcpy
 using interface::type; 
 
 
+
+namespace patch
+{
+    template < typename T > std::string to_string( const T& n )
+    {
+        std::ostringstream stm ;
+        stm << n ;
+        return stm.str() ;
+    }
+}
 
 template<typename T,typename F> std::string __toString(T* obj, size_t  n, size_t  m,F f)
 {
@@ -59,7 +70,7 @@ template<>  inline std::string _t_toString<char>(char* d, size_t  n, size_t  m)
 
 template<> inline std::string _t_toString<double>(double* d, size_t  n, size_t  m)
 {
-    return __toString<double>( d, n, m, [](double x){return std::to_string(x);});
+    return __toString<double>( d, n, m, [](double x){return patch::to_string(x);});
 }
 template<> inline std::string _t_toString<interface::type*>(interface::type** d, size_t  n, size_t  m)
 {
