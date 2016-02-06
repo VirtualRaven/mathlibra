@@ -3,4 +3,6 @@
 extern "C"
 {
 	interface::calc_lib_interface * InitLib();
+	const char* LibVersion();
+	const char* LibSHA();
 }
