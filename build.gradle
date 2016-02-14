@@ -1,48 +1,48 @@
 apply plugin: "cpp"
-task createGitHeader << {
-	println "Updating git info..."
-	def tmp = "git describe --dirty=-D".execute()
-	tmp.waitForOrKill(1000)
-	if(tmp.exitValue() != 0){
-		throw new GradleException("Could not get git info")
-	}
-	else{
-		
-		def fileContent = { tag, number, sha -> 
-"""
-#define GIT_NAME \"${tag}\"
-#define GIT_SHA  \"${sha}\"
-#define GIT_NUM  \"${number}\"
-"""
-		}
 
-		def res = tmp.text.split("-",4)
-		project.buildDir.mkdirs()
-		if(res.size() >= 3 && res.size() <= 4){
-			new File(project.buildDir.getAbsolutePath()+ "/GIT_VERSION.h").withWriter { out ->
-				out.print fileContent(res[0].trim(),res[1].trim(),res[2].trim())
-				if(res.size() == 4){
-					out.println "#define GIT_DIRTY"
-				}
-			}
+
+	 task createGitHeader<< {
+		println "Updating git info..."
+		def tmp = "git describe --dirty=-D".execute()
+		tmp.waitForOrKill(10000)
+		if(tmp.exitValue() != 0){
+			throw new GradleException("Could not get git info")
 		}
 		else{
-			throw new GradleException("Output from git describe not understood")
-		}		
-		println "Git update done"
+			
+			def fileContent = { tag, number, sha -> 
+	"""
+	#define GIT_NAME \"${tag}\"
+	#define GIT_SHA  \"${sha}\"
+	#define GIT_NUM  \"${number}\"
+	"""
+			}
+	
+			def res = tmp.text.split("-",4)
+			project.buildDir.mkdirs()
+			if(res.size() >= 3 && res.size() <= 4){
+				new File(project.buildDir.getAbsolutePath()+ "/GIT_VERSION.h").withWriter { out ->
+					out.print fileContent(res[0].trim(),res[1].trim(),res[2].trim())
+					if(res.size() == 4){
+						out.println "#define GIT_DIRTY"
+					}
+				}
+			}
+			else{
+				throw new GradleException("Output from git describe not understood")
+			}		
+			println "Git update done"
+		}
 	}
-}
-
-
 
 
 model
 {
+		
 	buildTypes {
 		debug
 		release
 	}
-	
 	binaries{
 	all{	
 			if(buildType == buildTypes.debug)
@@ -66,9 +66,6 @@ model
 	}
 	components {
 		core_lib(NativeLibrarySpec) {
-			binaries.withType(SharedLibraryBinarySpec){ 
-				buildable false
-			}
 			binaries.all{
 				if(toolChain in Gcc)
 				{
@@ -110,7 +107,7 @@ model
 						srcDirs  project.buildDir.getAbsolutePath()
 						include "GIT_VERSION.h"
 					}
-					builtBy(createGitHeader)
+					builtBy createGitHeader
 				}
 				
 				
