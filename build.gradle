@@ -1,6 +1,5 @@
 apply plugin: "cpp"
 
-
 	 task createGitHeader<< {
 		println "Updating git info..."
 		def tmp = "git describe --dirty=-D".execute()
@@ -23,9 +22,13 @@ apply plugin: "cpp"
 			if(res.size() >= 3 && res.size() <= 4){
 				new File(project.buildDir.getAbsolutePath()+ "/GIT_VERSION.h").withWriter { out ->
 					out.print fileContent(res[0].trim(),res[1].trim(),res[2].trim())
+					project.ext.gitTag=res[0].trim()
+					project.ext.gitSHA=res[1].trim()
 					if(res.size() == 4){
 						out.println "#define GIT_DIRTY"
+						project.ext.gitDirty=true
 					}
+					else {project.gitDirty=false}
 				}
 			}
 			else{
@@ -42,6 +45,34 @@ model
 	buildTypes {
 		debug
 		release
+	}
+	tasks{
+		mkCXXApi(Copy){
+			from "wrapper/common/main_wrapper.h"
+			from "core/core/type_interface.h"
+			from "core/core/type_enum.h"
+			from "core/ptr_protect.h"
+			from "wrapper/c++_wrapper/export.h"
+			rename { String fileName -> "mathlibra_CXX/include/" + fileName}
+			into "$buildDir/mkCXXApi"
+		}
+		mkCApi(Copy){
+			from "wrapper/c_api_interface/c_api.h"
+			from "core/core/type_enum.h"
+			rename { String fileName -> "mathlibra_C/include/" + fileName }
+			into "$buildDir/mkCApi"
+		}	
+		zip(Zip){
+			baseName "mathlibra"
+			dependsOn $.binaries.findAll { it.buildable }
+			dependsOn createGitHeader
+			destinationDir project.buildDir
+			from project.buildDir.getAbsolutePath() + "/libs"
+			from mkCXXApi
+			from mkCApi
+			exclude "core_lib"	
+			
+		}
 	}
 	binaries{
 	all{	
@@ -169,9 +200,6 @@ model
 		}
 		mathlibra_CXX_client(NativeExecutableSpec)
 		{
-			binaries.all{
-				println buildTask
-			}
 			sources{
 				cpp{
 					lib library: "mathlibra_CXX", linkage: "shared"
