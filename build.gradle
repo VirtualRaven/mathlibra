@@ -22,13 +22,9 @@ apply plugin: "cpp"
 			if(res.size() >= 3 && res.size() <= 4){
 				new File(project.buildDir.getAbsolutePath()+ "/GIT_VERSION.h").withWriter { out ->
 					out.print fileContent(res[0].trim(),res[1].trim(),res[2].trim())
-					project.ext.gitTag=res[0].trim()
-					project.ext.gitSHA=res[1].trim()
 					if(res.size() == 4){
 						out.println "#define GIT_DIRTY"
-						project.ext.gitDirty=true
 					}
-					else {project.gitDirty=false}
 				}
 			}
 			else{
