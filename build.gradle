@@ -43,6 +43,25 @@ model
 		release
 	}
 	tasks{
+
+		createPyTest0(Copy){
+		dependsOn $.binaries.withType(SharedLibraryBinarySpec).findAll({ it.toString().contains("mathlibra_C") && it.buildable })
+		from "$buildDir/libs/mathlibra_C/shared/debug/"
+		include "*.so"
+		into "$buildDir/py_test"}
+		
+		createPyTest1(Copy){
+		from "wrapper/c_api_interface/"
+		include "*.py"
+		into "$buildDir/py_test"}
+		
+		runPyTest(Exec){
+			2.times{ i-> 
+				dependsOn "createPyTest$i"
+			}
+			workingDir "$buildDir/py_test"
+			commandLine 'python', "run_tests.py"
+		}
 		mkCXXApi(Copy){
 			from "wrapper/common/main_wrapper.h"
 			from "core/core/type_interface.h"
@@ -70,6 +89,7 @@ model
 			
 		}
 	}
+	
 	binaries{
 	all{	
 			if(buildType == buildTypes.debug)

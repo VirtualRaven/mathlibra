@@ -33,7 +33,7 @@ class func_obj_array_c (ctypes.Structure):
 class mathlibra:
     def __init__(self):
         #load dll
-        self.lib_instance = ctypes.CDLL("../lib/libmathlibra_C.so")
+        self.lib_instance = ctypes.CDLL("./libmathlibra_C.so")
         
         #Set up the instance creation function
         self.handle =ctypes.c_void_p()
@@ -56,7 +56,7 @@ class mathlibra:
         self.__free_func_obj_array_c =self.lib_instance.free_func_obj_array
 
         self.__execute_arg = self.lib_instance.execute_arg
-        self.__execute_arg.restype = ctypes.c_double
+        self.__execute_arg.restype = ctypes.c_void_p
         
         self.__error = self.lib_instance.mathlibra_error
         self.__error.restype = ctypes.c_bool
@@ -79,7 +79,12 @@ class mathlibra:
         self.__mem_set= self.lib_instance.mem_set
 
         self.__free_mem_obj=self.lib_instance.free_mem_obj
-    
+        self.__is_number = self.lib_instance.isNumber
+        self.__is_number.restype=ctypes.c_bool
+        self.__to_number = self.lib_instance.toNumber
+        self.__to_number.restype=ctypes.c_double 
+
+
     #Function to convert c struct to python data types
     def __from_func_obj_array_c(self,obj):
         tmp_list = []
@@ -119,7 +124,10 @@ class mathlibra:
     def execute_arg(self):
         val = self.__execute_arg(self.handle)
         self.__check_error()
-        return val
+        if not self.__is_number(val):
+            raise mathlibra_exception("PYTHON_WRAPPER","Mathlibra returned non double value which is not supported by this version of the python wrapper",true,-1)
+
+        return self.__to_number(val)
     
     def enable_plugins(self):
         self.__enable_plugins(self.handle)

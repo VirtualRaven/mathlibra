@@ -127,7 +127,7 @@ void interpret_arg(handle hwn,char * str)
 ret execute_arg(handle hwn)
 {
 	hwn->__return_val =  hwn->wrp.execute_arg();
-	return &hwn->__return_val;
+	return hwn->__return_val.ptr();
 }
 bool mathlibra_error(handle hwn)
 {
