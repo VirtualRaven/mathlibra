@@ -13,5 +13,5 @@ install:
 
 
 script: 
-       mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug -DC_API_TEST=True .. && make && make test
+       ./gradlew runPyTest
 
