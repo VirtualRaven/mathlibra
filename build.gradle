@@ -67,6 +67,8 @@ model
 			from "core/core/type_interface.h"
 			from "core/core/type_enum.h"
 			from "core/ptr_protect.h"
+			from "core/exception_helper.h"
+			from "core/exception.h"
 			from "wrapper/c++_wrapper/export.h"
 			rename { String fileName -> "mathlibra_CXX/include/" + fileName}
 			into "$buildDir/mkCXXApi"
