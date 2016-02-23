@@ -65,6 +65,7 @@ model
 		mkCXXApi(Copy){
 			from "wrapper/common/main_wrapper.h"
 			from "core/core/type_interface.h"
+			from "core/core/type.h"
 			from "core/core/type_enum.h"
 			from "core/ptr_protect.h"
 			from "core/exception_helper.h"

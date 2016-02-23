@@ -1,6 +1,5 @@
 #ifndef TYPE_H_INCLUDED
 #define TYPE_H_INCLUDED
-#include "exception_helper.h"
 #include "type_interface.h"
 #include "ptr_protect.h"
 #include <iterator>
