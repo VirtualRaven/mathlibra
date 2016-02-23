@@ -2,7 +2,7 @@
 #define LIB_INTERFACE_INCLUED
 #include <vector>
 #include <string>
-#include "core/type_interface.h"
+#include "type_interface.h"
 namespace interface
 {
 

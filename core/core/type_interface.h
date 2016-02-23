@@ -2,9 +2,9 @@
 #define TYPE_INTERFACE_H_INCLUDED
 #include <string>
 #include "ptr_protect.h"
-#include "core/type_enum.h"
+#include "type_enum.h"
 #ifdef TYPE_MEM_TEST
-#include "core/object_counter.h"
+#include "object_counter.h"
 #endif
 namespace interface
 {

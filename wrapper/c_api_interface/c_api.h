@@ -1,5 +1,5 @@
 #include <stdbool.h>
-#include "core/type_enum.h"
+#include "type_enum.h"
 #ifdef __cplusplus
 extern "C"
 {
