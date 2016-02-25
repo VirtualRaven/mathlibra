@@ -37,7 +37,56 @@ apply plugin: "cpp"
 
 model
 {
+	toolChains {
+		arm(Gcc){
+			path "/teamcity/armtoolchain/arm-linux-androideabi/bin"
+			target("armeabiv7a")
+		}
 		
+		gcc(Gcc){
+			target("linux_x86")
+			target("linux_x64")
+		}
+		clang(Clang){
+			target("osx_x86")
+			target("osx_x64")
+			target("windows_x86")
+			target("windows_x64")
+		}
+		
+	}
+	
+	platforms {
+		armeabiv7a{
+			architecture "arm"
+			operatingSystem "linux"
+		}
+		linux_x86{
+			architecture "x86"
+			operatingSystem "linux"
+		}
+		linux_x64{
+			architecture "x86_64"
+			operatingSystem "linux"
+		}
+		windows_x86 {
+                 architecture "x86"
+                 operatingSystem "windows"
+        }
+        windows_x64 {
+                 architecture "x86_64"
+                 operatingSystem "windows"
+        }
+        osx_x86 {
+                 architecture "x86"
+                 operatingSystem "osx"
+        }
+        osx_x64 {
+                 architecture "x86_64"
+                 operatingSystem "osx"
+        }
+	}	
+	
 	buildTypes {
 		debug
 		release
@@ -48,7 +97,8 @@ model
 			from "core/core/type_interface.h"
 			from "core/core/type_enum.h"
 			from "core/ptr_protect.h"
-			from "wrapper/c++_wrapper/export.h"
+		
+	from "wrapper/c++_wrapper/export.h"
 			rename { String fileName -> "mathlibra_CXX/include/" + fileName}
 			into "$buildDir/mkCXXApi"
 		}
@@ -71,28 +121,64 @@ model
 		}
 	}
 	binaries{
-	all{	
-			if(buildType == buildTypes.debug)
-			{
-				cppCompiler.define "DEBUG"
-			}
-			if(toolChain in Gcc)
-			{
-				if(buildType == buildTypes.release)
-				{
-					cppCompiler.args "-std=c++11", "-O2", "-Wall", "-pedantic"
-					linker.args "-ldl"
+		all{	
+				if((targetPlatform.operatingSystem.isCurrent() && targetPlatform.getName() != "armeabiv7a") || (project.hasProperty(targetPlatform.getName()))){
+					buildable = true
+				}else{
+					buildable = false
 				}
-				else
-				{
-					cppCompiler.args "-std=c++11", "-Wall", "-pedantic", "-g"
-					linker.args "-ldl"
+				if (buildable && targetPlatform.getName()=="armeabiv7a" && !project.hasProperty('ndktoolchain')){
+					buildable = false
+					throw new GradleException("No ndktoolchain set")
 				}
-			}
-	}
+
+				if(buildType == buildTypes.debug)
+				{
+					cppCompiler.define "DEBUG"
+				}
+				if(toolChain in Gcc)
+				{
+					if(buildType == buildTypes.release)
+					{
+						cppCompiler.args "-std=c++11", "-O2","-Wall","-pedantic","-fPIC"
+						linker.args "-ldl"
+					}
+					else
+					{
+						cppCompiler.args "-std=c++11","-Wall","-pedantic","-g","-fPIC"
+						linker.args "-ldl"
+					}
+				}else if(toolChain in Clang)
+				{
+					if(buildType == buildTypes.release)
+					{
+						cppCompiler.args "-std=c++11", "-O2","-Wall","-pedantic","-fPIC"
+						linker.args "-ldl"
+					}
+					else
+					{
+						cppCompiler.args "-std=c++11","-Wall","-pedantic","-g","-fPIC"
+						linker.args "-ldl"
+					}
+				}
+		}
+		withType(NativeExecutableBinarySpec) {
+			
+				if(toolChain in Gcc)
+				{
+						linker.args "-pie"
+				}
+        }
 	}
 	components {
 		core_lib(NativeLibrarySpec) {
+			targetPlatform "armeabiv7a"
+			targetPlatform "linux_x86"
+			targetPlatform "linux_x64"
+			targetPlatform "windows_x86"
+			targetPlatform "windows_x64"
+			targetPlatform "osx_x86"
+			targetPlatform "osx_x64"
 			binaries.all{
 				if(toolChain in Gcc)
 				{
@@ -103,6 +189,9 @@ model
 				}
 				else if(targetPlatform.operatingSystem.isWindows()){
 					cppCompiler.define "WINDOWS"
+				}
+				else if(targetPlatform.operatingSystem.isMacOsX()){
+					cppCompiler.define "LINUX"
 				}
 				else{
 					throw new GradleException("Platform unknown, cannont select plugin loader")
@@ -143,6 +232,13 @@ model
 		
 		core_tester(NativeExecutableSpec)
 		{	
+			targetPlatform "armeabiv7a"
+			targetPlatform "linux_x86"
+			targetPlatform "linux_x64"
+			targetPlatform "windows_x86"
+			targetPlatform "windows_x64"
+			targetPlatform "osx_x86"
+			targetPlatform "osx_x64"
 			sources{
 				cpp{
 					cpp.lib library: "core_lib", linkage: "static"
@@ -160,6 +256,13 @@ model
 		}
 		mathlibra_CXX(NativeLibrarySpec)
 		{
+			targetPlatform "armeabiv7a"
+			targetPlatform "linux_x86"
+			targetPlatform "linux_x64"
+			targetPlatform "windows_x86"
+			targetPlatform "windows_x64"
+			targetPlatform "osx_x86"
+			targetPlatform "osx_x64"
 			sources{
 				cpp{
 					lib library: "core_lib", linkage: "static"
@@ -179,6 +282,13 @@ model
 		}
 		mathlibra_C(NativeLibrarySpec)
 		{
+			targetPlatform "armeabiv7a"
+			targetPlatform "linux_x86"
+			targetPlatform "linux_x64"
+			targetPlatform "windows_x86"
+			targetPlatform "windows_x64"
+			targetPlatform "osx_x86"
+			targetPlatform "osx_x64"
 			sources{
 				cpp{
 					lib library: "core_lib", linkage: "static"
@@ -195,7 +305,14 @@ model
 				
 		}
 		mathlibra_CXX_client(NativeExecutableSpec)
-		{
+		{	
+			targetPlatform "armeabiv7a"
+			targetPlatform "linux_x86"
+			targetPlatform "linux_x64"
+			targetPlatform "windows_x86"
+			targetPlatform "windows_x64"
+			targetPlatform "osx_x86"
+			targetPlatform "osx_x64"
 			sources{
 				cpp{
 					lib library: "mathlibra_CXX", linkage: "shared"
