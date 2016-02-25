@@ -20,7 +20,7 @@ bool isUnary(const char* str,  size_t i, tvec tokens)
 		token::baseToken * token = tokens.back();
 		if (token->type == tree::PARENTHESES)
 		{
-			return  (i != 0) ? (str[i-1] == '(') : false ;
+			return  (i != 0) ? (str[i-1] == '(' || str[i-1]== '[' ) : false ;
                 }
 		else if (token->type == tree::OPERATOR)
 		{
@@ -62,7 +62,7 @@ state lexical(const char * expr,
 	{
 		if(expr[i] == '(')
 		{
-			if(i>0 && expr[i-1] ==  ')')
+			if(i>0 && (expr[i-1] ==  ')' || expr[i-1]==']') )
 			{
 				pushMulti(tokens,opr,s);
 			}
@@ -72,6 +72,26 @@ state lexical(const char * expr,
 		{
 			parse_parantheses2(tokens,s,paran);
 		}
+                else if(expr[i]=='[')
+                {
+                        if(func->isloaded("mat").loaded)
+                        {
+		        	if (tokens.size() > 0 && (tokens.back()->type == tree::VALUE || (expr[i-1]==')' || expr[i-1]==']') ))
+		        	{
+		        		pushMulti(tokens,opr,s);
+		        	}
+			        parse_func("mat",tokens,s,func);
+                        }      
+			parse_parantheses1(tokens,s,paran,opr);
+                }
+                else if(expr[i]==']')
+                {
+			parse_parantheses2(tokens,s,paran);
+                }
+                else if(expr[i]=='|')
+                {
+
+                }
 		else if (isdigit(expr[i]) || expr[i]== '.')
 		{
 			parse_number(expr,tokens,s,opr);	
@@ -95,7 +115,7 @@ state lexical(const char * expr,
 		{
 			auto str = extract_alpha(expr,i,expr_len);
 			i+=str.size()-1;	
-			if (tokens.size() > 0 && (tokens.back()->type == tree::VALUE || expr[i-1]==')'))
+			if (tokens.size() > 0 && (tokens.back()->type == tree::VALUE || (expr[i-1]==')' || expr[i-1]==']') ))
 			{
 				pushMulti(tokens,opr,s);
 			}
@@ -264,7 +284,7 @@ void parse_number(const char * expr, tvec& tokens, i_state& s,operators::operato
 		{
 			pushMulti(tokens,opr,s);
 		}
-		else if(expr[*(s.i)-1]==')')
+		else if(expr[*(s.i)-1]==')' || expr[*(s.i)-1]==']')
 		{
 			pushMulti(tokens,opr,s);
 		}
@@ -340,7 +360,7 @@ void parse_opr(const char* expr, tvec& tokens ,i_state& s,operators::operators_i
 			test_type = tree::UNKNOWN;
 		}
 
-		if ((  *(s.i) - 1 > 0 && (test_type == tree::OPERATOR || expr[*(s.i) - 1] == '(')) || *(s.i) == 0)  
+		if ((  *(s.i) - 1 > 0 && (test_type == tree::OPERATOR || ( expr[*(s.i) - 1] == '(' || expr[*(s.i)-1] == '[' ))) || *(s.i) == 0)  
 		{
 			if (opr->inArray('*'))
 			{
