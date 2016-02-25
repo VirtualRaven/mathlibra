@@ -39,7 +39,7 @@ model
 {
 	toolChains {
 		arm(Gcc){
-			path "/teamcity/armtoolchain/arm-linux-androideabi/bin"
+			path project.properties['ndktoolchain']
 			target("armeabiv7a")
 		}
 		
