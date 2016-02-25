@@ -39,7 +39,8 @@ model
 {
 	toolChains {
 		arm(Gcc){
-			path project.properties['ndktoolchain']
+			if (project.hasProperty('ndktoolchain'))
+				path project.properties['ndktoolchain']
 			target("armeabiv7a")
 		}
 		
