@@ -12,6 +12,11 @@ namespace util
 		std::cout << "-[ Execution enviroment " << EXEC_ENV_STRING << "]\n";
 		std::cout << "-[ Version: " << LIB_VERSION << " ]\n";
 		std::cout << "-[SHA: "<< LIB_SHA <<" ]\n\n";
+
+#ifdef GIT_DIRTY
+		std::cout << "-[BUILD DIRTY]\n\n";
+#endif
+
 		std::cout << "-[DEBUG: ";
 
 #ifdef DEBUG
@@ -29,6 +34,9 @@ namespace util
 #ifdef DEBUG_CORAX_INS
 		std::cout << "-[DEBUG_CORAX_INS: ENABLED ]\n";
 #endif
+#ifdef TYPE_MEM_TEST
+		std::cout << "-[TYPE_MEM_TEST: ENABLED ]\n";
+#endif 
 #else
 		std::cout << "False ]\n";
 #endif

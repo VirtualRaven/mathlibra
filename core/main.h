@@ -14,7 +14,6 @@
 
 
 typedef double number_type;
-#define DEBUG
 #ifdef DEBUG
 #define P_TEST
 //#define RUN_TESTS
