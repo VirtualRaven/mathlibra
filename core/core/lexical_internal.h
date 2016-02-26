@@ -23,7 +23,7 @@ namespace __internal
 	void parse_parantheses1(tvec&,i_state&, pstack&, operators::operators_interface*);
 	void parse_parantheses2(tvec&,i_state&, pstack&);
 	void parse_number(const char*,tvec&, i_state&,operators::operators_interface*);  
-	void parse_opr(const char*, tvec&,i_state&,operators::operators_interface*);
+	void parse_opr( tvec&,i_state&,operators::operators_interface*);
 	void parse_func(std::string ,tvec&,i_state&,math_func::function_interface*);
 	void parse_var(std::string, tvec&,i_state&,math_func::function_interface*, memory::memory*);	
 }

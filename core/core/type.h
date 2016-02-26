@@ -5,6 +5,7 @@
 #include <iterator>
 #include <string>
 #include <sstream>
+#include <iostream>
 #include <cstring> //memcpy
 using interface::type; 
 
@@ -29,28 +30,28 @@ template<typename T,typename F> std::string __toString(T* obj, size_t  n, size_t
 		tmp.push_back('[');
 	}
 	for(size_t  i = 0; i < n; i++)
-    {   
-        if( m > 1)
-        {
-            tmp.push_back('[');
-        }
-        for(size_t  j =0; j < m; j++)
-        {
-            tmp += f(obj[i*(n-1)+j]);
-            if(j != m-1)
-            {
-                tmp.push_back(',');
-            }
-        }
-        if(m > 1) 
-        {
-            tmp.push_back(']');
-        }
-        if(i != n -1)
-        {
-            tmp.push_back('|');
-        }  
-    }
+    	{   
+       		if( m > 1)
+       		{
+       		    tmp.push_back('[');
+       		}
+       		for(size_t  j =0; j < m; j++)
+       		{
+       		    tmp += f(obj[i*m+j]);
+       		    if(j != m-1)
+       		    {
+       		        tmp.push_back(',');
+       		    }
+       		}
+       		if(m > 1) 
+       		{
+       		    tmp.push_back(']');
+       		}
+       		if(i != n -1)
+       		{
+       		    tmp.push_back('|');
+       		}  
+    	}
 	if (n > 1 && m != 1)
 	{
 		tmp.push_back(']');
@@ -79,11 +80,10 @@ template<> inline std::string _t_toString<interface::type*>(interface::type** d,
 
 
 template<typename T,bool C=false> class type_iterator : public std::iterator<std::random_access_iterator_tag,T>
-{   
+{  public: 
     int _m;
     int _n;
     int _i;
-
     T* _mat;
     int _to_index(const int& x)
     {
@@ -102,15 +102,15 @@ template<typename T,bool C=false> class type_iterator : public std::iterator<std
     {
         return x._i - y._i;   
     }
-    friend type_iterator operator+(type_iterator x, const int& n)
+    friend type_iterator operator+(const type_iterator& x, const int& n)
     {
-        x._i+=n;
+        return type_iterator(x)+=n ;
     }
     friend type_iterator operator+(const int& n, type_iterator x)
     {
         return x+n;
     }
-    friend type_iterator operator-(type_iterator x, const int& n)
+    friend type_iterator operator-(const type_iterator& x, const int& n)
     {
         return x+(-n);
     }
@@ -305,4 +305,23 @@ template<typename T> class   base_type : public interface::t_type<T>
 typedef base_type<char> char_mat;
 typedef base_type<type*> mat_mat;
 typedef base_type<double> num_mat;
+/*Template functuibs to convert base_type
+ *
+ */
+template<typename T> struct get_enum
+{
+    static constexpr storage_types t() {return T_UNKN;} 
+};
+template<>  struct get_enum<num_mat>
+{
+    static constexpr storage_types t() { return T_DOUBLE;}
+};
+template<> struct get_enum<char_mat>
+{
+    static constexpr storage_types t() { return T_CHAR;}
+};
+template<>  struct get_enum<mat_mat>
+{
+    static constexpr storage_types t() { return  T_TYPE;}
+};
 #endif //TYPE_H_INCLUDED

@@ -104,7 +104,7 @@ namespace function_helper
         template<typename T> T convertData(node_base* n )
         {
             auto tmp = n->data->eval();
-           if(tmp->stores() == interface::get_storage<T>::t() )
+           if(tmp->stores() == get_enum<T>::t() )
            {
                 auto tmp2 = T(*static_cast<T*>(tmp)); 
                 n->free_type(tmp);

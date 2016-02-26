@@ -49,14 +49,19 @@ enum EXCEPTION {
 	NODE_EVAL_UNDEFINED_FUNC,
 	TOKEN_NO_MEM_MODULE,
 	TOKEN_FUNCTION_NULL_POINTER,
-    REALLOC_NO_RULE,
-    USER_DEFINED_FUNCTION_TAKES_NUMBER,
+    	REALLOC_NO_RULE,
+    	USER_DEFINED_FUNCTION_TAKES_NUMBER,
 	PTR_PROTECT_MOVED_FREED_PTR,
 	SYNTAX_EXPECTED_END_OF_STRING,
 	EMPTY_MAT_INIT,
 	DIFFERENT_N_MAT_INIT,
 	DOUBLE_REQUIRED_MAT_INIT,
-	MATRICE_MUST_BE_DOUBLE_MAT_INIT
+	MATRICE_MUST_BE_DOUBLE_MAT_INIT,
+	MATRICE_NEW_LINE_SYMBOL,
+	SQUARE_BRACKET_MISSMATCH,
+	MATRICE_NEW_LINE_UNALLOWED,
+	MATRICE_NEW_LINE_NOT_LAST,
+	MUL_OPR_INVALID_ARGS
 	};
 
 //* Lists all possible exception owners
@@ -576,5 +581,36 @@ declare_exception(MATRICE_MUST_BE_DOUBLE_MAT_INIT)
 	str_property info = "Bracket matrix initilization can only create double matrix";
 	bool_property critical = false;
 	owner_property owner = FUNCTION;
+};
+
+declare_exception(MATRICE_NEW_LINE_SYMBOL)
+{
+	str_property info = "Matrice new line operator '|' can only be used inside an bracket initilization";
+	bool_property critical = false;
+	owner_property owner = INTERPRETER;
+};
+declare_exception(SQUARE_BRACKET_MISSMATCH)
+{
+	str_property info ="Missing opening square bracket";
+	bool_property critical = false;
+	owner_property owner = INTERPRETER;
+};
+declare_exception(MATRICE_NEW_LINE_UNALLOWED)
+{
+	str_property info = "Matrice new line operator '|' must be preceded by at least matrice element"; 
+	bool_property critical = false;
+	owner_property owner = INTERPRETER;
+};
+declare_exception(MATRICE_NEW_LINE_NOT_LAST)
+{
+	str_property info = "Matrice new line operator '|' must have element after itself"; 
+	bool_property critical = false;
+	owner_property owner = INTERPRETER;
+};
+declare_exception(MUL_OPR_INVALID_ARGS)
+{
+	str_property info = "Invalid matrice sizes of multiplication operands";
+	bool_property critical = false;
+	owner_property owner = STD_OPERATORS;
 };
 #endif //EXCEPTION_HELPER_INCLUDED

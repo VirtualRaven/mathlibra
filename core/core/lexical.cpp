@@ -51,7 +51,7 @@ state lexical(const char * expr,
 	tokens.reserve(expr_len);
 	
 	pstack paran;
-	
+	std::stack<bool> extraParan;
 	size_t oper_w_extra=0;
 	size_t oper_w_lowset=99999999;
 	size_t i=0;
@@ -74,23 +74,53 @@ state lexical(const char * expr,
 		}
                 else if(expr[i]=='[')
                 {
-                        if(func->isloaded("mat").loaded)
-                        {
+			extraParan.push(true);
+                        if(func->isloaded("matc").loaded)
+                        {	
 		        	if (tokens.size() > 0 && (tokens.back()->type == tree::VALUE || (expr[i-1]==')' || expr[i-1]==']') ))
 		        	{
 		        		pushMulti(tokens,opr,s);
 		        	}
-			        parse_func("mat",tokens,s,func);
+			        parse_func("matc",tokens,s,func);
+				parse_parantheses1(tokens,s,paran,opr);
+				if(func->isloaded("mat").loaded){
+			        	parse_func("mat",tokens,s,func);
+				}
                         }      
 			parse_parantheses1(tokens,s,paran,opr);
                 }
                 else if(expr[i]==']')
                 {
+			if(extraParan.size()>0)
+			{
+				extraParan.pop();	
+			}
+			else
+			{
+				lexicalOops<SQUARE_BRACKET_MISSMATCH>();
+			}
+			parse_parantheses2(tokens,s,paran);
 			parse_parantheses2(tokens,s,paran);
                 }
                 else if(expr[i]=='|')
                 {
-
+			if(i==0 || (i>0 && expr[i-1]=='['))
+			{
+				lexicalOops<MATRICE_NEW_LINE_UNALLOWED>();
+			}	
+			if(extraParan.size() > 0)
+			{
+					parse_parantheses2(tokens,s,paran);
+			}
+			else
+			{
+				lexicalOops<MATRICE_NEW_LINE_SYMBOL>();	
+			}
+				opr->inArray(',');
+				parse_opr(tokens,s,opr);
+			func->isloaded("mat");
+			parse_func("mat",tokens,s,func);
+			parse_parantheses1(tokens,s,paran,opr);
                 }
 		else if (isdigit(expr[i]) || expr[i]== '.')
 		{
@@ -109,7 +139,32 @@ state lexical(const char * expr,
 		}
 		else if (opr!= nullptr && opr->inArray(expr[i]))
 		{	
-			parse_opr(expr,tokens,s,opr);
+			//Following test compensates for implicit -1 situations like -x or 2*-(2+x) which 
+			//will be extended to -1*x and 2*-1*(2+x) where the multiplication sign
+			//between -1 and the other term has an higher than usal weight
+			if ( expr[*(s.i)] == '-')
+			{
+				tree::tokenType test_type;
+				if (tokens.size() > 0)
+				{
+					test_type = tokens.back()->type;
+				}
+				else
+				{
+					test_type = tree::UNKNOWN;
+				}
+		
+				if ((  *(s.i) - 1 > 0 && (test_type == tree::OPERATOR || ( expr[*(s.i) - 1] == '(' || expr[*(s.i)-1] == '[' ))) || *(s.i) == 0)  
+				{
+					if (opr->inArray('*'))
+					{
+						pushValue(tokens,s,-1);	
+						pushMulti(tokens,opr,s);
+						continue;
+					}		
+				}
+			}
+			parse_opr(tokens,s,opr);
 		}
 		else if( isalpha(expr[i]))
 		{
@@ -139,7 +194,10 @@ state lexical(const char * expr,
 		}
 	}
 #ifndef NON_STRICT_PARANTHESES
-	
+	if(expr[expr_len-1]=='|')
+	{
+		lexicalOops<MATRICE_NEW_LINE_NOT_LAST>();
+	}	
 	if(!paran.empty())
 	{
 		lexicalOops<SYNTAX_UNMATCHED_OPENING_PARANTHESES>();
@@ -343,33 +401,8 @@ void parse_number(const char * expr, tvec& tokens, i_state& s,operators::operato
 //*	Operator parser
 //*
 //**********************************************
-void parse_opr(const char* expr, tvec& tokens ,i_state& s,operators::operators_interface* opr)
+void parse_opr(tvec& tokens ,i_state& s,operators::operators_interface* opr)
 {
-	//Following test compensates for implicit -1 situations like -x or 2*-(2+x) which 
-	//will be extended to -1*x and 2*-1*(2+x) where the multiplication sign
-	//between -1 and the other terme has an higher than usal weight
-	if ( expr[*(s.i)] == '-')
-	{
-		tree::tokenType test_type;
-		if (tokens.size() > 0)
-		{
-			test_type = tokens.back()->type;
-		}
-		else
-		{
-			test_type = tree::UNKNOWN;
-		}
-
-		if ((  *(s.i) - 1 > 0 && (test_type == tree::OPERATOR || ( expr[*(s.i) - 1] == '(' || expr[*(s.i)-1] == '[' ))) || *(s.i) == 0)  
-		{
-			if (opr->inArray('*'))
-			{
-				pushValue(tokens,s,-1);	
-				pushMulti(tokens,opr,s);
-				return;
-			}		
-		}
-	}
 
 	ptr_protect<token::operatorToken*, false> tmp(new token::operatorToken(opr->getCurrent()));
 	tmp->startPos=*(s.i);

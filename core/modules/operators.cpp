@@ -23,13 +23,63 @@ namespace operators
 		return internal_helper::forward_fast<double,double>(add, n);
 	}
 
-        type* multi(double x, double y)
+        type* multi(num_mat x, num_mat y)
 	{
-		return make_type(x*y);
+		if(x.isNumber() && y.isNumber())
+		{
+			*x.begin() = (*x.begin())*(*y.begin());
+			return x.copy();
+		}
+		else if(x.isNumber())
+		{
+			double oper = *x.begin();
+			for(auto it = y.begin(); it < y.end(); it++)
+			{
+				*it=oper*(*it);
+			}
+			return y.copy();
+		}
+		else if(y.isNumber())
+		{
+			return multi(std::move(y),std::move(x));
+		}
+		//Preform matrix multiplication
+		else if(x.sizeM() == y.sizeN())
+		{
+			//The return value must be an pointer, thus we allocate the 
+			//result matrice on the heap
+			num_mat*  res = new num_mat(x.sizeN(),y.sizeM());
+			auto itr = res->begin();
+			auto itx = x.begin();
+			for(size_t i=0; i < x.sizeN(); i++)
+			{
+				std::cout << "itx " << *itx << std::endl;
+				auto ity = y.begin<true>();
+				for(size_t j=0; j < y.sizeM(); j++)
+				{
+					std::cout << "ity " << *ity << std::endl;
+					double sum=0;
+					for(size_t k=0; k < y.sizeN(); k++)
+					{
+						sum += (*(ity+k)) * (*(itx+k));
+					}
+					*itr=sum;
+					++itr;
+					//Move ity to begining of next column
+					ity+=y.sizeN();
+				}
+				//Move itx to begining of next row
+				itx+=x.sizeM();
+			}
+			return res;
+
+		}
+		stdOperatorOops<MUL_OPR_INVALID_ARGS>();
+		
 	}
 	type* __multi(tree::nodeDataInterface* n)
 	{
-		return internal_helper::forward_fast<number_type, number_type>(multi, n);
+		return internal_helper::forward_fast<num_mat, num_mat>(multi, n);
 	}
 	type* divide(double x, double y)
 	{

@@ -269,7 +269,7 @@ namespace math_func
 						}
 					}
 					num_mat* mat = new num_mat(choose<B>(n,totalM),choose<B>(totalM,m));
-					auto it = mat->begin<true>();
+					auto it = mat->begin<B>();
 					for(size_t i=0; i<args_len; i++)
 					{
 					      it= std::copy(static_cast<num_mat*>(vec[i].ptr())->begin<B>(),	
