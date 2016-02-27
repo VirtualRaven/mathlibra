@@ -53,11 +53,9 @@ namespace operators
 			auto itx = x.begin();
 			for(size_t i=0; i < x.sizeN(); i++)
 			{
-				std::cout << "itx " << *itx << std::endl;
 				auto ity = y.begin<true>();
 				for(size_t j=0; j < y.sizeM(); j++)
 				{
-					std::cout << "ity " << *ity << std::endl;
 					double sum=0;
 					for(size_t k=0; k < y.sizeN(); k++)
 					{
