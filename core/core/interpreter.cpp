@@ -23,16 +23,27 @@ template<EXCEPTION T> void interpreterOops()
 
 
 	class interpreter;
-
-
-void debug::check_tree_mem_leak()
+#ifdef TYPE_MEM_TEST
+template<typename T> void leak_check(typename util::object_stats<T> stats)
 {
-	util::object_stats<tree::nodeDataInterface> stats;
 	std::cout << "COUNTABLE ASSERT RUNNING\n" << "STATS: \n" << "total: " << stats.get_total() << "\ncurrent: " << stats.get_current() << "\ndeleted: " << stats.get_deleted() << std::endl;
 	if(stats.get_total() != stats.get_deleted())
 	{
 		interpreterOops<MEMORY_LEAK_ASSERT>();
 	}	
+}
+#endif
+
+void debug::check_tree_mem_leak()
+{
+#ifdef TYPE_MEM_TEST
+	std::cout << "DEBUG LEAK CHECK\n\nNodes:\n";
+	leak_check(util::object_stats<tree::nodeDataInterface>());
+	std::cout << "\nTypes:\n";
+	leak_check(util::object_stats<interface::type>());
+#else
+	std::cout << "This library was built with memory leak check disabled\n";
+#endif
 }
 
 
@@ -137,7 +148,7 @@ void debug::check_tree_mem_leak()
 			expressionLength =0;
 		}
 	}
-	void interpreter::allocExpression(short lenght )
+	void interpreter::allocExpression(size_t lenght )
 	{
 		if(expression)
 		{
@@ -274,7 +285,7 @@ void debug::check_tree_mem_leak()
 
 
 	}
-	number_type interpreter::exec()
+        interface::type_ptr interpreter::exec()
 	{
         if(!rootEmpty)
         {
@@ -282,13 +293,13 @@ void debug::check_tree_mem_leak()
             this->root.integrityTest();
 #endif
 			this->root.TakeContext();
-			return this->root.data->eval();
+			return interface::type_ptr(this->root.data->eval());
 
         }
 		interpreterOops<EXEC_UNFINISHED_EXPR>();
-		return 0;
+		return interface::type_ptr(nullptr);
 	}
-	void interpreter::set(const char * expression_, unsigned short lenght)
+	void interpreter::set(const char * expression_, size_t lenght)
 	{
 		if (lenght > 0)
 		{
@@ -354,15 +365,15 @@ void debug::check_tree_mem_leak()
 		other.startOperatorPos = 0;
 		other.tokens.clear();
 	}
-	interpreter::interpreter(const interpreter& other)
+	interpreter::interpreter(const interpreter& )
 	{
 		interpreterOops<CANT_CPY_OBJ>();
 	}
-	interpreter& interpreter::operator=(const interpreter& other)
+	interpreter& interpreter::operator=(const interpreter& )
 	{
 		return *this;
 	}
-	interpreter& interpreter::operator=(interpreter&& other)
+	interpreter& interpreter::operator=(interpreter&& )
 	{
 		return *this;
 	}

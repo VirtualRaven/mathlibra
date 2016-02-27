@@ -1,4 +1,5 @@
-
+#ifndef OBJ_COUNTER_H_INCLUDED
+#define OBJ_COUNTER_H_INCLUDED
 namespace util
 {	
 	template<typename T>class countable;
@@ -48,3 +49,4 @@ namespace util
 	template<typename T> unsigned int util::countable<T>::__total_count=0;
 	template<typename T> unsigned int util::countable<T>::__deleted_count=0;
 }
+#endif

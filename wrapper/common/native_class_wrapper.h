@@ -22,7 +22,7 @@ namespace native
 		~core_native_wrapper();
 		void set_arg(std::string str);
 		void interpret_arg();
-		double execute_arg();
+		interface::type_ptr execute_arg();
 		wrapper_exception_info get_exception_info();
 		bool exceptionOccured();
 		//Fúnction unit
@@ -31,13 +31,13 @@ namespace native
 
 		//Memroy unit 
 		std::vector<std::string> getVariableNames();
-		double getVariableValue(std::string  name);
+		interface::type* 	getVariableValue(std::string  name);
 		mem_obj_api getVariable(std::string name);
                 mem_obj_api getVariable(size_t index);
-                void setVariable(std::string name, double value);
-		void createVariable(std::string name, double value);
+                void setVariable(std::string name, interface::type_ptr&& value);
+		void createVariable(std::string name, interface::type_ptr&& value);
 		void clearVariables();
-                void manageVariable(std::string,double value,bool const);
+                void manageVariable(std::string,interface::type_ptr&& value,bool isConst);
                 bool  isConstVariable(std::string);
                 unsigned int getNumVariables();
                 bool isDefined(std::string name);

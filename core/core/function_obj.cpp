@@ -1,5 +1,6 @@
 #include "function_obj.h"
 #include "mathNode.h"
+#include "core/type_helper.h"
 namespace function_obj
 {
 	
@@ -40,17 +41,17 @@ void interpreted_func::__prepare_function()
 {
 	for (auto var : this->global_mem->allVars())
 	{
-		this->local_mem.set(var, this->global_mem->get(var), true, true);
+		this->local_mem.set(var, interface::type_ptr(this->global_mem->get(var)->copy()), true, true);
 	}
 	this->__make_local_context(&this->__tree);
 }
-double interpreted_func::operator()(double x)
+type* interpreted_func::operator()(type* x)
 {
-	this->local_mem.set_ignore_const("x", x, true, true);
+	this->local_mem.set_ignore_const("x", interface::type_ptr(x), true, true);
 	this->__tree.TakeContext();
 	return this->__tree.data->eval();
 }
-double interpreted_func::exec(double x )
+type* interpreted_func::exec(type* x )
 {
 	return this->operator()(x);
 }

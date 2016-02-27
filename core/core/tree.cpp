@@ -1,6 +1,7 @@
 #include "tree.h"
 #include <vector>
 #include "exception_helper.h"
+#include "type.h"
 namespace tree
 {
 
@@ -55,7 +56,46 @@ namespace tree
 		}
 
 	}
+
 #endif
+
+
+        interface::type* node::realloc(interface::type* t)
+        {
+            switch(t->stores())
+            {
+                case T_CHAR:
+                    {
+                        auto tmp = static_cast<base_type<char>*>(t);
+                        return new base_type<char>(*tmp);         
+                    }          
+                case T_TYPE:
+                    {
+                        auto tmp = static_cast<base_type<type*>*>(t);
+                        return new base_type<type*>(*tmp);         
+                    }          
+                case T_DOUBLE:
+                    {
+                        auto tmp = static_cast<base_type<double>*>(t);
+                        return new base_type<double>(*tmp);         
+                    }          
+                default:
+                    treeOops<REALLOC_NO_RULE>();
+                    return nullptr;
+            }
+        }
+        void    __free_type(interface::type* t)
+        {
+            delete t;
+        }
+		void node::free_type(interface::type* t)
+		{
+			delete  t;
+		}
+		tree::node_base::free_func node::get_free_func()
+		{
+			return __free_type;
+		}
 	node * node::sub1()
 	{
 		return nodePtr1;
@@ -122,9 +162,9 @@ namespace tree
 	{
 
 	}
-	void node::set(nodeDataInterface* data)
+	void node::set(nodeDataInterface* data_)
 	{
-		this->data = data;
+		this->data = data_;
 		this->data->bind(this);
 	}
 

@@ -1,5 +1,5 @@
 #include "exception.h"
-
+ char __exception_buffer[128] = {'\0'};
 
 exception::exception(const char* type,
 	  const char* inf,

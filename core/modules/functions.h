@@ -49,16 +49,13 @@ namespace math_func
 		std::string tag;
 		std::string doc;
 		std::string disp_name;
-		typedef number_type(*funcPtr)(number_type); /**< @typedef the standard fixed single argument type function. */
-		typedef number_type(*generalFuncPtr)(tree::node_base*); /**< @typedef the extended function type that takes an pointer to an node_base. Used for multi argument functions. */ 
+		typedef interface::type*(*generalFuncPtr)(tree::node_base*); /**< @typedef the extended function type that takes an pointer to an node_base. Used for multi argument functions. */ 
 		union
 		{
-			funcPtr ptr; 
 			generalFuncPtr gptr;
 		        interpreted_func* uptr;
                 };
 		
-		m_function(std::string name,std::string tag,std::string doc,std::string disp_name, funcPtr ptr); 
 		m_function(std::string name,std::string tag,std::string doc,std::string disp_name, generalFuncPtr ptr);
 		m_function(std::string name,std::string tag,std::string doc,std::string disp_name, interpreted_func* ptr);
                 m_function();
@@ -76,7 +73,6 @@ namespace math_func
 	{
                 std::vector<m_function> funcs;
 		m_function cache;
-		typedef number_type(*funcPtr)(number_type);
 	public:
 
 		void load(std::vector< m_function>& obj); /**< @param obj An vector of functions to be loaded by the module. */
@@ -98,7 +94,8 @@ namespace math_func
 	extern std::vector<math_func::m_function> std_math_func;
 	/**Vector containing basic numerical functions like ceil dervired from math.h */
 	extern std::vector<math_func::m_function> std_math_num_func;
-
+	/**Data connstructors for bracket matrice initilization */
+	extern std::vector<math_func::m_function> mathlibra_data_constructors; 
 	
 }
 #endif

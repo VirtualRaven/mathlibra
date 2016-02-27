@@ -1,6 +1,7 @@
 #ifndef EXCEPTION_HELPER_INCLUDED
 #define EXCEPTION_HELPER_INCLUDED
 #include "exception.h"
+#include <cstring>
 //* All exceptions that can be thrown is decalared in this enum
 enum EXCEPTION {
 	MEMORY_LEAK_ASSERT,
@@ -47,7 +48,15 @@ enum EXCEPTION {
 	NODE_EXPECTED_ARGUMENT_FOR_FUNC,
 	NODE_EVAL_UNDEFINED_FUNC,
 	TOKEN_NO_MEM_MODULE,
-	TOKEN_FUNCTION_NULL_POINTER	
+	TOKEN_FUNCTION_NULL_POINTER,
+    REALLOC_NO_RULE,
+    USER_DEFINED_FUNCTION_TAKES_NUMBER,
+	PTR_PROTECT_MOVED_FREED_PTR,
+	SYNTAX_EXPECTED_END_OF_STRING,
+	EMPTY_MAT_INIT,
+	DIFFERENT_N_MAT_INIT,
+	DOUBLE_REQUIRED_MAT_INIT,
+	MATRICE_MUST_BE_DOUBLE_MAT_INIT
 	};
 
 //* Lists all possible exception owners
@@ -60,9 +69,11 @@ enum EXCEPTION_TYPE {
 		PLUG_IN,
 		BUILD,
 		NODE,
-		TOKEN
+		TOKEN,
+		PTR_PROTECT
 };
 
+extern char __exception_buffer[128];
 
 
 	//* Property class which holds properties for EXCEPTION_TYPE
@@ -94,10 +105,11 @@ template<EXCEPTION T,EXCEPTION_TYPE X,short assert=StaticAssert<exception_proper
 //Exceptions thrown by this function has to implement all properties except info.
 template<EXCEPTION T,EXCEPTION_TYPE X,short assert=StaticAssert<exception_property<T>::owner==X>::assert> inline void __mathlibra__runtime__raise(const char * message)
 {
+	strncpy(&__exception_buffer[0], message, 127);
 
 	//Terribly sorry that we had to end it likes this :/
 	throw exception(exception_type_prop<exception_property<T>::owner>::str,
-			message,
+			&__exception_buffer[0],
 			exception_property<T>::critical,
 			T);
 }
@@ -183,9 +195,21 @@ declare_exception_owner(TOKEN)
 {
 	str_property str = "Token Oops";
 };
+
+
+declare_exception_owner(PTR_PROTECT)
+{
+	str_property str = "Ptr protect Oops (Severe bug)";
+};
 /***************************************************************
 *              LIST OF EXCEPTIONS
 **************************************************************/
+declare_exception(PTR_PROTECT_MOVED_FREED_PTR)
+{
+	str_property info = "Tried to move released pointer";
+	bool_property critical = true;
+	owner_property owner = PTR_PROTECT;
+};
 declare_exception(MEMORY_LEAK_ASSERT)
 {
 	str_property info = "ASSERT FAILURE,possible memory leak in program";
@@ -501,5 +525,56 @@ declare_exception(SYNTAX_EXPECTED_FUNC_ARG)
 	bool_property critical = false;
 	owner_property owner = BUILD;
 };
-	
+
+declare_exception(REALLOC_NO_RULE)
+{
+        str_property info = "No rule found for reallocation current object";
+        bool_property critical = true;
+        owner_property owner = TREE;
+};
+
+declare_exception(USER_DEFINED_FUNCTION_TAKES_NUMBER)
+{   
+    str_property info = "A user defined function can only take single number";
+    bool_property critical = false;
+    owner_property owner = NODE;
+
+
+};
+
+declare_exception(SYNTAX_EXPECTED_END_OF_STRING)
+{
+	str_property info = "Expected ending \" at end of string";
+	bool_property critical = false;
+	owner_property owner = INTERPRETER;
+
+};
+
+declare_exception(EMPTY_MAT_INIT)
+{
+	str_property info = "Cannot create an empty matrice";
+	bool_property critical = false;
+	owner_property owner = FUNCTION;
+
+};
+declare_exception(DIFFERENT_N_MAT_INIT)
+{
+	str_property info = "All matrices in bracket initilization must be of same type";
+	bool_property critical = false;
+	owner_property owner = FUNCTION;
+
+};
+declare_exception(DOUBLE_REQUIRED_MAT_INIT)
+{
+	str_property info = "All element in bracket initilization must be of double matrice or double type";
+	bool_property critical = false;
+	owner_property owner = FUNCTION;
+
+};
+declare_exception(MATRICE_MUST_BE_DOUBLE_MAT_INIT)
+{
+	str_property info = "Bracket matrix initilization can only create double matrix";
+	bool_property critical = false;
+	owner_property owner = FUNCTION;
+};
 #endif //EXCEPTION_HELPER_INCLUDED

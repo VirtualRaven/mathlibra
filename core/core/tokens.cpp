@@ -1,6 +1,6 @@
 #include "tokens.h"
 #include "exception_helper.h"
-
+#include "core/type_helper.h"
 
 	template<EXCEPTION T> void tokenOops()
 	{
@@ -68,7 +68,7 @@
 	{
 		return nullptr;
 	}
-	 token::parenthesesToken::parenthesesToken(short startPos, short endPos)
+	 token::parenthesesToken::parenthesesToken(size_t startPos, size_t endPos)
 	: baseToken(),
     opposit(0)
 	{
@@ -89,15 +89,15 @@
 
 	 tree::nodeDataInterface* token::valueToken::node()
 	{
-		return new mathNode::mathExpressionNode_val(value);
+		return new mathNode::mathExpressionNode_val(this->value->copy());
 	}
 	 bool token::valueToken::hasNode()
 	{
 		return true;
 	}
-	 token::valueToken::valueToken(short startPos, short endPos)
+	 token::valueToken::valueToken(size_t startPos, size_t endPos)
 	:baseToken(),
-	value(0)
+	value(nullptr)
 	{
 
 		this->endPos = endPos;
@@ -129,7 +129,7 @@
 	{
 		return true;
 	}
-	 token::variableToken::variableToken(short startPos, short endPos, memory::memory* mem, math_func::function_interface* func)
+	 token::variableToken::variableToken(size_t startPos, size_t endPos, memory::memory* mem, math_func::function_interface* func)
 	:baseToken(),
         func(func),
 	variableName(""),
@@ -174,7 +174,7 @@ using token::ptr_type_enum;
 	 tree::nodeDataInterface* token::funcToken::node()
 	{
                 
-		if (ptr == nullptr)
+		if (gptr == nullptr)
 		{
 			tokenOops<TOKEN_FUNCTION_NULL_POINTER>();
 			return nullptr;
@@ -182,10 +182,6 @@ using token::ptr_type_enum;
 		else if (this->ptr_type == ptr_type_enum::gen)
 		{
 			return new mathNode::mathExpressionNode_func_tree(gptr);
-		}
-		else if (this->ptr_type == ptr_type_enum::std)
-		{
-			return new mathNode::mathExpressionNode_func(ptr);
 		}
                 else 
                 {
@@ -197,16 +193,7 @@ using token::ptr_type_enum;
 	{
 		return true;
 	}
-	 token::funcToken::funcToken(short startPos, short endPos, funcPtr ptr)
-	:ptr(ptr),
-	baseWheight(4),
-	ptr_type(ptr_type_enum::std)
-	{
-		this->endPos = endPos;
-		this->startPos = startPos;
-		this->type = tree::FUNCTION;
-	}
-	 token::funcToken::funcToken(short startPos, short endPos, generalFuncPtr ptr)
+	 	 token::funcToken::funcToken(size_t startPos, size_t endPos, generalFuncPtr ptr)
 	:gptr(ptr),
 	baseWheight(4),
 	ptr_type(ptr_type_enum::gen)
@@ -215,7 +202,7 @@ using token::ptr_type_enum;
 		this->startPos = startPos;
 		this->type = tree::FUNCTION;
 	}
-        token::funcToken::funcToken(short startPos, short endPos,usr_ptr ptr)
+        token::funcToken::funcToken(size_t startPos, size_t endPos,usr_ptr ptr)
         : uptr(ptr),
         baseWheight(4),
         ptr_type(ptr_type_enum::usr)
@@ -226,11 +213,11 @@ using token::ptr_type_enum;
         }
 
 	 token::funcToken::funcToken()
-	:ptr(nullptr),
+	:gptr(nullptr),
 	baseWheight(4)
 	{
 		this->endPos = 0;
 		this->startPos = 0;
-		this->type = tree::FUNCTION;
+		this->type = tree::FUNCTION_TREE;
 	}
 

@@ -1,9 +1,12 @@
 //#define DEBUG
 #include <iostream>
+
 #include <cstring>
 #include <iomanip> 
 #include "tests.h"
 #include "core/function_obj.h"
+#include "core/type.h"
+#include "core/type_helper.h"
 /* TODO
 	Add function inpterpeting and execution DONE
 	Add varible interpeting and memmory system. DONE
@@ -24,7 +27,7 @@ bool menu(memory::memory& mem,math_func::function_interface& func)
 		std::vector<std::string> vars = mem.allVars();
 		for (unsigned int i = 0; i < vars.size(); i++)
 		{
-			std::cout <<"Variable "<<i+1 << ": " << vars[i] << " = " << mem.get(vars[i]) << "\n";
+			std::cout <<"Variable "<<i+1 << ": " << vars[i] << " = " << mem.get(vars[i])->toString() << "\n";
 		}
 		if (vars.size() == 0)
 		{
@@ -55,11 +58,6 @@ bool menu(memory::memory& mem,math_func::function_interface& func)
 	}
 	else if (input == "6")
 	{
-		if (!test::memory_module_test1())
-		{
-			std::cin.get();
-			return false;
-		}
 		std::string exr = "x=(sqrt(sqrt(5*5)^2)*100)/5*(sin(PI)^2+cos(PI)^2)";
 		test::profileInterpreter(exr);
 //		test::profileInterpreterVM(exr);
@@ -79,8 +77,7 @@ bool menu(memory::memory& mem,math_func::function_interface& func)
 }
 int main(int argc, char* argv[])
 {
-	
-
+    
 
 	
 	{
@@ -109,7 +106,7 @@ int main(int argc, char* argv[])
 	functions.load(math_func::std_math_trig_func); // Load std_math_trig_funct into function unit
 	functions.load(math_func::std_math_func);
 	functions.load(math_func::std_math_num_func);
-	
+	functions.load(math_func::mathlibra_data_constructors);
 	inter.setFunction(&functions);
 	auto my_manager = plugin::get_platform_specific_manager();
 	if(my_manager != nullptr)
@@ -133,7 +130,7 @@ int main(int argc, char* argv[])
 
 
 	bool exit = false;
-     std::cout << "Calculator backend test\nLukas Rahmn 2015\n\nEnter an expression or write menu to open the menu\n\n";
+     std::cout << "Calculator backend test\nLukas Rahmn 2016\n\nEnter an expression or write menu to open the menu\n\n";
 	do
 	{
 
@@ -161,7 +158,7 @@ int main(int argc, char* argv[])
 #else
 #error "WARNING, no execution enviroment selected"
 #endif
-					std::cout << expression << " = " << mem.get("ans") << std::endl;
+					std::cout << expression << " = " << mem.get("ans")->toString() << std::endl;
 				
 
 			}

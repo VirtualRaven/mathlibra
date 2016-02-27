@@ -2,14 +2,15 @@
 #ifndef TOKENS_H_INCLUDED
 #define TOKENS_H_INCLUDED
 
+#include "core/type_interface.h"
 #include "mathNode.h"
 #include "tree.h"
 #include "modules/operators.h"
 #include "modules/functions.h"
 #include "main.h"
 #include "function_obj.h"
-using mathNode::number_type;
 using tree::tokenType;
+using interface::type;
 /**
  *@namespace token Contains all token types. Tokens are used to identefy parts of strings.
 */
@@ -21,8 +22,8 @@ namespace token
  */
  struct baseToken
 {
-	short startPos; /**< The starting position of an token in the string. @note This index is broken in the current revision*/ 
-	short endPos;  /**< The ending position of an token in the string*/
+	size_t startPos; /**< The starting position of an token in the string. @note This index is broken in the current revision*/ 
+	size_t endPos;  /**< The ending position of an token in the string*/
 	tokenType type; /**< The type of token @see tokenType. */
 
 	virtual tree::nodeDataInterface* node()=0; /**< Constructor for nodeDataInterface object. @return nodeDataInterface pointer to the data coresponding to the type. */
@@ -53,12 +54,12 @@ struct operatorToken : public baseToken, operators::interpreter_operator
 struct parenthesesToken : public baseToken
 {
 
-	short opposit; 
+	size_t opposit; 
 
 	bool isOppening(); /**< @return True if the token represents '(' else false. */
 	bool  hasNode();
 	tree::nodeDataInterface * node();
-	parenthesesToken(short startPos, short endPos);
+	parenthesesToken(size_t startPos, size_t endPos);
 	parenthesesToken();
 
 };
@@ -70,11 +71,11 @@ struct parenthesesToken : public baseToken
 
 struct valueToken : public baseToken
 {
-	double value; /**< The value of the token, for example 1 or 4e100 */
+	interface::type_ptr value; /**< The value of the token, for example 1 or 4e100 */
 
 	tree::nodeDataInterface* node();
 	bool  hasNode();
-	valueToken(short startPos, short endPos);
+	valueToken(size_t startPos, size_t endPos);
 	valueToken();
 };
 /**
@@ -89,7 +90,7 @@ struct variableToken : public baseToken
 	bool _stack; /**< Stackable. Signifies  if the variable should be put on the stack. Used for the corax virtual machine. */
 	tree::nodeDataInterface* node();
 	bool  hasNode();	
-	variableToken(short startPos, short endPos, memory::memory* mem, math_func::function_interface* func);
+	variableToken(size_t startPos, size_t endPos, memory::memory* mem, math_func::function_interface* func);
 	variableToken();
         variableToken(const variableToken&);
         variableToken operator=(const variableToken&); 
@@ -106,12 +107,10 @@ struct funcToken : public baseToken
 {
        
          
-	typedef number_type(*funcPtr)(number_type); /**< @typedef The standard single argument function. Used by FUNCTION type nodes */
-	typedef number_type(*generalFuncPtr)(tree::node_base*); /** @typedef Special pointer for multi argument functions. Used by FUNCTION_TREE type nodes */
+	typedef interface::type*(*generalFuncPtr)(tree::node_base*); /** @typedef Special pointer for multi argument functions. Used by FUNCTION_TREE type nodes */
         typedef function_obj::interpreted_func* usr_ptr;
 	union
 	{
-		funcPtr ptr;
 		generalFuncPtr gptr;
                 usr_ptr uptr;    
                 
@@ -119,9 +118,8 @@ struct funcToken : public baseToken
 	unsigned short baseWheight; /**< Weight of the operator. Higher weight means higher execution priority.  */
 	tree::nodeDataInterface* node();
 	bool  hasNode();
-	funcToken(short startPos, short endPos, funcPtr ptr);
-	funcToken(short startPos, short endPos, generalFuncPtr ptr);
-        funcToken(short startPos,short endPos, usr_ptr ptr);
+	funcToken(size_t startPos, size_t endPos, generalFuncPtr ptr);
+        funcToken(size_t startPos,size_t endPos, usr_ptr ptr);
 	funcToken();
 private:
             ptr_type_enum ptr_type;

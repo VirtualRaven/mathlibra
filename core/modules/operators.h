@@ -13,7 +13,7 @@ struct variableToken; //Forward declared from core
 */
 namespace operators
 {
-	typedef number_type(*generic_oper_ptr)(tree::nodeDataInterface*);
+	typedef type* (*generic_oper_ptr)(tree::nodeDataInterface*);
 
 
     struct interpreter_operator

@@ -21,14 +21,14 @@ buildVector::buildVector(size_t lowLimit, size_t hiLimit, size_t vecOffset, std:
 	vecPtr(nullptr)
 	{}
 	//Return types, -1 error, >0 next operator index
-	size_t buildVector::calculateNextOperation(size_t lowLimit, size_t hiLimit)
+	size_t buildVector::calculateNextOperation(size_t _lowLimit, size_t _hiLimit)
 	{
 		size_t lowWheight = 9999;
-		size_t nextOperation = -2;
+		size_t nextOperation = 0;
 		size_t lenght = 0;
 		size_t values = 0;
 		token::baseToken* basePtr = nullptr;
-		for (size_t i = lowLimit; i < hiLimit; i++)
+		for (size_t i = _lowLimit; i < _hiLimit; i++)
 		{
 			 
 			basePtr = vecPtr->operator[](i);
@@ -66,7 +66,7 @@ buildVector::buildVector(size_t lowLimit, size_t hiLimit, size_t vecOffset, std:
 		}
 		else if (values == 1 && lenght == 1)	//There is nothing more to do, a value is the only member of the interval
 		{
-			for (size_t i = lowLimit; i < hiLimit; i++)
+			for (size_t i = _lowLimit; i < _hiLimit; i++)
 			{
 				basePtr = vecPtr->operator[](i);
 				if (basePtr->type == tree::VALUE || basePtr->type == tree::VARIABLE)
@@ -173,50 +173,7 @@ bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)
 			return true;
 		}
 
-bool _function_build(mathNode::mathExpressionNode_func * tgt, buildVector vec)
-{
 
-	if (vec.vecOffset >= vec.vecPtr->size() - 1 || ((vec.vecOffset == vec.vecPtr->size() - 2) && vec.vecPtr->operator[](vec.vecOffset+1)->type ==tree::PARENTHESES ))
-	{
-		buildOops<SYNTAX_EXPECTED_FUNC_ARG>();
-
-	}
-        for (size_t i = vec.lowLimit; i < vec.vecOffset; i++)
-	{
-		if (vec.vecPtr->operator[](i)->type != tree::PARENTHESES)
-		{
-			std::cerr << "Vital token on lefhand side of function in build vector!\n";
-			return false;
-		}
-	}
-	buildVector node1(vec.vecOffset + 1, vec.hiLimit, 0, vec.vecPtr);
-	//Create first sub branche
-        if(node1.lowLimit != node1.hiLimit)
-        {
-	    size_t result = node1.calculateNextOperation(node1.lowLimit, node1.hiLimit);
-	    tree::nodeDataInterface* mathNode1;
-	    if (vec.vecPtr->operator[](result)->hasNode())
-	    {
-	    	mathNode1 = vec.vecPtr->operator[](result)->node();
-	    }
-	    else
-	    {
-		std::cerr << "Can't create sub node!\n";
-		return false;
-	    }
-
-	    node1.vecOffset = result;
-	    auto tmp = static_cast<tree::node*>(nodeDataInterface_wrapper_access(tgt));
-
-	    tmp->createSubNodes(mathNode1,nullptr);
-	    if (!buildSubNodes(mathNode1, node1))
-	    {
-		return false;
-	    }
-	    else return true;
-        }
-        else return true;
-}
 
 bool _function_build_tree(mathNode::mathExpressionNode_func_tree * tgt, buildVector vec)
 {	
@@ -325,10 +282,7 @@ bool buildSubNodes(tree::nodeDataInterface * target, buildVector vec)
 	case tree::VALUE:
 		return true;
 		break;
-	case tree::FUNCTION:
-		return _function_build(static_cast<mathNode::mathExpressionNode_func*>(target), vec);
-		break;
-	case tree::FUNCTION_TREE:
+        case tree::FUNCTION_TREE:
 		return _function_build_tree(static_cast<mathNode::mathExpressionNode_func_tree*>(target), vec);
 		break;
         case tree::FUNCTION_USER:

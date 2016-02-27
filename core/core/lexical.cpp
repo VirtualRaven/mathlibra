@@ -3,6 +3,7 @@
 #include <cstring>
 #include <cstdlib>
 #include "ptr_protect.h"
+#include "type_helper.h"
 using namespace __internal;
 
 template<EXCEPTION T> void lexicalOops()
@@ -52,7 +53,7 @@ state lexical(const char * expr,
 	pstack paran;
 	
 	size_t oper_w_extra=0;
-	size_t oper_w_lowset=~0;
+	size_t oper_w_lowset=99999999;
 	size_t i=0;
 	size_t start=0;
 	i_state s = { &oper_w_extra, &i,&oper_w_lowset, &expr_len,&start};
@@ -81,6 +82,10 @@ state lexical(const char * expr,
 			(isdigit(expr[i+1]) || expr[i+1] == '.'))
 		{
 			parse_number(expr,tokens,s,opr);
+		}
+		else if (expr[i] == '"')
+		{
+			parse_string(expr, tokens, s);
 		}
 		else if (opr!= nullptr && opr->inArray(expr[i]))
 		{	
@@ -154,7 +159,7 @@ void pushMulti(tvec& t,operators::operators_interface* opr, i_state& s)
 void pushValue(tvec& tokens ,i_state& s, double value)
 {
 	ptr_protect<token::valueToken*, false> tmp_val(new token::valueToken(*(s.i),*(s.i)));
-	tmp_val->value = value;
+	tmp_val->value = interface::type_ptr(make_type(value));
 	tokens.push_back(tmp_val.ptr());
 	tmp_val.release();
 }
@@ -213,6 +218,39 @@ void parse_parantheses2(tvec& tokens ,i_state& s, pstack& p)
 	}
 }
 //**************************************************
+//* string parser
+//**************************************************
+
+void parse_string(const char * expr, tvec& tokens, i_state& s)
+{
+	
+	for (size_t i = *s.i+1; i < *s.lenght; i++)
+	{
+		if (expr[i] == '"')
+		{
+			ptr_protect<token::valueToken*, false> tmp(new token::valueToken(*(s.i), 0));
+			tmp->startPos = *s.i;
+			tmp->endPos = i;
+	
+			if (*s.i - i == 1)
+			{
+				tmp->value= interface::type_ptr(make_type(""));
+			}
+			else
+			{
+				tmp->value= interface::type_ptr(make_type(std::string(expr + (*s.i) + 1, i - (*s.i) - 1)));
+			}
+			
+			tokens.push_back(tmp.ptr());
+			tmp.release(); //Release ownership of pointer
+			*(s.i) = i;
+			return;
+		}
+	}
+	lexicalOops<SYNTAX_EXPECTED_END_OF_STRING>();
+}
+
+//**************************************************
 //*	number parser
 //*
 //**************************************************
@@ -266,13 +304,13 @@ void parse_number(const char * expr, tvec& tokens, i_state& s,operators::operato
 			valueLength++;
 	}
 	tmp->endPos = *(s.i)+valueLength;
-	short tmp_str_length = tmp->endPos+1 - tmp->startPos;
+	size_t tmp_str_length = tmp->endPos+1 - tmp->startPos;
 	//Create a temporary string from which we can convert the string to a double
 	char* tmp_str = nullptr;
         tmp_str = new char[tmp_str_length+1];
 	memcpy(tmp_str, &expr[*(s.i)], (tmp_str_length*sizeof(char)) );
 	tmp_str[tmp_str_length] = '\0';
-	tmp->value =  atof(tmp_str);
+	tmp->value =  interface::type_ptr(make_type(atof(tmp_str)));
 	delete[] tmp_str;
 	tokens.push_back(tmp.ptr());
 	tmp.release(); //Release ownership of pointer
@@ -353,10 +391,6 @@ void parse_func(std::string str,
 	if (type == math_func::func_type::GENERAL )
 	{
 		tmp_ptr = new token::funcToken(startPos, endPos, (token::funcToken::generalFuncPtr)func->get(str));
-	}
-	else if (type == math_func::func_type::FAST)
-	{
-		tmp_ptr = new token::funcToken(startPos, endPos, (token::funcToken::funcPtr)func->get(str));
 	}
         else
         {

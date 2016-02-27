@@ -33,7 +33,10 @@ namespace tree
                 node * take_ownership_sub1();
                 node * take_ownership_sub2();
 		std::stack<tree::node_base*> getArgs();
-		void raiseException(const char * inf);
+		void raiseException(const char * inf); /**< Raises an exception in the library. @param inf an message describing the exception, the lenght is limeted to 127 chars the rest will be truncated*/
+        interface::type* realloc(interface::type* t); /**< Reallocates the the type by deepcopying the object. Used to tranfer object allocation form shared library memory space to mathlibra's memoryspace */
+		void free_type(interface::type*);
+		free_func get_free_func();
 		void deleteSubNodes(); /**< Destroy child branches. Delete the data of any child branches and then remove the branch. */
 		node();
 		node(nodeDataInterface* val);

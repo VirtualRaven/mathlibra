@@ -1,7 +1,11 @@
 #ifndef TREE_INTERFACE_INCLUDED
+
 #define TREE_INTERFACE_INCLUDED
 #include <stack>
+#ifdef TYPE_MEM_TEST
 #include "object_counter.h"
+#endif
+#include "core/type_interface.h"
 /**
  *@namespace tree Contains the tree classes. Provides the data types to orgenize data in a tree structure.
  */
@@ -27,7 +31,10 @@ namespace tree
 	/**
 	 * A data interface for nodes. All nodes have to contain data which is of the type nodeDataInterface. Data like values, variables and function names are all stored using this interface.
 	 */
-	class nodeDataInterface: util::countable<nodeDataInterface>
+	class nodeDataInterface
+#ifdef TYPE_MEM_TEST
+		: util::countable<nodeDataInterface>
+#endif
 	{
 	protected:
 		node_base * wrapperNode;
@@ -37,8 +44,8 @@ namespace tree
 
 		virtual void bind(node_base * context)=0; /**< Called before operations on the node. The class has an internal pointer pointing back to the node_base which contains the data. This internal pointer needs to be set to the right node before any operations can be carried out. @note Forgetting to call bind before eval causes undefined behaviour. @param context Pointer to the node_base which owns the data. */
 		virtual void destroy()=0; /**< Called upon tree destruction. It shall delete all data allocated by the class and then destroy the interface itself. @note Failure to correctly follow this behaviour causes memory leaks. */
-		virtual double eval()=0; /**< Evaluate node. When called is causes the node to evaluate itself. If the type of the data is one that takes input data the eval method is first called on the child branches of the node_base owning the data. Then this data is evaluated using the acquired data from the child branches. */
-
+		virtual interface::type* eval()=0; /**< Evaluate node. When called is causes the node to evaluate itself. If the type of the data is one that takes input data the eval method is first called on the child branches of the node_base owning the data. Then this data is evaluated using the acquired data from the child branches. */
+                virtual ~nodeDataInterface() = default;
 	};
 
 	/**
@@ -54,7 +61,10 @@ namespace tree
 		virtual node_base * sub2()=0; /**< Gets the second child branch. @return Pointer to the second child branch.*/
 		virtual std::stack<tree::node_base*> getArgs() = 0; /**<Used for multi argument functions. It searches the child branches an splits for DUMMY nodes. @see DUMMY. Using the dummy node it splits up the child-branches in several "sub trees" each coresonding to an argument for an function. @see FUNCTION_TREE. */
 		virtual void raiseException(const char * inf)=0; /**<Raise an exception. This function is used to created an exception inside the core. @note It is primary thought to be used for passing exception over DLL-bundries, it is not made for internal use. \ For internal exceptions, overload the standard exception instead. @see exception. */
-
+        virtual interface::type* realloc(interface::type* t)=0; /**< Reallocates the the type by deepcopying the object. Used to tranfer object allocation form shared library memory space to mathlibra's memoryspace */
+		typedef void(*free_func)(interface::type*);
+		virtual void free_type(interface::type*) = 0;
+		virtual  free_func get_free_func()=0; /**< Get an pointer to an free function which deletes an type object. Used to free type object over dll bunderies" */
 	};
 }
 

@@ -1,0 +1,335 @@
+apply plugin: "cpp"
+
+	 task createGitHeader<< {
+		println "Updating git info..."
+		def tmp = "git describe --dirty=-D".execute()
+		tmp.waitForOrKill(10000)
+		if(tmp.exitValue() != 0){
+			throw new GradleException("Could not get git info")
+		}
+		else{
+			
+			def fileContent = { tag, number, sha -> 
+	"""
+	#define GIT_NAME \"${tag}\"
+	#define GIT_SHA  \"${sha}\"
+	#define GIT_NUM  \"${number}\"
+	"""
+			}
+	
+			def res = tmp.text.split("-",4)
+			project.buildDir.mkdirs()
+			if(res.size() >= 3 && res.size() <= 4){
+				new File(project.buildDir.getAbsolutePath()+ "/GIT_VERSION.h").withWriter { out ->
+					out.print fileContent(res[0].trim(),res[1].trim(),res[2].trim())
+					if(res.size() == 4){
+						out.println "#define GIT_DIRTY"
+					}
+				}
+			}
+			else{
+				throw new GradleException("Output from git describe not understood")
+			}		
+			println "Git update done"
+		}
+	}
+
+
+model
+{
+	toolChains {
+		arm(Gcc){
+			if (project.hasProperty('ndktoolchain'))
+				path project.properties['ndktoolchain']
+			target("armeabiv7a")
+		}
+		
+		gcc(Gcc){
+			target("linux_x86")
+			target("linux_x64")
+		}
+		clang(Clang){
+			target("osx_x86")
+			target("osx_x64")
+			target("windows_x86")
+			target("windows_x64")
+		}
+		
+	}
+	
+	platforms {
+		armeabiv7a{
+			architecture "arm"
+			operatingSystem "linux"
+		}
+		linux_x86{
+			architecture "x86"
+			operatingSystem "linux"
+		}
+		linux_x64{
+			architecture "x86_64"
+			operatingSystem "linux"
+		}
+		windows_x86 {
+                 architecture "x86"
+                 operatingSystem "windows"
+        }
+        windows_x64 {
+                 architecture "x86_64"
+                 operatingSystem "windows"
+        }
+        osx_x86 {
+                 architecture "x86"
+                 operatingSystem "osx"
+        }
+        osx_x64 {
+                 architecture "x86_64"
+                 operatingSystem "osx"
+        }
+	}	
+	
+	buildTypes {
+		debug
+		release
+	}
+	tasks{
+		mkCXXApi(Copy){
+			from "wrapper/common/main_wrapper.h"
+			from "core/core/type_interface.h"
+			from "core/core/type_enum.h"
+			from "core/ptr_protect.h"
+		
+	from "wrapper/c++_wrapper/export.h"
+			rename { String fileName -> "mathlibra_CXX/include/" + fileName}
+			into "$buildDir/mkCXXApi"
+		}
+		mkCApi(Copy){
+			from "wrapper/c_api_interface/c_api.h"
+			from "core/core/type_enum.h"
+			rename { String fileName -> "mathlibra_C/include/" + fileName }
+			into "$buildDir/mkCApi"
+		}	
+		zip(Zip){
+			baseName "mathlibra"
+			dependsOn $.binaries.findAll { it.buildable }
+			dependsOn createGitHeader
+			destinationDir project.buildDir
+			from project.buildDir.getAbsolutePath() + "/libs"
+			from mkCXXApi
+			from mkCApi
+			exclude "core_lib"	
+			
+		}
+	}
+	binaries{
+		all{	
+				if((targetPlatform.operatingSystem.isCurrent() && targetPlatform.getName() != "armeabiv7a") || (project.hasProperty(targetPlatform.getName()))){
+					buildable = true
+				}else{
+					buildable = false
+				}
+				if (buildable && targetPlatform.getName()=="armeabiv7a" && !project.hasProperty('ndktoolchain')){
+					buildable = false
+					throw new GradleException("No ndktoolchain set")
+				}
+
+				if(buildType == buildTypes.debug)
+				{
+					cppCompiler.define "DEBUG"
+				}
+				if(toolChain in Gcc)
+				{
+					if(buildType == buildTypes.release)
+					{
+						cppCompiler.args "-std=c++11", "-O2","-Wall","-pedantic","-fPIC"
+						linker.args "-ldl"
+					}
+					else
+					{
+						cppCompiler.args "-std=c++11","-Wall","-pedantic","-g","-fPIC"
+						linker.args "-ldl"
+					}
+				}else if(toolChain in Clang)
+				{
+					if(buildType == buildTypes.release)
+					{
+						cppCompiler.args "-std=c++11", "-O2","-Wall","-pedantic","-fPIC"
+						linker.args "-ldl"
+					}
+					else
+					{
+						cppCompiler.args "-std=c++11","-Wall","-pedantic","-g","-fPIC"
+						linker.args "-ldl"
+					}
+				}
+		}
+		withType(NativeExecutableBinarySpec) {
+			
+				if(toolChain in Gcc)
+				{
+						linker.args "-pie"
+				}
+        }
+	}
+	components {
+		core_lib(NativeLibrarySpec) {
+			targetPlatform "armeabiv7a"
+			targetPlatform "linux_x86"
+			targetPlatform "linux_x64"
+			targetPlatform "windows_x86"
+			targetPlatform "windows_x64"
+			targetPlatform "osx_x86"
+			targetPlatform "osx_x64"
+			binaries.all{
+				if(toolChain in Gcc)
+				{
+					cppCompiler.args "-fPIC"
+				}
+				if(targetPlatform.operatingSystem.isLinux()){
+					cppCompiler.define "LINUX"
+				}
+				else if(targetPlatform.operatingSystem.isWindows()){
+					cppCompiler.define "WINDOWS"
+				}
+				else if(targetPlatform.operatingSystem.isMacOsX()){
+					cppCompiler.define "LINUX"
+				}
+				else{
+					throw new GradleException("Platform unknown, cannont select plugin loader")
+				}
+			}
+			sources {
+				cpp{
+					source {
+						srcDirs "core/core/",
+							"core/core/modules",
+							"core/core/plugins",
+							"core/",
+							"core/interface"
+						
+						include "**/*.cpp"
+					}
+					exportedHeaders {
+						srcDirs "core/core/",
+							"core/core/modules",
+							"core/core/plugins",
+							"core/",
+							"core/interface"
+						include "**/*.h"
+					}
+					lib sources.generated
+				}
+				generated(CppSourceSet){
+					exportedHeaders {
+						srcDirs  project.buildDir.getAbsolutePath()
+						include "GIT_VERSION.h"
+					}
+					builtBy createGitHeader
+				}
+				
+				
+			}
+		}
+		
+		core_tester(NativeExecutableSpec)
+		{	
+			targetPlatform "armeabiv7a"
+			targetPlatform "linux_x86"
+			targetPlatform "linux_x64"
+			targetPlatform "windows_x86"
+			targetPlatform "windows_x64"
+			targetPlatform "osx_x86"
+			targetPlatform "osx_x64"
+			sources{
+				cpp{
+					cpp.lib library: "core_lib", linkage: "static"
+					source{
+						srcDirs "tester"
+						include "*.cpp"
+						}
+					exportedHeaders
+					{
+						srcDirs "tester"
+						include "*.h"
+					}
+				}
+			}
+		}
+		mathlibra_CXX(NativeLibrarySpec)
+		{
+			targetPlatform "armeabiv7a"
+			targetPlatform "linux_x86"
+			targetPlatform "linux_x64"
+			targetPlatform "windows_x86"
+			targetPlatform "windows_x64"
+			targetPlatform "osx_x86"
+			targetPlatform "osx_x64"
+			sources{
+				cpp{
+					lib library: "core_lib", linkage: "static"
+					source{
+						srcDirs "wrapper/c++_wrapper", "wrapper/common"
+						include "*.cpp"
+					}
+					exportedHeaders{
+						srcDirs "wrapper/c++_wrapper", 
+							"wrapper/common",
+							"wrapper"
+						include "*.h"
+					}	
+				}
+					
+			}				
+		}
+		mathlibra_C(NativeLibrarySpec)
+		{
+			targetPlatform "armeabiv7a"
+			targetPlatform "linux_x86"
+			targetPlatform "linux_x64"
+			targetPlatform "windows_x86"
+			targetPlatform "windows_x64"
+			targetPlatform "osx_x86"
+			targetPlatform "osx_x64"
+			sources{
+				cpp{
+					lib library: "core_lib", linkage: "static"
+					source{
+						srcDirs "wrapper/c_api_interface", "wrapper/common"
+						include "*.cpp"
+					}
+					exportedHeaders{
+						srcDirs "wrapper/c_api_interface", "wrapper/common"
+						include "*.h"
+					}	
+					}
+				}
+				
+		}
+		mathlibra_CXX_client(NativeExecutableSpec)
+		{	
+			targetPlatform "armeabiv7a"
+			targetPlatform "linux_x86"
+			targetPlatform "linux_x64"
+			targetPlatform "windows_x86"
+			targetPlatform "windows_x64"
+			targetPlatform "osx_x86"
+			targetPlatform "osx_x64"
+			sources{
+				cpp{
+					lib library: "mathlibra_CXX", linkage: "shared"
+					lib library: "core_lib", linkage: "api"
+					source{
+						srcDirs "wrapper/c++_wrapper_client"
+						include "*.cpp"
+					}
+					exportedHeaders{
+						srcDirs "wrapper/c++_wrapper_client"
+						include "*.h"
+					}	
+					}
+				}
+		}
+		
+	}		
+}
+

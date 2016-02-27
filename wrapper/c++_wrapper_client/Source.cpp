@@ -1,4 +1,4 @@
-#include "main_wrapper.h"
+#include "common/main_wrapper.h"
 #include "c++_wrapper/export.h"
 #include "ptr_protect.h"
 #include <iostream>
@@ -21,7 +21,7 @@ int run_test()
 {
 	//List of expressions to test that the interpreter must handle correctly.
 	std::vector < std::string> tests = { "sqrt(42)",  "x=2*(32-1)", "y=2^3", "x-1", "2^-x" };
-	std::vector<double> results;
+	std::vector<std::string> results;
 	ptr_protect<interface::calc_lib_interface*, false> calc(InitLib());
 	
 	//Load external plugins
@@ -52,7 +52,7 @@ int run_test()
 		{
 			return false;
 		}
-		results.push_back( calc->execute_arg());
+		results.push_back( calc->execute_arg().ptr()->toString());
 		if (!test_error(calc))
 		{
 			return false;
@@ -61,7 +61,7 @@ int run_test()
 
 	
 	interface::mem_obj_api obj =  calc->getVariable(0);
-	std::cout << "0: " << obj.name.c_str() << " " << obj.value << " "<<obj.isConst << std::endl;
+	std::cout << "0: " << obj.name.c_str() << " " << obj.value->toString() << " "<<obj.isConst << std::endl;
 	return true;
 	
 }

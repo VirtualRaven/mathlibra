@@ -20,8 +20,8 @@ namespace function_obj /**< function_obj object to export interpreted expression
 		void __prepare_function();
 		tree::rootNode __tree;
 	public:
-		double operator()(double);
-		double exec(double); /**< Evaluate the function. Provides the argument as variable x to the expression*/
+		type* operator()(type*);
+		type* exec(type*); /**< Evaluate the function. Provides the argument as variable x to the expression*/
 		interpreted_func(tree::node *, memory::memory* mem); /**< Create an new interpreted_func. THe  function takes owner ship of the provided tree and creates an local copy of the mem module. **/
 		interpreted_func& operator=(tree::node*);
 		interpreted_func& operator=(interpreted_func&& func);
