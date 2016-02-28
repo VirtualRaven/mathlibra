@@ -114,6 +114,25 @@ model
 			workingDir "$buildDir/py_test"
 			commandLine 'python', "run_tests.py"
 		}
+		run(Task){
+			description "Runs core tester, must be run with --no-daemon" 
+			dependsOn $.binaries.withType(NativeExecutableBinarySpec).findAll({it.buildable && it.targetPlatform.name.contains("current") && it.toString().contains("core_tester")})
+			doLast{
+   			
+
+    				def proc = new ProcessBuilder("$buildDir/exe/core_tester/current/debug/core_tester")
+        			.redirectOutput(ProcessBuilder.Redirect.INHERIT)
+        			.redirectInput(ProcessBuilder.Redirect.INHERIT)
+        			.redirectError(ProcessBuilder.Redirect.INHERIT)
+        			.start()
+    				proc.waitFor()
+
+    				if (0 != proc.exitValue()) {
+        				throw new RuntimeException("console exited with status: ${proc.exitValue()}")
+    				}
+			}
+			
+		}
 		mkCXXApi(Copy){
 			from "wrapper/common/main_wrapper.h"
 			from "core/core/type_interface.h"
@@ -160,6 +179,7 @@ model
 				if(buildType == buildTypes.debug)
 				{
 					cppCompiler.define "DEBUG"
+					cppCompiler.define "TYPE_MEM_TEST"
 				}
 				if(toolChain in Gcc)
 				{
