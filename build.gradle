@@ -40,8 +40,23 @@ model
 	toolChains {
 		
 		gcc(Gcc){
-			target("linux_x86")
-			target("linux_x64")
+			target("linux_x86"){
+			
+				cppCompiler.withArguments { args ->
+					args << "-m32" 
+				}
+				linker.withArguments { args ->
+					args << "-m32" 
+				}
+			}
+			target("linux_x64"){
+				cppCompiler.withArguments { args ->
+					args << "-m64" 
+				}
+				linker.withArguments { args ->
+					args << "-m64" 
+				}
+			}
 		}
 		arm(Gcc){
 			if (project.hasProperty('ndktoolchain'))
@@ -62,8 +77,6 @@ model
 			architecture "arm"
 			operatingSystem "linux"
 		}
-		current{
-		}
 		linux_x86{
 			architecture "x86"
 			operatingSystem "linux"
@@ -73,21 +86,23 @@ model
 			operatingSystem "linux"
 		}
 		windows_x86 {
-                 architecture "x86"
-                 operatingSystem "windows"
-        }
-        windows_x64 {
-                 architecture "x86_64"
-                 operatingSystem "windows"
-        }
-        osx_x86 {
-                 architecture "x86"
-                 operatingSystem "osx"
-        }
-        osx_x64 {
-                 architecture "x86_64"
-                 operatingSystem "osx"
-        }
+                	architecture "x86"
+                	operatingSystem "windows"
+        	}
+        	windows_x64 {
+                	architecture "x86_64"
+                	operatingSystem "windows"
+        	}
+        	osx_x86 {
+                	architecture "x86"
+                	operatingSystem "osx"
+        	}
+        	osx_x64 {
+                	architecture "x86_64"
+                	operatingSystem "osx"
+        	}
+		current{
+		}
 	}	
 	
 	buildTypes {
@@ -147,53 +162,57 @@ model
 	
 	binaries{
 		all{	
-			if(targetPlatform.getName() == "current" || (project.hasProperty(targetPlatform.getName()))){
-					buildable = true
-				}else{
-					buildable = false
+			if(!((targetPlatform.getName() == "current") || (project.hasProperty(targetPlatform.getName())))){
+				buildable = false
+			}	
+			if (targetPlatform == platforms.current){
+				for(NativePlatform p : platforms){
+					if(project.hasProperty(p.getName())){
+						buildable = false
+					}
 				}
-				if (buildable && targetPlatform.getName()=="armeabiv7a" && !project.hasProperty('ndktoolchain')){
-					buildable = false
-					throw new GradleException("No ndktoolchain set")
-				}
-
-				if(buildType == buildTypes.debug)
+			}
+			if (buildable && targetPlatform.getName()=="armeabiv7a" && !project.hasProperty('ndktoolchain')){
+				buildable = false
+				throw new GradleException("No ndktoolchain set")
+			}
+			if(buildType == buildTypes.debug)
+			{
+				cppCompiler.define "DEBUG"
+			}
+			if(toolChain in Gcc)
+			{
+				if(buildType == buildTypes.release)
 				{
-					cppCompiler.define "DEBUG"
+					cppCompiler.args "-std=c++11", "-O2","-Wall","-pedantic","-fPIC"
+					linker.args "-ldl"
 				}
-				if(toolChain in Gcc)
+				else
 				{
-					if(buildType == buildTypes.release)
-					{
-						cppCompiler.args "-std=c++11", "-O2","-Wall","-pedantic","-fPIC"
-						linker.args "-ldl"
-					}
-					else
-					{
-						cppCompiler.args "-std=c++11","-Wall","-pedantic","-g","-fPIC"
-						linker.args "-ldl"
-					}
-				}else if(toolChain in Clang)
-				{
-					if(buildType == buildTypes.release)
-					{
-						cppCompiler.args "-std=c++11", "-O2","-Wall","-pedantic","-fPIC"
-						linker.args "-ldl"
-					}
-					else
-					{
-						cppCompiler.args "-std=c++11","-Wall","-pedantic","-g","-fPIC"
-						linker.args "-ldl"
-					}
+					cppCompiler.args "-std=c++11","-Wall","-pedantic","-g","-fPIC"
+					linker.args "-ldl"
 				}
+			}else if(toolChain in Clang)
+			{
+				if(buildType == buildTypes.release)
+				{
+					cppCompiler.args "-std=c++11", "-O2","-Wall","-pedantic","-fPIC"
+					linker.args "-ldl"
+				}
+				else
+				{
+					cppCompiler.args "-std=c++11","-Wall","-pedantic","-g","-fPIC"
+					linker.args "-ldl"
+				}
+			}
 		}
 		withType(NativeExecutableBinarySpec) {
 			
-				if(toolChain in Gcc)
-				{
-						linker.args "-pie"
-				}
-        }
+			if(toolChain in Gcc)
+			{
+					linker.args "-pie"
+			}
+        	}
 	}
 	components {
 		core_lib(NativeLibrarySpec) {
