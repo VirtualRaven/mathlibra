@@ -100,7 +100,14 @@ namespace function_helper
 			throw f_exception("Wrong argument type");
 		}
 	}
-        
+        /**
+	 * Tries to extract the requested type T from the tree n 
+	 * by evaluating the tree and checking the returned type object.
+	 * If the this object matches the requested type the object is returned,
+	 * else an exception is raised in mathlibra.
+	 * @param n Pointer to the node to extract data from.
+	 * @tparam T, the requested type. 
+	 */ 
         template<typename T> T convertData(node_base* n )
         {
             auto tmp = n->data->eval();
@@ -155,7 +162,11 @@ namespace function_helper
                 throw f_exception("Expected type convertaible to double");
             }
 	}
-
+	/**
+	 *Template struct defining function signatures.
+	 * The struct contains f_type which is an typedef of 
+	 * a function returning a double an having parameter arg0, arg1 ... argN.
+	 */
         template <typename... argN> struct func_type_double
         {
             typedef double(*f_type)(argN...);
@@ -182,18 +193,32 @@ template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> paramet
 		return parameter_package::package<arg0, arg1, argN...>(tmp, fillPackage< arg1, argN...>(s));
 
 	}
+
 	/**
-	 * 
-	 * @function Forward function call. 
-	 * If the arguments required for the call can not be exctracted from the node_base an exception will be raised in the core.
-	 * @param func An pointer to an function of the type double f(vars...) where vars is an variable number of arguments
-	 * @param n Pointer to the node to use to extract requested data.
-	 * @tparam argN An list of the arguments  accepted by func.
-	 * @note Any exceptions thrown by func will be caought an automatically forwarded to the core, so feel free to throw any exception.
-	 * 
+	 * Forward function.
+	 * This function takes an node_base* which is what mathlibra passes to an function when it is evaluated, it then converts it
+	 * into the arguments needed for a function call to the provided function.
+	 * If the arguments required for the call can not be exctracted from the node_base, an exception will be raised in mathlibra.
+	 * Forward has two main modes of operation, evaluation and convertion. If you request a double forward will fullfil this request by forcing evaluation of the syntax tree 
+	 * and the it then converts the resulting value into the requested one if possible.
+	 * If you instead request an syntax node type, for example mathNode::mathExpressionNode_variable_interface (which represents an mathlibra variable) the tree is not evaluated,
+	 * instead forward checks if n can be safely convertet into such a variable.  This behavior can be exploited to get great controll over the expression execution.
+	 * Currently the forward function can create arguments of type:
+	 * 	- double
+	 * 	- char_mat
+	 * 	- num_mat
+	 * 	- mat_mat
+	 * 	- type_ptr
+	 * 	- mathNode types
 	 *
+	 * If you define an function type* f(double,double,num_mat); the you call forward by forward<double,double,num_mat>(f,n);
+	 * @param func An pointer to an function of the type double f(vars...) where vars is an variable number of arguments
+	 * @param n Pointer to the node in the syntax tree 
+	 * @tparam argN An list of the arguments  accepted by func.
+	 * @note Any exceptions thrown by func will be caught and automatically forwarded to the to mathlibra If the exception is .
+	 * @note The return value of the function to be forwarded is automatically transfered over library boundries and safely deleted when no longer needed. thus statements like return new type(); is
+	 * 	valid inside any function managed by the forward function.
 	 */
-	
 	template< typename... argN> type* forward(typename func_type<argN...>::f_type  func, node_base * n)
 	{
 		auto args = n->getArgs();

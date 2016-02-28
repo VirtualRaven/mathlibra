@@ -75,13 +75,13 @@ namespace mathNode
 
         	
 	/**
-	 * @namesoace helper contains functions to ease creation of templates.
+	 * @namespace helper contains functions to ease creation of templates.
 	 */
 	namespace helper
 	{
 
 		/**
-		 *@struct enum_type an structure used to map tokenType to an nodeDataInterface object.
+		 *@struct enum_type  A struct used to map tokenType to an nodeDataInterface object.
 		 *@tparam T the nodeDataInterface child class to get token type for.
 		 */
 		template<typename T> struct  enum_type

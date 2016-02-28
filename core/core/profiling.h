@@ -6,11 +6,11 @@
 #endif
 
 /**
- * @file Profiling contains function to calculate function execution times.
+ *  @file profiling.h contains function to calculate function execution times.
  */
 
  /**
-  * @function func_profile messures time taken to execute function.
+  *  func_profile messures time taken to execute function.
   * @param function A function to measure execution time.
   * @param args A list of arguments to be provided to the function upon execution.
   * @tparam TEST_LENGHT A integer representing the number of time to iterate func.

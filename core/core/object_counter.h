@@ -22,7 +22,7 @@ namespace util
 	};
 
 		
-	template<typename T> class countable /**< A class that implements an counter. All objects that derives this class can be queried for allocation stats. @seealso object_stats*/
+	template<typename T> class countable /**< A class that implements an counter. All objects that derives this class can be queried for allocation stats. @see object_stats*/
 	{
 		static unsigned int __current_count;
 		static unsigned int __total_count;

@@ -23,7 +23,7 @@ using tree::node;
  */
 namespace debug
 {
-	void check_tree_mem_leak(); /**< Check if the total count of allocated mathnode obhect is equal to the total delition count. Raiess interpreterOops on error.**/
+	void check_tree_mem_leak(); /**< Uses util::coubtable to detect memory leaks. It Checks if the total number of allocated mathnode objects corresponds to the total deletion count. If check fails it frows an exception.**/
 }
 
 
@@ -97,7 +97,7 @@ public:
 	Therefore must the pointer remain valid throug the lifetime of the interpreter object*/
 	void setOperator(operators::operators_interface* operators); /**< Load operator module. @param operators Pointer to the  operator module to load. @note does not copy the module, therefore the pointer must remain valid through the lifetime of the interpeter. */
 	void setMemory(memory::memory* mem_); /**< Load memory module. @param mem_ Pointer to the module to load. @note does not copy the module, therefore the pointer must remain valid through the lifetime of the interpeter. */
-	void setFunction(math_func::function_interface* functions); /**< Load function module. @param operators Pointer to the  module to load. @note does not copy the module, therefore the pointer must remain valid through the lifetime of the interpeter. */
+	void setFunction(math_func::function_interface* functions); /**< Load function module. @param functions Pointer to the  module to load. @note does not copy the module, therefore the pointer must remain valid through the lifetime of the interpeter. */
 	void interpret(); /**< Construct the abstract syntax tree.  @note The tree remains until the next call to interpret() or the destructor. Thus several calls can be made to exec cheaply after the construction.*/
         interface::type_ptr  exec(); /**< Evaluate the abstract syntax tree. @return The result of the tree evaluation. */
 	void set(const char * expression_, size_t lenght); /**< Sets the expression to interpret. @param expression_ Pointer to an c-style string. @param lenght the lenght of the string excluding any termination characters.*/

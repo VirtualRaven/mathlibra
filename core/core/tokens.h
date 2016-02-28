@@ -41,7 +41,9 @@ struct operatorToken : public baseToken, operators::interpreter_operator
 {
 	tree::nodeDataInterface * node();
 	bool  hasNode();
-	operatorToken(operators::generic_oper_ptr opr, char symbol, short wheight); /**< @param opr an pointer to an operator. @param symbol An char that represents the operator, for example '+' for the addition operator. @param weight The weight of the operator, the higher weight the higher priority the operators is given. */
+	operatorToken(operators::generic_oper_ptr opr, char symbol, short wheight); /**< @param opr A pointer to an operator. 
+										         @param symbol A char that represents the operator, for example '+' for the addition operator. 
+											 @param wheight The weight of the operator, the higher weight the higher priority the operators is given. */
 	operatorToken(operators::interpreter_operator opr); /**< Copy constructor. */
 	operatorToken();
 };

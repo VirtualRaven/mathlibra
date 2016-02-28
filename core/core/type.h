@@ -78,7 +78,13 @@ template<> inline std::string _t_toString<interface::type*>(interface::type** d,
 }
 
 
-
+/**
+ *Iterator for base type.
+ *The iterator iterates though all elements inside base_type either by column or row.
+ * @warning This iterator does not preform any bounds checking!
+ *@tparam T the type of the value inside the base_type
+ *@tparam C true if the iterator should iterator by column instead of row.
+ */
 template<typename T,bool C=false> class type_iterator : public std::iterator<std::random_access_iterator_tag,T>
 {  public: 
     int _m;
@@ -183,6 +189,10 @@ template<> inline double __toNumber<double>(double* x)
 {
         return x[0];
 }
+/**
+ *The templated implementation of mathlibras data types.
+ *@see type
+ */
 template<typename T> class   base_type : public interface::t_type<T>
 {   
     size_t  _m;
@@ -207,7 +217,7 @@ template<typename T> class   base_type : public interface::t_type<T>
      *  Iterators
      */
     template<bool by_column=false> 
-    type_iterator<T,by_column> begin()
+    type_iterator<T,by_column> begin() /**< Returns an iterator to the begin. @tparm by_column selects the type of iterator. */
     {
         return type_iterator<T,by_column>(_m,_n,0,_mat);
     }
@@ -265,6 +275,12 @@ template<typename T> class   base_type : public interface::t_type<T>
         {
                 return _mat[(_n-1)*n+m];
         }
+	/**
+	 *base_type constructor
+	 *@param d  An array of lenght n*m containing data that will be copied  into the base_type-
+	 *@param n  The number of columns that the base_type should have.
+	 *@param m  The number of rows that the base_type should have.
+	 **/
         base_type(const T* d,size_t n, size_t m) : 
         _m(m),
         _n(n),    
@@ -273,12 +289,24 @@ template<typename T> class   base_type : public interface::t_type<T>
         {
                 memcpy(_mat, d,m*n*sizeof(T)); 
         }
+	/**
+	 *@param n The number of columns that the base_type should have.
+	 *@param m  The number of rows that the base_type should have.
+	 **/
 	base_type(size_t n, size_t m) :
 	_m(m),
 	_n(n),
 	_mat(new T[n*m]),
 	_str()
 	{}
+
+	/**
+	 *@param d A smart pointer containing the data array to be moved into base_type. 
+	 *@note base_type takes ownership of the smart pointer and its data.
+	 *@note Use this constuctor to create base types without any unessecary copying.
+	 *@param n the number of columns that the base_type should have.
+	 *@param m the number of rows that the base_type should have.
+	 **/
 	base_type(ptr_protect<T*,false>&& d,size_t n,size_t m): 
 		base_type(d.ptr(),n,m)
 	{
@@ -305,8 +333,8 @@ template<typename T> class   base_type : public interface::t_type<T>
 typedef base_type<char> char_mat;
 typedef base_type<type*> mat_mat;
 typedef base_type<double> num_mat;
-/*Template functuibs to convert base_type
- *
+/**
+ * Template functions to get an base_type's coresponding  storage_types
  */
 template<typename T> struct get_enum
 {
