@@ -7,7 +7,7 @@ exception::exception(const char* type,
 	  unsigned short id 
 	  	) : _info(inf),
 		     _type(type),
-		    _id(eid),
+		    _id(id),
 		    _isCritical(isCritical) {}
 
 bool exception::critical()
