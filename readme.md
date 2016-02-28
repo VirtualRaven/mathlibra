@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/VirtualRaven/mathlibra.svg?token=CLuwuoYsSeFx17TVonxH&branch=master)](https://travis-ci.com/VirtualRaven/mathlibra)
+
 
 #README#
 This is the repo for mathlibra, an calculator backend library that parsers and interprets mathematical expressions. It is designed to serve as an backend for developing calculator software.
@@ -9,24 +9,28 @@ Mathlibra have no dependency and as such should build on most platforms, though 
 If core is built for any other platform than windows or linux plug ins will be disabled as currently. 
 The core has no loader for other files than windows DLL and linux shared libraries.
 
-The project is easiest to build using cmake. Out of source builds are recommended but not enforced so be careful
+The project is built using gradle which requires that java is installed.
+To build the project run 
+ `cd /to/projet/root/`
+ `./gradlew build`
+ 
+ This creates the build directory and builds all of mathlibra.
+ To run the interactive mathlibra client included in the project run
+ `./build/exe/core_tester/current/debug/core_tester`
+ 
+ Gradle can also package all important binaries and headers in an zip file by writing
+ `./gradlew zip`
+ which creates an zip named mathlibra.zip in the root of the build directory
 
-Build commands for linux:
- `cd /path/to/repo/`
- `mkdir build`
- `cd build`
- `cmake ..`
- `make`
-
-On Windows cmake can be used to create visual studio files. Install cmake for windows and follow the instructions.
 
 For vim users all directories include config files for youcomplete me to enable autocompletion. To just install youcompleteme and when opening an file in the repo accept when it asks if you want to load the config files.
 
 ### Running Tests ###
-The project includes an random tester which generates test cases. The tester works by generating random expressions and passing them to mathlibra through the C api. The result is then compared to the calculated expected result, if they differ or a exception is thrown, the test fails. To enable the tester use the command `cmake -DC_API_TEST=True ..` when configuring cmake  and then to run the tester with `make test`. If the tester fails it will generate an report `test/test_report.txt` in the build folder.
+The project includes an random tester which generates test cases. The tester works by generating random expressions and passing them to mathlibra through the C api. The result is then compared to the calculated expected result, if they differ or a exception is thrown, the test fails. To run the tester write `./gradlew runPyTest` If the tester fails it will generate an report `py_test/test_report.txt` in the build folder. Be aware the this tester does only test an very limted part of mathlibra at the moment,for example the generator does not produce any assigment or matrix expression. So while it can detect some errors it does not guarentee that mathlibra works.
 
-The project contains a tester executable which when run provides an interactive sessions for inputting expressions to be evaluated.
-Writing menu instead of an expression will bring up an menu which can run tests, provide help and lets you inspect the status of the interpreter at any time.
+The project contains a tester executable named core_tester which when run provides an interactive sessions for inputting expressions to be evaluated.
+Writing menu instead of an expression will bring up an menu which can run tests, provide help and lets you inspect the status of the interpreter at any time. If you use the the debug version of core_tester it will also preform memory tests on exit.
+To trigger these, start core_tester, run your expression and the selec menu and item 7 exit which will present memory statistics before exiting.
 
 ### Contribution guidelines ###
 
@@ -72,7 +76,6 @@ Comment in headers should be doxygen compatible using the java syntax. For more 
  int func(std::string name);
 ```
 
-At the moment, cmake is not configured to generate documentations and thus it has to be done manually. Feel free to reconfigure cmake for doc gen.
 
 An important trait of mathlibra is that it has no external dependencies and that it is platform independent. Any code breaking these traits will not be accepted. For example, do not write code that requires the c++ boost library. Any functions needed for mathlibra not provided by the standard c library or the standard template library should be implemented inside of the project.
 The reason behind this is that this is as stated above ab educational project, there are no time limits or deadlines to adhere to. So we have time to implement our own functions and learn something more that way. Implementing stuff by yourself may not always be the best option, but it is an great opportunity to learn, so for your own sake please follows these recommendations.  
