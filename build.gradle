@@ -38,15 +38,15 @@ apply plugin: "cpp"
 model
 {
 	toolChains {
-		arm(Gcc){
-			if (project.hasProperty('ndktoolchain'))
-				path project.properties['ndktoolchain']
-			target("armeabiv7a")
-		}
 		
 		gcc(Gcc){
 			target("linux_x86")
 			target("linux_x64")
+		}
+		arm(Gcc){
+			if (project.hasProperty('ndktoolchain'))
+				path project.properties['ndktoolchain']
+			target("armeabiv7a")	
 		}
 		clang(Clang){
 			target("osx_x86")
@@ -61,6 +61,8 @@ model
 		armeabiv7a{
 			architecture "arm"
 			operatingSystem "linux"
+		}
+		current{
 		}
 		linux_x86{
 			architecture "x86"
@@ -123,7 +125,7 @@ model
 	}
 	binaries{
 		all{	
-				if((targetPlatform.operatingSystem.isCurrent() && targetPlatform.getName() != "armeabiv7a") || (project.hasProperty(targetPlatform.getName()))){
+			if(targetPlatform.getName() == "current" || (project.hasProperty(targetPlatform.getName()))){
 					buildable = true
 				}else{
 					buildable = false
@@ -180,6 +182,7 @@ model
 			targetPlatform "windows_x64"
 			targetPlatform "osx_x86"
 			targetPlatform "osx_x64"
+			targetPlatform "current"
 			binaries.all{
 				if(toolChain in Gcc)
 				{
@@ -240,6 +243,7 @@ model
 			targetPlatform "windows_x64"
 			targetPlatform "osx_x86"
 			targetPlatform "osx_x64"
+			targetPlatform "current"
 			sources{
 				cpp{
 					cpp.lib library: "core_lib", linkage: "static"
@@ -264,6 +268,7 @@ model
 			targetPlatform "windows_x64"
 			targetPlatform "osx_x86"
 			targetPlatform "osx_x64"
+			targetPlatform "current"
 			sources{
 				cpp{
 					lib library: "core_lib", linkage: "static"
@@ -290,6 +295,7 @@ model
 			targetPlatform "windows_x64"
 			targetPlatform "osx_x86"
 			targetPlatform "osx_x64"
+			targetPlatform "current"
 			sources{
 				cpp{
 					lib library: "core_lib", linkage: "static"
@@ -314,6 +320,7 @@ model
 			targetPlatform "windows_x64"
 			targetPlatform "osx_x86"
 			targetPlatform "osx_x64"
+			targetPlatform "current"
 			sources{
 				cpp{
 					lib library: "mathlibra_CXX", linkage: "shared"
