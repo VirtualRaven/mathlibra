@@ -2,7 +2,7 @@ apply plugin: "cpp"
 
 	 task createGitHeader<< {
 		println "Updating git info..."
-		def tmp = "git describe --dirty=-D".execute()
+		def tmp = "git describe --long --dirty=-D".execute()
 		tmp.waitForOrKill(10000)
 		if(tmp.exitValue() != 0){
 			throw new GradleException("Could not get git info")
@@ -98,7 +98,7 @@ model
 
 		createPyTest0(Copy){
 		dependsOn $.binaries.withType(SharedLibraryBinarySpec).findAll({ it.toString().contains("mathlibra_C") && it.buildable })
-		from "$buildDir/libs/mathlibra_C/shared/debug/"
+		from "$buildDir/libs/mathlibra_C/shared/current/debug/"
 		include "*.so"
 		into "$buildDir/py_test"}
 		
