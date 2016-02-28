@@ -4,7 +4,11 @@
 This is the repo for mathlibra, an calculator backend library that parsers and interprets mathematical expressions. It is designed to serve as an backend for developing calculator software.
 
 ### How do I get set up? ###
+#### The quick way ####
+ `cd /to/projet/root/`
 
+`./run.sh` which builds and runs mathlibra
+#### The longer way ####
 Mathlibra have no dependency and as such should build on most platforms, though it requires compiler support for c++11.
 If core is built for any other platform than windows or linux plug ins will be disabled as currently. 
 The core has no loader for other files than windows DLL and linux shared libraries.
