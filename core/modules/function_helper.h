@@ -227,11 +227,11 @@ template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> paramet
 			n->raiseException("Function called with wrong number of argumets");
 		}
 
-		parameter_package::package<argN...> pack = fillPackage<argN...>(args);
 		try
 		{
+		        parameter_package::package<argN...> pack = fillPackage<argN...>(args);
 			auto tmp =parameter_package::package_forward<type*, typename func_type<argN...>::f_type>(func, pack);
-            return n->realloc(tmp);
+                        return n->realloc(tmp);
 		}
 		catch (std::exception& e)
 		{
