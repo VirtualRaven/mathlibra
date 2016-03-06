@@ -87,7 +87,6 @@ class interpreter : public interface::interpreter_interface
 	void allocExpression(size_t lenght);
 	void lexicalAnalys();
 	void buildSyntaxTree();
-	
 	interpreter(const interpreter& other);
 	interpreter& operator=(const interpreter& other);
 	interpreter& operator=(interpreter&& other);
@@ -104,6 +103,7 @@ public:
 	interpreter();
 	interpreter(interpreter&& other);
 
+  	void optimize();	
 	~interpreter();
 	
 };

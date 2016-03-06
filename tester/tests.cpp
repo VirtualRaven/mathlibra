@@ -26,7 +26,7 @@ void test::profileInterpreter(std::string& exr)
 		functions.load(math_func::std_math_func);
 		functions.load(math_func::std_math_num_func);
 		inter.setFunction(&functions);
-		const unsigned int test_lenght = 10000;
+		const unsigned int test_lenght = 1000000;
 		std::cout << "Running test\n";
 	
 		inter.set(exr.c_str(), exr.size());
@@ -37,6 +37,9 @@ void test::profileInterpreter(std::string& exr)
 		std::cout << "interpret: " << func_profile<test_lenght>(test2) << "ms\n";
 		double exec = func_profile<test_lenght>(test1);
 		std::cout << "exec: " << exec << "ms\n";
+		inter2.optimize();
+		exec = func_profile<test_lenght>(test1);
+		std::cout << "exec optimized: " << exec << "ms\n";
 	}
 	catch (exception& e)
 	{

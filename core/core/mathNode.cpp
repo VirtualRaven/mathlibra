@@ -37,6 +37,14 @@ namespace mathNode
 	{	
             return value.ptr()->copy();
 	}
+ 	void mathExpressionNode_val::optimize()
+	{
+	}
+	bool mathExpressionNode_val::isPure()
+	{
+		return true;
+	}
+
 	void  mathExpressionNode_val::bind(node_base * context)
 	{
 		this->wrapperNode = context;
@@ -61,6 +69,10 @@ namespace mathNode
 
 
         }
+
+ 	bool mathExpressionNode_variable::isPure(){
+		return false;
+	}
 	void mathExpressionNode_variable::set_mem_provider(memory::memory* mem_provider)
 	{
 		this->mem = mem_provider;
@@ -95,6 +107,9 @@ namespace mathNode
         interface::type* mathExpressionNode_variable::eval()
 	{
 		return mem->get(name)->copy();
+	}
+	void  mathExpressionNode_variable::optimize()
+	{
 	}
 	bool mathExpressionNode_variable::is_pushable()
 	{
@@ -147,6 +162,15 @@ namespace mathNode
 		this->type = tree::OPERATOR;
 
 	}
+	bool mathExpressionNode_opr::isPure()
+	{
+		if(this->wrapperNode->sub1() == nullptr || this->wrapperNode->sub2()== nullptr)
+		{
+			nodeOops<NODE_UNEXPECTED_NULL_POINTER>();		
+		}
+		return this->wrapperNode->sub1()->data->isPure() && this->wrapperNode->sub2()->data->isPure();
+
+	}
 
 	mathExpressionNode_opr::mathExpressionNode_opr(operators::generic_oper_ptr operation)
 	{
@@ -182,6 +206,23 @@ namespace mathNode
 			
 		}
 	}
+	void mathExpressionNode_opr::optimize()
+	{
+		if(this->wrapperNode->sub1()==nullptr || this->wrapperNode->sub2()==nullptr)
+		{
+			nodeOops<NODE_UNEXPECTED_NULL_POINTER>();
+		}	
+		if(this->isPure())
+		{
+			this->wrapperNode->data = new mathExpressionNode_val(this->eval());
+			this->wrapperNode->data->bind(this->wrapperNode);
+			static_cast<tree::node*>(this->wrapperNode)->deleteSubNodes();	
+			delete this;
+			return;
+		}	
+		this->wrapperNode->sub1()->data->optimize();
+		this->wrapperNode->sub2()->data->optimize();
+	}
 
 	void mathExpressionNode_opr::bind(node_base* context)
 	{
@@ -198,6 +239,30 @@ namespace mathNode
 	{
 		this->func = nullptr;
 		this->type = tree::FUNCTION_TREE;
+	}
+	void mathExpressionNode_func_tree::optimize()
+	{
+		if(this->wrapperNode->sub1()==nullptr)
+		{
+			nodeOops<NODE_UNEXPECTED_NULL_POINTER>();
+		}
+		if(this->isPure())
+		{
+			this->wrapperNode->data = new mathExpressionNode_val(this->eval());
+			this->wrapperNode->data->bind(this->wrapperNode);
+			static_cast<tree::node*>(this->wrapperNode)->deleteSubNodes();	
+			delete this;
+			return;
+		}	
+		this->wrapperNode->sub1()->data->optimize();
+	}
+	bool mathExpressionNode_func_tree::isPure()
+	{
+		if(this->wrapperNode->sub1() != nullptr)
+		{
+			return this->wrapperNode->sub1()->data->isPure();
+		} 
+		else  nodeOops<NODE_UNEXPECTED_NULL_POINTER>();
 	}
 
 	mathExpressionNode_func_tree::mathExpressionNode_func_tree(funcPtr operation)
@@ -226,7 +291,27 @@ namespace mathNode
 	{
 		delete this;
 	}
-            
+          
+	void mathExpressionNode_func_user::optimize()
+	{
+		if(this->wrapperNode->sub1()==nullptr)
+		{
+			nodeOops<NODE_UNEXPECTED_NULL_POINTER>();
+		}
+		if(this->isPure())
+		{
+			this->wrapperNode->data = new mathExpressionNode_val(this->eval());
+			this->wrapperNode->data->bind(this->wrapperNode);
+			static_cast<tree::node*>(this->wrapperNode)->deleteSubNodes();	
+			delete this;
+			return;
+		}	
+		this->wrapperNode->sub1()->data->optimize();
+	}
+       	bool mathExpressionNode_func_user::isPure()
+	{
+		return this->wrapperNode->sub1()->data->isPure() && this->wrapperNode->sub2()->data->isPure();
+	}	
         mathExpressionNode_func_user::~mathExpressionNode_func_user(){}
         mathExpressionNode_func_user::mathExpressionNode_func_user():ptr(nullptr){}
         mathExpressionNode_func_user::mathExpressionNode_func_user(function_obj::interpreted_func * ptr):ptr(ptr)

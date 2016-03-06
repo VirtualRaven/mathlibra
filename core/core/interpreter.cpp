@@ -285,7 +285,19 @@ void debug::check_tree_mem_leak()
 
 
 	}
-        interface::type_ptr interpreter::exec()
+	void interpreter::optimize()
+	{	
+		
+        	if(!rootEmpty)
+        	{
+			this->root.TakeContext();
+			this->root.data->optimize();
+			return;
+        	}
+		interpreterOops<EXEC_UNFINISHED_EXPR>();
+	}
+        
+	interface::type_ptr interpreter::exec()
 	{
         if(!rootEmpty)
         {

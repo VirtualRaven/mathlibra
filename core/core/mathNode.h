@@ -30,8 +30,10 @@ namespace mathNode
 		mathExpressionNode_val(interface::type* val);
 		virtual ~mathExpressionNode_val();
                 interface::type* eval();
+		void  optimize();
 		void bind(node_base * context);
 		void destroy();
+		bool isPure();
 
 	};
 
@@ -52,8 +54,10 @@ class mathExpressionNode_opr;
                 mathExpressionNode_variable(std::string var, memory::memory* mem, bool b,math_func::function_interface * func);
 		virtual ~mathExpressionNode_variable();
                 interface::type* eval();
+		void optimize();
 		bool is_pushable();
                 bool is_undefined();
+		bool isPure();
 		void set(interface::type_ptr);
 		void set_mem_provider(memory::memory* mem_provider);
                 memory::memory* get_mem_provider();
@@ -74,6 +78,8 @@ class mathExpressionNode_opr;
         mathExpressionNode_opr(void);
 		virtual  ~mathExpressionNode_opr();
                 interface::type* eval();
+		void optimize();
+		bool isPure();
 		void bind(node_base * context);
 		void destroy();
 	};
@@ -89,6 +95,8 @@ class mathExpressionNode_opr;
 		mathExpressionNode_func_tree(funcPtr operation);
 		virtual ~mathExpressionNode_func_tree();
                 interface::type* eval();
+		void optimize();
+		bool isPure();
 		void bind(node_base * context);
 		void destroy();
 	};
@@ -102,6 +110,8 @@ class mathExpressionNode_opr;
             void bind(node_base * context);
             mathExpressionNode_func_user(function_obj::interpreted_func* ptr);
             interface::type* eval();
+	    void optimize();
+	    bool isPure();
             void destroy();       
 
         };        
