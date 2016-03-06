@@ -37,8 +37,9 @@ namespace mathNode
 	{	
             return value.ptr()->copy();
 	}
- 	void mathExpressionNode_val::optimize()
+ 	nodeDataInterface* mathExpressionNode_val::optimize()
 	{
+            return this;
 	}
 	bool mathExpressionNode_val::isPure()
 	{
@@ -108,8 +109,9 @@ namespace mathNode
 	{
 		return mem->get(name)->copy();
 	}
-	void  mathExpressionNode_variable::optimize()
+	nodeDataInterface*  mathExpressionNode_variable::optimize()
 	{
+            return this;
 	}
 	bool mathExpressionNode_variable::is_pushable()
 	{
@@ -206,7 +208,7 @@ namespace mathNode
 			
 		}
 	}
-	void mathExpressionNode_opr::optimize()
+	nodeDataInterface* mathExpressionNode_opr::optimize()
 	{
 		if(this->wrapperNode->sub1()==nullptr || this->wrapperNode->sub2()==nullptr)
 		{
@@ -217,11 +219,13 @@ namespace mathNode
 			this->wrapperNode->data = new mathExpressionNode_val(this->eval());
 			this->wrapperNode->data->bind(this->wrapperNode);
 			static_cast<tree::node*>(this->wrapperNode)->deleteSubNodes();	
-			delete this;
-			return;
+			auto tmp = this->wrapperNode->data;
+                        delete this;
+			return tmp;
 		}	
 		this->wrapperNode->sub1()->data->optimize();
 		this->wrapperNode->sub2()->data->optimize();
+                return this;
 	}
 
 	void mathExpressionNode_opr::bind(node_base* context)
@@ -240,7 +244,7 @@ namespace mathNode
 		this->func = nullptr;
 		this->type = tree::FUNCTION_TREE;
 	}
-	void mathExpressionNode_func_tree::optimize()
+	nodeDataInterface* mathExpressionNode_func_tree::optimize()
 	{
 		if(this->wrapperNode->sub1()==nullptr)
 		{
@@ -251,10 +255,12 @@ namespace mathNode
 			this->wrapperNode->data = new mathExpressionNode_val(this->eval());
 			this->wrapperNode->data->bind(this->wrapperNode);
 			static_cast<tree::node*>(this->wrapperNode)->deleteSubNodes();	
+			auto tmp = this->wrapperNode->data;
 			delete this;
-			return;
+			return tmp;
 		}	
 		this->wrapperNode->sub1()->data->optimize();
+                return this;
 	}
 	bool mathExpressionNode_func_tree::isPure()
 	{
@@ -292,7 +298,7 @@ namespace mathNode
 		delete this;
 	}
           
-	void mathExpressionNode_func_user::optimize()
+	nodeDataInterface*  mathExpressionNode_func_user::optimize()
 	{
 		if(this->wrapperNode->sub1()==nullptr)
 		{
@@ -303,10 +309,12 @@ namespace mathNode
 			this->wrapperNode->data = new mathExpressionNode_val(this->eval());
 			this->wrapperNode->data->bind(this->wrapperNode);
 			static_cast<tree::node*>(this->wrapperNode)->deleteSubNodes();	
+                        auto tmp = this->wrapperNode->data;
 			delete this;
-			return;
+			return tmp;
 		}	
 		this->wrapperNode->sub1()->data->optimize();
+                return this;
 	}
        	bool mathExpressionNode_func_user::isPure()
 	{

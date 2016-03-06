@@ -154,6 +154,28 @@ namespace math_func
 
 
 		}
+                type* iterate(tree::nodeDataInterface* next, 
+                                mathNode::mathExpressionNode_variable_interface* var,
+                                num_mat start,
+                                double iterations)
+                {
+                    //As we are going to iterate over next it is best to take the time and
+                    //optimize it
+                    next=next->optimize();
+                    var->set(interface::type_ptr(start.copy())); 
+                    for(double i=0; i < iterations; i++)
+                    {
+                        var->set(interface::type_ptr(next->eval()));    
+                    }
+                    return var->eval();
+                }
+                type* __iterate(node_base* b)
+                {
+                    return function_helper::forward<tree::nodeDataInterface*,
+                                                    mathNode::mathExpressionNode_variable_interface*,
+                                                    num_mat,
+                                                    double>(iterate,b);
+                }
                 type* __sin(node_base* b)
                 {
                     return internal_helper::forward_fast<double>(sin,b); 
@@ -303,7 +325,8 @@ namespace math_func
 		std::vector<math_func::m_function> std_math_num_func = {
 			math_func::m_function("ceil","numeric","ceil(double)","ceil", __ceil),
 			math_func::m_function("floor","numeric","floor(double)","floor", __floor),
-			math_func::m_function("round","numeric","round(double)","round", __round)
+			math_func::m_function("round","numeric","round(double)","round", __round),
+                        math_func::m_function("it","numeric","it(expr,variable,num_mat,double)","it", __iterate)
 		};
 		
 		std::vector<math_func::m_function> mathlibra_data_constructors = {

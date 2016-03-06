@@ -46,7 +46,18 @@ namespace tree
 		virtual void destroy()=0; /**< Called upon tree destruction. It shall delete all data allocated by the class and then destroy the interface itself. @note Failure to correctly follow this behaviour causes memory leaks. */
 		virtual bool isPure()=0; /**< Returns true if the call to eval has no side effects. If isPure is true it tells mathlibra that it is safe to cache the result of the calcualtion. */  
 		virtual interface::type* eval()=0; /**< Evaluate node. When called is causes the node to evaluate itself. If the type of the data is one that takes input data the eval method is first called on the child branches of the node_base owning the data. Then this data is evaluated using the acquired data from the child branches. */
-		virtual void  optimize()=0;
+
+                /**
+                 * Collapses the subtree as much as possible. 
+                 * Provides higher executions speeds if called.
+                 * @returns a pointer to the new optimized object, 
+                 * the original object which the method
+                 * was called upon may become invalid after the call
+                 * thus use the returned object instead.
+                 * @note Optimize updates the tree references so the node_base::data pointer
+                 * is updated to point at the new object.
+                 */
+		virtual nodeDataInterface*  optimize()=0;
                 virtual ~nodeDataInterface() = default;
 	};
 
