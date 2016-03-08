@@ -166,6 +166,20 @@ model
 			rename { String fileName -> "mathlibra_C/include/" + fileName }
 			into "$buildDir/mkCApi"
 		}	
+                mkPluginApi(Zip){
+                        from "core/modules/function_helper.h"
+			from "core/exception_helper.h"
+			from "core/exception.h"
+                        from "core/plugins/functions_external_interface.h"
+                        from "core/core/mathNode_interface.h"
+                        from "core/ptr_protect.h"
+                        from "core/core/tree_interface.h"
+                        from "core/core/type.h"
+                        from "core/core/type_interface.h"
+                        from "core/core/type_enum.h"
+                        baseName "plugin_api"
+                        destinationDir project.buildDir 
+                }
 		zip(Zip){
 			baseName "mathlibra"
 			dependsOn $.binaries.findAll { it.buildable }
