@@ -121,17 +121,13 @@ bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)
 
 			size_t result = node1.calculateNextOperation(node1.lowLimit, node1.hiLimit);
 
-			tree::nodeDataInterface* mathNode1=nullptr;
-			ptr_protect<nodeDataInterface*, false> mathNode1_guard(mathNode1);
-			if(vec.vecPtr->operator[](result)->hasNode())
-			{
-				mathNode1 = vec.vecPtr->operator[](result)->node();
-			}
-			else
+			if(!vec.vecPtr->operator[](result)->hasNode())
 			{
 				std::cerr << "Can't create sub node!\n";
 				return false;
 			}
+
+			ptr_protect<nodeDataInterface*, false> mathNode1_guard(vec.vecPtr->operator[](result)->node());
 
 			node1.vecOffset=result;
 
@@ -139,37 +135,26 @@ bool _operator_build(mathNode::mathExpressionNode_opr * tgt, buildVector vec)
 			node2.hiLimit = vec.hiLimit;
 			result =	node2.calculateNextOperation(node2.lowLimit,node2.hiLimit);
 
-			tree::nodeDataInterface* mathNode2=nullptr;
-			ptr_protect<nodeDataInterface*, false> mathNode2_guard(mathNode2);
-			if (vec.vecPtr->operator[](result)->hasNode())
-			{
-				mathNode2 = vec.vecPtr->operator[](result)->node();
-			}
-			else
+			if (!vec.vecPtr->operator[](result)->hasNode())
 			{
 				std::cerr << "Can't create sub node!\n";
 				return false;
 			}
+			ptr_protect<nodeDataInterface*, false> mathNode2_guard(vec.vecPtr->operator[](result)->node());
 			node2.vecOffset=result;
-
-
-
 
 			if (tgt->ptr == nullptr)
 			{
 				tgt->type = tree::DUMMY;
 			}
 			auto tmp = static_cast<tree::node*>(nodeDataInterface_wrapper_access(tgt));
-			tmp->createSubNodes(mathNode1, mathNode2);
-			
 			mathNode1_guard.release();
 			mathNode2_guard.release();
-			
-			if( !buildSubNodes(mathNode1,node1) || 	!buildSubNodes(mathNode2,node2))
+			tmp->createSubNodes(mathNode1_guard.ptr(), mathNode2_guard.ptr());
+			if( !buildSubNodes(mathNode1_guard.ptr()  ,node1) || 	!buildSubNodes(mathNode2_guard.ptr() ,node2))
 			{
 				return false;
 			}
-
 			return true;
 		}
 
@@ -200,24 +185,24 @@ bool _function_build_tree(mathNode::mathExpressionNode_func_tree * tgt, buildVec
 	buildVector node1(vec.vecOffset + 1, vec.hiLimit, 0, vec.vecPtr);
 	//create first sub branche
 	    size_t result = node1.calculateNextOperation(node1.lowLimit, node1.hiLimit);
-	    tree::nodeDataInterface* mathnode1;
-	    if (vec.vecPtr->operator[](result)->hasNode())
-	    {
-		mathnode1 = vec.vecPtr->operator[](result)->node();
-	    }
-	    else
+	    if (!vec.vecPtr->operator[](result)->hasNode())
 	    {
 		std::cerr << "can't create sub node!\n";
 		return false;
-	    }   
+	    }
+	    ptr_protect<tree::nodeDataInterface*,false> mathNode1_guard(vec.vecPtr->operator[](result)->node());
             node1.vecOffset = result;
 	    auto tmp = static_cast<tree::node*>(nodeDataInterface_wrapper_access(tgt));
-	    tmp->createSubNodes(mathnode1, nullptr);
-	    if (!buildSubNodes(mathnode1, node1))
+            mathNode1_guard.release();
+	    tmp->createSubNodes(mathNode1_guard.ptr(), nullptr);
+	    if (!buildSubNodes(mathNode1_guard.ptr(), node1))
 	    {
 		return false;
 	    }
-            else return true;
+            else
+            {
+                return true;
+            }
         
 	
 
@@ -242,26 +227,25 @@ bool _function_build_user(mathNode::mathExpressionNode_func_user * tgt, buildVec
         {
             size_t result = node1.calculateNextOperation(node1.lowLimit, node1.hiLimit);
 	
-	    tree::nodeDataInterface* mathNode1;
-	    if (vec.vecPtr->operator[](result)->hasNode())
-	    {
-		mathNode1 = vec.vecPtr->operator[](result)->node();
-	    }
-	    else
+	    if (!vec.vecPtr->operator[](result)->hasNode())
 	    {
 		std::cerr << "Can't create sub node!\n";
 		return false;
 	    }
-
-	    node1.vecOffset = result;
+	    ptr_protect<nodeDataInterface*, false> mathNode1_guard(vec.vecPtr->operator[](result)->node());
+            node1.vecOffset = result;
 	    auto tmp = static_cast<tree::node*>(nodeDataInterface_wrapper_access(tgt));
 
-	    tmp->createSubNodes(mathNode1,nullptr);
-	    if (!buildSubNodes(mathNode1, node1))
+            mathNode1_guard.release();
+	    tmp->createSubNodes(mathNode1_guard.ptr() ,nullptr);
+	    if (!buildSubNodes(mathNode1_guard.ptr(), node1))
 	    {
 		return false;
 	    }
-	    else return true;
+	    else
+            {
+                return true;
+            }
         }
         else return true;
 }
