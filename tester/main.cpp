@@ -15,13 +15,35 @@
     Verify that exception system does not intoduce memmory leaks
 
 */
-
-
-bool menu(memory::memory& mem,math_func::function_interface& func)
+std::vector<std::string> split(std::string str,char delim)
 {
-	std::cout << "PRINT VARIABLES [1]\nEMPTY VARIABLE TABLE[2]\nPRINT FUNCS[3]\nPRINT BUILD INFO[4]\nPRINT HELP[5]\nRUN TESTS [6]\nEXIT [7]\nMenu> ";
-	std::string input;
-	std::getline(std::cin, input);
+    std::vector<std::string> strs;
+    strs.push_back(std::string());
+    for(auto s = str.begin(); s < str.end(); s++)
+    {
+        if(*s==delim)
+        {
+            strs.push_back(std::string());
+        } 
+        else
+        {
+            strs.back().push_back(*s);
+        }
+    }
+    if(strs.back().size() == 0)
+    {
+        strs.pop_back();
+    }
+    return strs;
+}
+
+bool menu(memory::memory& mem,math_func::function_interface& func,std::string input)
+{
+        if(input.size() == 0)
+        {
+	    std::cout << "PRINT VARIABLES [1]\nEMPTY VARIABLE TABLE[2]\nPRINT FUNCS[3]\nPRINT BUILD INFO[4]\nPRINT HELP[5]\nRUN TESTS [6]\nEXIT [7]\nMenu> ";
+	    std::getline(std::cin, input);
+        }
 	if (input == "1")
 	{
 		std::vector<std::string> vars = mem.allVars();
@@ -71,7 +93,7 @@ bool menu(memory::memory& mem,math_func::function_interface& func)
 	else
 	{
 		std::cout << "Unkown input, try again\n";
-		return menu(mem,func);
+		return menu(mem,func,"");
 	}
 	return false;
 }
@@ -136,10 +158,15 @@ int main(int argc, char* argv[])
 
 		std::cout << "> ";
 		std::getline(std::cin, expression);
-		if (expression == "menu")
+                std::vector<std::string> arg=split(expression,' ');
+                if(arg.size() == 1 && arg[0] == "menu") 
 		{
-			exit = menu(mem,functions);
+			exit = menu(mem,functions,"");
 		}
+                else if(arg.size() == 2 && arg[0] == "menu")
+                {
+                    exit = menu(mem,functions,arg[1]);   
+                }
 		else
 		{
 
