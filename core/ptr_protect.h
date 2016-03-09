@@ -1,6 +1,6 @@
 #ifndef PTR_PROTECT_H
 #define PTR_PROTECT_H
-#include "exception_helper.h"
+#include <stdexcept>
 /**
  *This file contains templates for implementing a simple smart pointer interface
  */
@@ -98,7 +98,7 @@ class ptr_protect<T,B,true>
 		if(!x._enabled)
 		{
 			x.release();	
-			__mathlibra__raise<PTR_PROTECT_MOVED_FREED_PTR,PTR_PROTECT>();
+                        throw std::runtime_error("Can't move a released pointer");
 		}
 		x.release(); x._ptr=nullptr;
 	}

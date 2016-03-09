@@ -168,8 +168,6 @@ model
 		}	
                 mkPluginApi(Zip){
                         from "core/modules/function_helper.h"
-			from "core/exception_helper.h"
-			from "core/exception.h"
                         from "core/plugins/functions_external_interface.h"
                         from "core/core/mathNode_interface.h"
                         from "core/ptr_protect.h"
