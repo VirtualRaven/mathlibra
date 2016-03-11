@@ -87,6 +87,10 @@ state lexical(const char * expr,
 			        	parse_func("mat",tokens,s,func);
 				}
                         }      
+			else
+			{
+				lexicalOops<MATRICE_SYNTAX_DISABLED>();
+			}
 			parse_parantheses1(tokens,s,paran,opr);
                 }
                 else if(expr[i]==']')

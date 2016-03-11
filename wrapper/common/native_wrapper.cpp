@@ -12,7 +12,7 @@ namespace native
 		this->functions.load(math_func::std_math_func);
 		this->functions.load(math_func::std_math_num_func);
 		this->functions.load(math_func::std_math_trig_func);
-		
+		this->functions.load(math_func::mathlibra_data_constructors);	
 		//Load the function container into interpreter
 		this->inter.setFunction(&this->functions);
 

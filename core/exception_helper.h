@@ -62,6 +62,7 @@ enum EXCEPTION {
 	SQUARE_BRACKET_MISSMATCH,
 	MATRICE_NEW_LINE_UNALLOWED,
 	MATRICE_NEW_LINE_NOT_LAST,
+	MATRICE_SYNTAX_DISABLED,
 	MUL_OPR_INVALID_ARGS
 	};
 
@@ -611,6 +612,12 @@ declare_exception(MATRICE_NEW_LINE_UNALLOWED)
 declare_exception(MATRICE_NEW_LINE_NOT_LAST)
 {
 	str_property info = "Matrice new line operator '|' must have element after itself"; 
+	bool_property critical = false;
+	owner_property owner = INTERPRETER;
+};
+declare_exception(MATRICE_SYNTAX_DISABLED)
+{
+	str_property info = "Matrices has been disabled"; 
 	bool_property critical = false;
 	owner_property owner = INTERPRETER;
 };
