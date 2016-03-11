@@ -198,6 +198,10 @@ state lexical(const char * expr,
 	{
 		lexicalOops<MATRICE_NEW_LINE_NOT_LAST>();
 	}	
+	else if(extraParan.size() != 0)
+	{
+		lexicalOops<SYNTAX_UNMATCHED_CLOSING_SQUARE_PARANTHESES>();
+	}
 	if(!paran.empty())
 	{
 		lexicalOops<SYNTAX_UNMATCHED_OPENING_PARANTHESES>();

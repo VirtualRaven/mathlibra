@@ -9,6 +9,7 @@ enum EXCEPTION {
 	TREE_BUILD_FAILED,
 	SYNTAX_UNMATCHED_CLOSING_PARANTHESES,
 	SYNTAX_UNMATCHED_OPENING_PARANTHESES,
+	SYNTAX_UNMATCHED_CLOSING_SQUARE_PARANTHESES,
 	SYNTAX_EXP_AFTER_E,
 	SYNTAX_ASSIGMENT_NEEDS_VAR,
 	SYNTAX_EXPECTED_RH_OPERAND,
@@ -240,6 +241,12 @@ declare_exception(TREE_BUILD_FAILED)
 declare_exception(SYNTAX_UNMATCHED_OPENING_PARANTHESES)
 {
 	str_property info ="Syntax error: found unmatched (";
+	bool_property critical = false;
+	owner_property owner = INTERPRETER;
+};
+declare_exception(SYNTAX_UNMATCHED_CLOSING_SQUARE_PARANTHESES)
+{
+	str_property info ="Syntax error: found unmatched ]";
 	bool_property critical = false;
 	owner_property owner = INTERPRETER;
 };
