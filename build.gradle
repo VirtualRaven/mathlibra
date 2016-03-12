@@ -157,6 +157,10 @@ model
 			workingDir "$buildDir/py_test"
 			commandLine 'python', "run_tests.py"
 		}
+                test(Task){
+                    dependsOn runPyTest
+                    dependsOn runTest
+                }
 		run(Task){
 			description "Runs core tester, must be run with --no-daemon" 
 			dependsOn $.binaries.withType(NativeExecutableBinarySpec).findAll({it.buildable && it.targetPlatform.name.contains("current") && it.toString().contains("core_tester")})
