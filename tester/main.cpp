@@ -7,6 +7,7 @@
 #include "core/function_obj.h"
 #include "core/type.h"
 #include "core/type_helper.h"
+#include "core/mem_test.h"
 /* TODO
 	Add function inpterpeting and execution DONE
 	Add varible interpeting and memmory system. DONE

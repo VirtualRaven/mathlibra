@@ -110,7 +110,35 @@ model
 		release
 	}
 	tasks{
+                    
+                createTest0(Copy){
+                   dependsOn $.binaries.withType(NativeExecutableBinarySpec).findAll(
+                                    {
+                                        it.targetPlatform.name.contains("current") && 
+                                        it.toString().contains("mathlibra_CXX_client") && 
+                                        it.buildType.name.contains("debug")
+                                    })
+                   dependsOn $.binaries.withType(SharedLibraryBinarySpec).findAll(
+                                    {
+                                        it.targetPlatform.name.contains("current") && 
+                                        it.toString().contains("mathlibra_CXX") && 
+                                        it.buildType.name.contains("debug")
+                                    })
+                    from "$buildDir/libs/mathlibra_CXX/shared/current/debug"
+                    from "$buildDir/exe/mathlibra_CXX_client/current/debug"
+                    into "$buildDir/user_test"
+                }
 
+                createTest1(Copy){
+                    from "tests/"
+                    include "*.txt"
+                    into "$buildDir/user_test"
+                }
+                runTest(Exec){
+                 2.times{ i -> dependsOn "createTest$i" }
+                  workingDir "$buildDir/user_test"
+                  commandLine './mathlibra_CXX_client', "-f" , "main.txt"   
+                }
 		createPyTest0(Copy){
 		dependsOn $.binaries.withType(SharedLibraryBinarySpec).findAll({ it.toString().contains("mathlibra_C") && it.buildable })
 		from "$buildDir/libs/mathlibra_C/shared/current/debug/"
@@ -386,6 +414,11 @@ model
 		}
 		mathlibra_CXX_client(NativeExecutableSpec)
 		{	
+                        binaries.all{
+                            if(toolChain in Gcc){
+                                linker.args  "-Wl,-rpath,./"
+                            }
+                        }
 			targetPlatform "armeabiv7a"
 			targetPlatform "linux_x86"
 			targetPlatform "linux_x64"

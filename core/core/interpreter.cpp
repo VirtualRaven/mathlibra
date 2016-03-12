@@ -12,39 +12,7 @@ template<EXCEPTION T> void interpreterOops()
 	__mathlibra__raise<T,INTERPRETER>();
 }
 
-
-
-
-
-
-
-
-
-
-
 	class interpreter;
-#ifdef TYPE_MEM_TEST
-template<typename T> void leak_check(typename util::object_stats<T> stats)
-{
-	std::cout << "COUNTABLE ASSERT RUNNING\n" << "STATS: \n" << "total: " << stats.get_total() << "\ncurrent: " << stats.get_current() << "\ndeleted: " << stats.get_deleted() << std::endl;
-	if(stats.get_total() != stats.get_deleted())
-	{
-		interpreterOops<MEMORY_LEAK_ASSERT>();
-	}	
-}
-#endif
-
-void debug::check_tree_mem_leak()
-{
-#ifdef TYPE_MEM_TEST
-	std::cout << "DEBUG LEAK CHECK\n\nNodes:\n";
-	leak_check(util::object_stats<tree::nodeDataInterface>());
-	std::cout << "\nTypes:\n";
-	leak_check(util::object_stats<interface::type>());
-#else
-	std::cout << "This library was built with memory leak check disabled\n";
-#endif
-}
 
 
 

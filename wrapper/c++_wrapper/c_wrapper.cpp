@@ -4,7 +4,7 @@
 #include "stdafx.h"
 #include "export.h"
 #include "native_class_wrapper.h"
-
+#include "mem_test.h"
 interface::calc_lib_interface* InitLib()
 {
 	return  dynamic_cast<interface::calc_lib_interface*>( new native::core_native_wrapper);
@@ -20,4 +20,7 @@ const char* LibSHA()
 	return LIB_SHA;
 }
 
-
+bool mem_error_occured()
+{
+    return debug::mem_error_occured();
+}
