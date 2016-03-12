@@ -47,6 +47,12 @@ bool run_test_cases(std::map<string,vector<string>> test)
                {
                     std::cout << "[ TEST: " << it->first  << " (OK) ]" << std::endl; 
                }
+               else if (test_res == RETURN_VAL::MEM_ERROR)
+               {
+
+                   std::cout << "[ TEST: " << it->first<< " (mem leak) ]" << std::endl;
+                   test_failed = true;
+               }
                else 
                {
                    std::cout << "[ TEST: " << it->first<< " (failed) ]" << std::endl;
