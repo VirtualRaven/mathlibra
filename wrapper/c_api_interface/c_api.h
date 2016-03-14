@@ -27,14 +27,14 @@ extern "C"
 	extern storage_types getStorage(ret); /**< @returns The underlying storage type */
 	extern double* getDoubleArray(ret); /**< Creates an pointer to a 1d double array. Creats an pointer to the underlying data, 
 										in this case an double array. This presumes that the data_type of ret is double. 
-										@returns An pointer to the ret's internal double array which is valid through the lifetime
-										of the object. For matrices the data is stored by rows. 
-										@example If ret contains a matrix consisting of 
+										If ret contains a matrix consisting of 
 										the column vectors {1,1,1} {2,2,2} and {3,3,3} the returned pointer
 										represents the following list { 1,2,3,1,2,3,1,2,3}
 										matrix getDoubleArray would return  
 										@note Using this function on an ret that does not have an data_type of double
-										causes undefined behavioure */
+										causes undefined behavioure 
+										@returns An pointer to the ret's internal double array which is valid through the lifetime
+										of the object. For matrices the data is stored by rows. */ 
 
 	extern char*   getCharArray(ret); /**< Same as getDoubleArray(ret) but for char types.  
 									  @see  getDoubleArray(ret) */

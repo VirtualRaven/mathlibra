@@ -55,8 +55,7 @@ namespace interface
         virtual bool    isSingleton() const=0 ; /**<Checks if the size of the type is 1x1*/
         virtual bool    isString() const=0; /**< Checks if the type is an string. */
         virtual bool    isNumber() const =0; /**< Checks if the data is an number. */
-        virtual storage_types stores() const=0 ; /**< Returns an enum representing which child class the interface contains. @returns storage_types. @example if 
-						   the returned value is T_DOUBLE this implies that the type pointer can be safely cast into num_mat. */
+        virtual storage_types stores() const=0 ; /**< Returns an enum representing which child class the interface contains. For example if the returned value is T_DOUBLE this implies that the type pointer can be safely cast into num_mat. @returns storage_types.  */
         virtual ~type() = default; /**< Default constructor */
         virtual type*   copy() const=0; /**< Deepcopies the object. 
 					  	@returns type* pointing to an copy of the type. 
