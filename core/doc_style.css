@@ -1,8 +1,173 @@
+/*Custom */
+
+#titlearea {
+    border-bottom:none;
+}
+
+.tablist a {
+    background-image:none;
+    border-right:1px solid #CCCCCC;
+    font-family:Arial, Helvetica, sans-serif;
+    float:left;
+    position:relative;
+    color: grey;
+}
+#navrow2 .tablist a{
+    border-right:none;
+}
+#navrow3 .tablist a{
+    border-right:none;
+}
+
+#navrow3 .tablist li{
+    line-height:100%;
+    font-size:1.2em;
+}
+#navrow4 .tablist a{
+    border-right:none;
+}
+/* Marker on current tab */
+.tablist li.current a{
+    background-image:none;
+    text-shadow:none;
+    background-color:rgb(105,105,105);
+    border-right:1px solid rgb(129,129,129);
+    box-shadow: 0px 1px 2px 0px rgb(70,70,70) inset;
+    z-index:101;
+    color:white; 
+}
+
+
+#navrow2 ul li.current a {
+    background: rgba(230,230,230,1);
+    border-bottom: 2px solid #D32F2F;
+    box-shadow:none;
+    color:grey;
+    font-weight: bold;
+}
+
+
+#navrow3 ul li.current a {
+    padding:0.5em;
+    margin-right:0.5em;
+}
+#navrow4 ul li.current a {
+    background-color:white;
+    border-radius:1em;
+    box-shadow:none;
+    color:grey;
+    font-weight: bold;
+}
+#navrow4 ul li a {
+    padding:0.5em;
+    margin-right:0.5em;
+}
+#navrow4 ul li.current a span {
+    padding:0.5em;
+    margin:0;
+}
+#navrow3 ul li.current a {
+    background: rgba(240,240,240,1);
+    border-radius:1em;
+    box-shadow:none;
+    color:grey;
+    font-weight: bold;
+}
+#navrow3 ul li a {
+    padding:0.5em;
+    margin-right:0.5em;
+}
+#navrow3 ul li.current a span {
+    padding:0.5em;
+    margin:0;
+}
+
+.tablist a:hover {
+    background-image:none;
+    background-color:rgb(105,105,105);
+    border-right:1px solid rgb(129,129,129);
+    box-shadow: 0px 1px 2px 0px rgb(70,70,70) inset;
+    text-shadow:none;
+    z-index:101;
+    color:white; 
+}
+#navrow2  a:hover {
+    background-image:none;
+    background: rgba(230,230,230,1);
+    border-right:none;
+    text-shadow:none;
+    box-shadow: none;
+    z-index:101;
+    color:grey; 
+
+}
+
+#navrow3  a:hover {
+    background-image:none;
+    background: rgba(240,240,240,1);
+    border-right:none;
+    text-shadow:none;
+    box-shadow: none;
+    z-index:101;
+    color:grey; 
+    border-radius:1em;
+
+}
+#navrow4  a:hover {
+    background-image:none;
+    background: white;
+    border-right:none;
+    text-shadow:none;
+    box-shadow: none;
+    z-index:101;
+    color:grey; 
+    border-radius:0;
+
+}
+
+#navrow1 {
+
+        border-top: 1px solid rgba(200,200,200,1);
+    background-image: none;
+	background-color:rgb(255,74,137);
+
+	background: rgba(230,230,230,1);
+und:none;
+}
+
+#navrow2 {
+
+    background-image: none;
+	background-color:rgb(255,74,137);
+
+	background: rgba(230,230,230,1);
+        border-bottom: 1px solid rgba(200,200,200,1);
+}
+#navrow3 {
+    background-image:none;
+    background-color:white;
+    margin-top:1em;
+}
+#navrow4 {
+    background-image:none;
+    background-color:white;
+    margin-top:1em;
+    font-size:1.2em;
+}
+
+.tablist li{
+    background-image: none;
+    background:none;
+}
+
 /* The standard CSS for doxygen 1.8.9.1 */
+
 
 body, table, div, p, dl {
 	font: 400 14px/22px Roboto,sans-serif;
 }
+
+
 
 /* @group Heading Levels */
 
@@ -18,8 +183,8 @@ h1.groupheader {
 }
 
 h2.groupheader {
-	border-bottom: 1px solid #879ECB;
-	color: #354C7B;
+	border-bottom: 1px solid #D0D0D0;
+	color: rgba(100,100,100,1);
 	font-size: 150%;
 	font-weight: normal;
 	margin-top: 1.75em;
@@ -110,7 +275,7 @@ div.navtab {
 /* @group Link Styling */
 
 a {
-	color: #3D578C;
+	color: rgba(100,100,100,1);
 	font-weight: normal;
 	text-decoration: none;
 }
@@ -228,21 +393,17 @@ span.lineno a:hover {
 }
 
 div.ah, span.ah {
-	background-color: black;
+	background-color: white;
+        background-image:none;
+        box-shadow:none;
 	font-weight: bold;
-	color: #ffffff;
+	color: rgba(100,100,100,1);
 	margin-bottom: 3px;
 	margin-top: 3px;
-	padding: 0.2em;
-	border: solid thin #333;
-	border-radius: 0.5em;
-	-webkit-border-radius: .5em;
-	-moz-border-radius: .5em;
-	box-shadow: 2px 2px 3px #999;
-	-webkit-box-shadow: 2px 2px 3px #999;
-	-moz-box-shadow: rgba(0, 0, 0, 0.15) 2px 2px 2px;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#000),color-stop(0.3, #444));
-	background-image: -moz-linear-gradient(center top, #eee 0%, #444 40%, #000);
+	padding: 0.1em;
+	border: none;
+        border-radius:0em;
+        border-bottom:2px solid #D32F2F;
 }
 
 div.classindex ul {
@@ -519,11 +680,7 @@ table.memberdecls {
 .memitem {
 	padding: 0;
 	margin-bottom: 10px;
-	margin-right: 5px;
-        -webkit-transition: box-shadow 0.5s linear;
-        -moz-transition: box-shadow 0.5s linear;
-        -ms-transition: box-shadow 0.5s linear;
-        -o-transition: box-shadow 0.5s linear;
+	margin-right: 5px-shadow 0.5s linear;
         transition: box-shadow 0.5s linear;
         display: table !important;
         width: 100%;
@@ -550,9 +707,9 @@ table.memberdecls {
         color: #253555;
         font-weight: bold;
         text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.9);
-        background-image:url('nav_f.png');
+        background-image:none;
         background-repeat:repeat-x;
-        background-color: #E2E8F2;
+        background-color: #F44336; */
         /* opera specific markup */
         box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.15);
         border-top-right-radius: 4px;
@@ -575,9 +732,9 @@ table.memberdecls {
         padding: 6px 10px 2px 10px;
         background-color: #FBFCFD;
         border-top-width: 0;
-        background-image:url('nav_g.png');
+        /*background-image:url('nav_g.png');
         background-repeat:repeat-x;
-        background-color: #FFFFFF;
+        background-color: #FFFFFF; */
         /* opera specific markup */
         border-bottom-left-radius: 4px;
         border-bottom-right-radius: 4px;
@@ -928,13 +1085,15 @@ table.fieldtable {
 .navpath ul
 {
 	font-size: 11px;
-	background-color:#D61E1E;
+        background-image:none;
+        border:none;
 	height:30px;
 	line-height:30px;
 	color:#8AA0CC;
 	border:solid 1px #C2CDE4;
 	overflow:hidden;
 	margin:0px;
+        margin-top:1em;
 	padding:0px;
 }
 
@@ -1009,11 +1168,9 @@ div.ingroups a
 
 div.header
 {
-        background-image:url('nav_h.png');
-        background-repeat:repeat-x;
+        background-image:none;
 	background-color: #F9FAFC;
 	margin:  0px;
-	border-bottom: 1px solid #C4CFE5;
 }
 
 div.headertitle
@@ -1127,13 +1284,6 @@ dl.section dd {
 	padding: 0px;
 }
 
-#titlearea
-{
-	padding: 0px;
-	margin: 0px;
-	width: 100%;
-	border-bottom: 1px solid #5373B4;
-}
 
 .image
 {
