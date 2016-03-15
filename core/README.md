@@ -1,9 +1,7 @@
-# README #
+# Core folder #
 
-### What is this repository for? ###
-core is the an static library which implements all of mathlibra's functionality.Mathlibra is a back-end library for developing calculator software which implements core functions as as lexical analysis, abstract syntax tree construction and tree evaluation and exposes an plug-in api to extend functions. 
-
-This folder contains all library related code. Unit tests and external interfaces should be included in the other folders.
+### What is in this folder? ###
+This folder contains all the code for the core functionality of mathlibra. All code except external wrappers and tester tools are located in this folder.
 
 ### Core is further split into some submodules.###
 
