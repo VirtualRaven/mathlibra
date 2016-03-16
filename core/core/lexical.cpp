@@ -176,13 +176,13 @@ state lexical(const char * expr,
 		}
 		else if( isalpha(expr[i]))
 		{
-			auto str = extract_alpha(expr,i,expr_len);
-			i+=str.size()-1;	
 			if (tokens.size() > 0 && (tokens.back()->type == tree::VALUE || (expr[i-1]==')' || expr[i-1]==']') ))
 			{
 				pushMulti(tokens,opr,s);
 			}
 
+			auto str = extract_alpha(expr,i,expr_len);
+			i+=str.size()-1;	
 			if (func != nullptr && func->isloaded(str).loaded)
 			{
 				parse_func(str,tokens,s,func);
