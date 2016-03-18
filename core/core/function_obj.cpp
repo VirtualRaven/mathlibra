@@ -43,11 +43,8 @@ void   interpreted_func::__make_local_context(tree::node* current)
 
 void interpreted_func::__prepare_function()
 {
-	for (auto var : this->global_mem->allVars())
-	{
-		this->local_mem.set(var, interface::type_ptr(this->global_mem->get(var)->copy()), true, true);
-	}
 	this->__make_local_context(&this->__tree);
+        this->__tree.data->optimize();
 }
 type* interpreted_func::operator()(type* x)
 {
@@ -59,7 +56,9 @@ type* interpreted_func::exec(type* x )
 {
 	return this->operator()(x);
 }
-interpreted_func::interpreted_func(tree::node* tree,  memory::memory* mem) :  global_mem(mem), __tree(std::move(*tree))
+interpreted_func::interpreted_func(tree::node* tree,  memory::memory* mem) :  
+local_mem(mem->copy_const()), 
+__tree(std::move(*tree))
 {
 	this->__prepare_function();
 }
@@ -73,7 +72,6 @@ interpreted_func& interpreted_func::operator=(tree::node* tree)
 interpreted_func& interpreted_func::operator=(interpreted_func&& func)
 {
 		this->__tree = std::move(func.__tree);
-		this->global_mem = func.global_mem;
 		this->local_mem = func.local_mem;
 		this->__prepare_function();
 		return *this;

@@ -203,6 +203,32 @@ using interface::type_ptr;
 		mem_it(mem.end()),
 		mem_it2(mem.end()),
 		mem_it2_index(0) {}
+                
+        memory::memory::memory(memory&& m) :
+                mem(std::move(m.mem)),
+                mem_it(mem.end()),
+                mem_it2(mem.end()),
+                mem_it2_index(0) {}
+        memory::memory memory::memory::copy() 
+        {
+            memory tmp;
+            tmp.mem = this->mem;
+            tmp.mem_it = tmp.mem.end();
+            tmp.mem_it2= tmp.mem.end();
+            tmp.mem_it2_index=0;
+            return std::move(tmp);
+
+        }
+        memory::memory memory::memory::copy_const()
+        {
+            auto tmp = this->copy();
+            for(auto it = tmp.mem.begin(); it != tmp.mem.end(); it++)
+            {
+                it->second.constant=true;
+            }
+            return std::move(tmp);
+
+        }
 /*
 	bool test::memory_module_test1()
 	{

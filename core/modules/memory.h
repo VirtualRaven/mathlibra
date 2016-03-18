@@ -56,6 +56,19 @@ namespace memory
                 memoryObject& get_obj(size_t index); /**< Get an memoryObject by index. Returns the memoryOject number index, use size to get maximum allowed index. @see memory::size. @note Due to the implementation of the internal oemory container the memory class do not support random access by integer index, instead it itterates through the structure to get the index. Thus get_obj(size_t index) is O(n) but provides caching to spead up sequential reads.  */
                 size_t get_size();
 		memory();
+                memory(memory&&);
+                memory(const memory&)=default;
+                memory& operator=(const memory&)=default;
+                /**
+                 * Create a copy of the memory object.
+                 * This deepcopies the object.
+                 */
+                memory copy();
+                /**
+                 * Create a copy of the memory object.
+                 * This deepcopies the object and sets all variables to const.
+                 */
+                memory copy_const();
 	};
 
 }

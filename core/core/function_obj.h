@@ -19,7 +19,6 @@ namespace function_obj /**< function_obj object to export interpreted expression
 	class interpreted_func
 	{
 		memory::memory local_mem;
-		memory::memory* global_mem;
 		void __make_local_context(tree::node*);
 		void __prepare_function();
 		tree::rootNode __tree;
