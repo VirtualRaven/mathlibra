@@ -44,12 +44,12 @@ void   interpreted_func::__make_local_context(tree::node* current)
 void interpreted_func::__prepare_function()
 {
 	this->__make_local_context(&this->__tree);
+	this->__tree.TakeContext();
         this->__tree.data->optimize();
 }
 type* interpreted_func::operator()(type* x)
 {
 	this->local_mem.set_ignore_const("x", interface::type_ptr(x), true, true);
-	this->__tree.TakeContext();
 	return this->__tree.data->eval();
 }
 type* interpreted_func::exec(type* x )
@@ -77,7 +77,8 @@ interpreted_func& interpreted_func::operator=(interpreted_func&& func)
 		return *this;
 }
 
-interpreted_func::interpreted_func(interpreted_func&& func) : __tree(std::move(func.__tree))
+interpreted_func::interpreted_func(interpreted_func&& func) : 
+	__tree(std::move(func.__tree))
 {
 	this->__prepare_function();
 }

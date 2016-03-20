@@ -25,11 +25,20 @@ RETURN_VAL test_error(interface::calc_lib_interface* calc)
 RETURN_VAL runTest(vector<string> testExpression )
 {
     
+//This extra bracket is here to ensure that calc has gone out of
+//scope before calling mem_error_occured
     {
         ptr_protect<interface::calc_lib_interface*, false> calc(InitLib());
+	calc->set_arg("x^3");
+	calc->defineFunction("cube");
+	auto test = test_error(calc.ptr());
+        if( test != RETURN_VAL::SUCCESS){
+		std::cerr << "-[ PREVIOUS ERROR CAUSED BY defineFunction() \n";
+                return test;   
+        }
         for(string expr : testExpression){
             calc->set_arg(expr);
-            auto test =test_error(calc.ptr());
+            test =test_error(calc.ptr());
             if( test != RETURN_VAL::SUCCESS){
                 return test;   
             }

@@ -4,6 +4,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 #include "Core_Includes.h"
 #include "main_wrapper.h"
+#include <map>
+#include "function_obj.h"
 namespace native
 {
 	extern const char * CoreVersion ;
@@ -20,12 +22,15 @@ namespace native
 		bool exception_occurred;
                 void __handle(exception& e);
 		interface::wrapper_exception_info ex_inf;
+		std::map<std::string,function_obj::interpreted_func> api_funcs;
 
 	public:
 		core_native_wrapper();
 		~core_native_wrapper();
 		void set_arg(std::string str);
 		void interpret_arg();
+		void defineFunction(std::string name,bool visible);
+		void undefineFunction(std::string name);
 		interface::type_ptr execute_arg();
 		wrapper_exception_info get_exception_info();
 		bool exceptionOccured();

@@ -56,9 +56,21 @@ namespace interface
                  * @returns a type_ptr representing the result of the calculation. 
                  * */
 		virtual interface::type_ptr execute_arg() = 0; 
+		/** Interpretes the expression set by set_arg and exports the resulting expresion as an function.
+		 * @note A call to this function does not invalidate the expression set by interpret_arg() thus it is legal to call this function between a call to intrpret_arg and execute_arg.
+		 * @param name The name of the defined function.
+		 * @param visible Selects if the function should be visible and callable by the end user, Setting this to false only makes the function available to the api-user.
+		 */
+		virtual void defineFunction(std::string name,bool visible=true)=0;
+		
+		/**Unloads specifed function.
+		 * @param name The name of the function to unload
+		 */
+		virtual void undefineFunction(std::string name)=0;
                 /** Get information about the latest exception. 
                  * @returns Information about the latest exception that occured in mathlibra. 
                  * */
+		
 		virtual wrapper_exception_info get_exception_info() = 0; 
                 /** Checks if an exception has occured. 
                  * To get more information about the exception use get_exception_info(), 

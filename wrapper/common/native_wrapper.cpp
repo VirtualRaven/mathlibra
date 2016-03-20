@@ -4,6 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 #include "native_class_wrapper.h"
 #include "core/export_lib_version.h"
+#include "function_obj.h"
 #include "exception.h"
 namespace native
 {
@@ -278,6 +279,40 @@ namespace native
 	    }
             return {};
         }
+	void core_native_wrapper::defineFunction(std::string name,bool visible)
+	{
+		try{
+
+			function_obj::interpreted_func f(inter.createFunction());
+			if(visible)
+			{
+				functions.load(m_function(name,
+							"API_DEFINED",
+							"",
+							name,
+							new interpreted_func(std::move(f))
+							));
+			}
+			else
+			{
+				api_funcs.insert(std::pair<std::string,function_obj::interpreted_func>(std::move(name),std::move(f)));	
+			}
+		}
+		catch(exception& e)
+		{
+			this->__handle(e);
+		}
+		return;
+	}
+	void core_native_wrapper::undefineFunction(std::string name)
+	{
+		auto it = api_funcs.find(name);
+		if (it != api_funcs.end())
+		{
+			api_funcs.erase(it);
+		}
+		functions.unload(name);
+	}
                 
 }
 

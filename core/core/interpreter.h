@@ -21,6 +21,7 @@
 #include "core/function_obj.h"
 using tree::rootNode;
 using tree::node;
+using function_obj::interpreted_func;
 
 /**
  * @namespace debug Contains function which helps during program debugging
@@ -97,6 +98,7 @@ public:
 	void setMemory(memory::memory* mem_); /**< Load memory module. @param mem_ Pointer to the module to load. @note does not copy the module, therefore the pointer must remain valid through the lifetime of the interpeter. */
 	void setFunction(math_func::function_interface* functions); /**< Load function module. @param functions Pointer to the  module to load. @note does not copy the module, therefore the pointer must remain valid through the lifetime of the interpeter. */
 	void interpret(); /**< Construct the abstract syntax tree.  @note The tree remains until the next call to interpret() or the destructor. Thus several calls can be made to exec cheaply after the construction.*/
+	interpreted_func createFunction(); /**< Same as interpret but exports the syntax tree as a interpreted_func object instead of saving it internally. @note interpreted_func objects runs in a seperate variable scope. Thus changeing a variable after creating the function does not affect the function. */
         interface::type_ptr  exec(); /**< Evaluate the abstract syntax tree. @return The result of the tree evaluation. */
 	void set(const char * expression_, size_t lenght); /**< Sets the expression to interpret. @param expression_ Pointer to an c-style string. @param lenght the lenght of the string excluding any termination characters.*/
 	interpreter();

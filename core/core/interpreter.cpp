@@ -361,3 +361,10 @@ template<EXCEPTION T> void interpreterOops()
 	{
 		return *this;
 	}
+	function_obj::interpreted_func interpreter::createFunction()
+	{		
+		this->interpret();
+		interpreted_func tmp(&this->root,this->mem);
+		this->emptyRoot();
+		return tmp;
+	}	

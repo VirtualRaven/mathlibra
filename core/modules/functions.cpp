@@ -158,6 +158,17 @@ namespace math_func
 
 
 		}
+		void function_interface::unload(std::string name)
+		{
+			for(auto it = funcs.begin(); it< funcs.end(); it++)
+			{
+				if(it->name==name)
+				{
+					funcs.erase(it);	
+					return;
+				}
+			}
+		}
                 type* iterate(tree::nodeDataInterface* next, 
                                 mathNode::mathExpressionNode_variable_interface* var,
                                 num_mat start,

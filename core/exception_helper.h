@@ -416,7 +416,7 @@ declare_exception(TREE_FORWARDED_EXCEPTION)
 
 declare_exception(PLUGIN_FAILED_SEARCH_FOLDER)
 {
-	str_property info ="Plugin folder does not found";
+	str_property info ="Plugin folder not found";
 	bool_property critical = true;
 	owner_property owner = PLUG_IN;
 };

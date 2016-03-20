@@ -32,4 +32,6 @@ x2
 [1,2,3]2
 #endtest
 
-
+#test-api-function
+cube(2)
+#endtest
