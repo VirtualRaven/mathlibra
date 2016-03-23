@@ -321,8 +321,12 @@ namespace mathNode
                 return this;
 	}
        	bool mathExpressionNode_func_user::isPure()
-	{
-		return this->wrapperNode->sub1()->data->isPure() && this->wrapperNode->sub2()->data->isPure();
+	{	
+		if(this->wrapperNode->sub1()==nullptr)
+		{
+			nodeOops<NODE_UNEXPECTED_NULL_POINTER>();
+		}
+		return this->wrapperNode->sub1()->data->isPure();
 	}	
         mathExpressionNode_func_user::~mathExpressionNode_func_user(){}
         mathExpressionNode_func_user::mathExpressionNode_func_user():ptr(nullptr){}
