@@ -40,43 +40,43 @@ namespace interface
 	public:
                 
                 /** Sets the expression to be interpreted. 
-                 * @param str The mathlibra expression to be interpeted. 
+                 * @param str The mathlibra expression to be interpreted. 
                  * @note Calling set_arg just set the argument, 
                  * it does not interpret it. Use interpret_arg() for that purpose. 
                  * */
 		virtual void set_arg(std::string str) = 0; 
-                /**Interpretes the expression set by set_arg.
+                /**Interprets the expression set by set_arg.
                  * Use exceptionOccured() to check if operation succeeded.
                  * */
 		virtual void interpret_arg() = 0;
 
-                /** Evaluats the expression. 
-                 * Use exceptionOccured() to check if the operation was successfull. 
-                 * A call to this function is only valid after a successfull call interpret_arg.  
+                /** Evaluates the expression. 
+                 * Use exceptionOccured() to check if the operation was successful. 
+                 * A call to this function is only valid after a successful call interpret_arg.  
                  * @returns a type_ptr representing the result of the calculation. 
                  * */
 		virtual interface::type_ptr execute_arg() = 0; 
-		/** Interpretes the expression set by set_arg and exports the resulting expresion as an function.
-		 * @note A call to this function does not invalidate the expression set by interpret_arg() thus it is legal to call this function between a call to intrpret_arg and execute_arg.
-		 * @note This causes a call to undefineFunction(name) to be made thus to ensure that no name collsions occur. Thus calling this function involves the same dangers as undefineFunction.
+		/** Interprets the expression set by set_arg and exports the resulting expression as an function.
+		 * @note A call to this function does not invalidate the expression set by interpret_arg() thus it is legal to call this function between a call to interpret_arg and execute_arg.
+		 * @note This causes a call to undefineFunction(name) to be made thus to ensure that no name collisions occur. Thus calling this function involves the same dangers as undefineFunction.
 		 * @see undefineFunction  
 		 * @param name The name of the defined function.
 		 * @param visible Selects if the function should be visible and callable by the end user, Setting this to false only makes the function available to the api-user.
 		 */
 		virtual void defineFunction(std::string name,bool visible=true)=0;
 		
-		/**Unloads specifed function.
+		/**Unloads specified function.
 		 * @param name The name of the function to unload
-		 * @warning Undefining a user defined function(a function created by defineFunction() or function definition operator ':' ) that
+		 * @warning Removing a user defined function(a function created by defineFunction() or function definition operator ':' ) that
 		 * currently is in use will lead to undefined behavior. 
 		 */
 		virtual void undefineFunction(std::string name)=0;
                 /** Get information about the latest exception. 
-                 * @returns Information about the latest exception that occured in mathlibra. 
+                 * @returns Information about the latest exception that occurred in mathlibra. 
                  * */
 		
 		virtual wrapper_exception_info get_exception_info() = 0; 
-                /** Checks if an exception has occured. 
+                /** Checks if an exception has occurred. 
                  * To get more information about the exception use get_exception_info(), 
                  * which returns and clears the exception. 
                  * @note calls to other methods in this class is invalid while an exception is pending. 
@@ -94,22 +94,22 @@ namespace interface
 		virtual std::vector<func_obj_api> getFunctionObjs() = 0;	
 		
 
-		//Memroy unit 
+		//Memory unit 
                  
                 /**
                  * Get all defined functions.
-                 * @returns a vector containing all curently defined variable names.
+                 * @returns a vector containing all currently defined variable names.
                  */
 		virtual std::vector<std::string> getVariableNames() = 0;
 
                 /**
                  * Gets the value of an variable.
-                 * @param name The name of the variable which value should be retrived
+                 * @param name The name of the variable which value should be retrieved
                  * @returns The variables current value. This pointer is owned by mathlibra and should not be deleted!
                  * @note if name is undefined a exception will occur, 
                  * use isDefined to check if it is safe call this method.
                  * @note The pointer returned points to the value of the variable, 
-                 * thus if you wish to update the variable it is possible to directly modify the pointer isnstead of using setVariable
+                 * thus if you wish to update the variable it is possible to directly modify the pointer instead of using setVariable
                  */
 		virtual type* getVariableValue(std::string  name) = 0;
                 /**
@@ -122,7 +122,7 @@ namespace interface
                  * Gets the variables mem_obj_api object.
                  * @param index Which variable to return starting at index 0. 
                  * @returns A mem_obj_api object containing data about index.
-                 * @note getVariable(std::String) is prefered over this method as it is faster.
+                 * @note getVariable(std::String) is preferred over this method as it is faster.
                  */
                 virtual mem_obj_api getVariable(size_t index)=0;
 
