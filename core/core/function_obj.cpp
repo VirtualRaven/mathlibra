@@ -47,14 +47,14 @@ void interpreted_func::__prepare_function()
 	this->__tree.TakeContext();
         this->__tree.data->optimize();
 }
-type* interpreted_func::operator()(type* x)
+type* interpreted_func::operator()(interface::type_ptr x)
 {
-	this->local_mem.set_ignore_const("x", interface::type_ptr(x), true, true);
+	this->local_mem.set_ignore_const("x",std::move(x), true, true);
 	return this->__tree.data->eval();
 }
-type* interpreted_func::exec(type* x )
+type* interpreted_func::exec(interface::type_ptr x )
 {
-	return this->operator()(x);
+	return this->operator()(std::move(x));
 }
 interpreted_func::interpreted_func(tree::node* tree,  memory::memory* mem) :  
 local_mem(mem->copy_const()), 

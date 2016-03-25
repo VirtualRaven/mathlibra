@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include "type_interface.h"
+#include "ptr_protect.h"
 namespace interface
 {
 
@@ -38,7 +39,7 @@ namespace interface
 	class calc_lib_interface
 	{
 	public:
-                
+         	typedef ptr_protect<double*,true> double_array_ptr;       
                 /** Sets the expression to be interpreted. 
                  * @param str The mathlibra expression to be interpreted. 
                  * @note Calling set_arg just set the argument, 
@@ -65,6 +66,24 @@ namespace interface
 		 */
 		virtual void defineFunction(std::string name,bool visible=true)=0;
 		
+		/**
+		 * Creates a set of XY-pairs using specified functions.
+		 * Map the specified function f onto the set XS = `{Start,Start+Offset,Start+2*Offset,...,End}`
+		 * presuming Start < End. The result is returned in a 1d double array packed as 
+		 * `{x1,f(x1),x2,f(x2),...,xn,f(xn)}` where xi is element i in XS and   
+		 * n=floor((End-Start)/Offset)+1.
+		 * @note  If f(xi) does not return a number a exception will occur.
+		 * @returns A double* to a array of length 2n.
+		 * @param Start the first value.
+		 * @param End the last value .
+		 * @param Offset the step lenght.
+		 * @param Function the name of function f.
+		 */
+		virtual double_array_ptr map(double Start,
+						double End,
+						double Offset,
+						std::string Function)=0;
+			
 		/**Unloads specified function.
 		 * @param name The name of the function to unload
 		 * @warning Removing a user defined function(a function created by defineFunction() or function definition operator ':' ) that

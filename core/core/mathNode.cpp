@@ -344,7 +344,7 @@ namespace mathNode
                     {
 			    nodeOops<NODE_EXPECTED_ARGUMENT_FOR_FUNC>();
                     }
-                    return this->ptr->exec(this->wrapperNode->sub1()->data->eval());
+                    return this->ptr->exec(interface::type_ptr(this->wrapperNode->sub1()->data->eval()));
                 }
                 void mathExpressionNode_func_user::bind(node_base* context)
                 {

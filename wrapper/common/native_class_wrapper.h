@@ -31,6 +31,11 @@ namespace native
 		void interpret_arg();
 		void defineFunction(std::string name,bool visible);
 		void undefineFunction(std::string name);
+		double_array_ptr map(double Start,
+					double End,
+					double Offset,
+					std::string Function);
+
 		interface::type_ptr execute_arg();
 		wrapper_exception_info get_exception_info();
 		bool exceptionOccured();

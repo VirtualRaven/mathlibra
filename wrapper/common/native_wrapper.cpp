@@ -6,8 +6,15 @@
 #include "core/export_lib_version.h"
 #include "function_obj.h"
 #include "exception.h"
+#include "type_helper.h"
+#include "exception_helper.h"
 namespace native
 {
+
+	template<EXCEPTION T> void wrapperOops()
+	{
+		__mathlibra__raise<T,WRAPPER>();	
+	}	
 	const char * CoreVersion = LIB_VERSION;
 	core_native_wrapper::core_native_wrapper() : manager(plugin::get_platform_specific_manager()) , exception_occurred(false)
 	{
@@ -315,6 +322,57 @@ namespace native
 		}
 		functions.unload(name);
 	}
+
+	interface::calc_lib_interface::double_array_ptr core_native_wrapper::map(double Start,
+					double End,
+					double Offset,
+					std::string Function)
+		{
+			try{
+				interpreted_func* f = nullptr;
+				auto it = api_funcs.find(Function);
+				if(it == api_funcs.end())
+				{
+					if(functions.isloaded(Function).loaded && functions.type() == math_func::func_type::USER)
+					{
+						f = functions.getFunctor(Function);
+					}
+					else
+					{
+						wrapperOops<MAP_FUNCTION_NOT_FOUND>();
+					}				
+				}
+				else
+				{
+					f = &it->second;
+				}
+				int buffsize = (int)(2*(End-Start)/Offset)+2;
+				double_array_ptr buffer(new double[buffsize]);
+				auto ptr = buffer.ptr();
+				for(int i =0; i < buffsize; i+=2)
+				{
+					double val = Start+i*Offset;
+					ptr[i]=val;
+					interface::type_ptr ret(f->exec(interface::type_ptr(make_type(val))));
+					if(ret->isNumber())
+					{
+						ptr[i+1] = ret->toNumber();
+					}		
+					else
+					{
+						wrapperOops<MAP_FUNCTION_NOT_NUMER_TYPE>();
+					}
+				}
+				return buffer;
+
+			}
+			catch(exception& e)
+			{
+				this->__handle(e);
+				return double_array_ptr(nullptr);
+			}
+
+		}
                 
 }
 

@@ -72,7 +72,7 @@ namespace math_func
 				std::string disp_name, 
 				interpreted_func* ptr);
                 m_function();
-		~m_function();
+		virtual ~m_function();
 	};
 	/**
 	 * A constant implementation of m_function.

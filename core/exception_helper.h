@@ -67,7 +67,9 @@ enum EXCEPTION {
 	MATRICE_NEW_LINE_UNALLOWED,
 	MATRICE_NEW_LINE_NOT_LAST,
 	MATRICE_SYNTAX_DISABLED,
-	MUL_OPR_INVALID_ARGS
+	MUL_OPR_INVALID_ARGS,
+	MAP_FUNCTION_NOT_FOUND,
+	MAP_FUNCTION_NOT_NUMER_TYPE
 	};
 
 //* Lists all possible exception owners
@@ -81,7 +83,8 @@ enum EXCEPTION_TYPE {
 		BUILD,
 		NODE,
 		TOKEN,
-		PTR_PROTECT
+		PTR_PROTECT,
+		WRAPPER
 };
 
 extern char __exception_buffer[128];
@@ -205,6 +208,10 @@ declare_exception_owner(NODE)
 declare_exception_owner(TOKEN)
 {
 	str_property str = "Token Oops";
+};
+declare_exception_owner(WRAPPER)
+{
+	str_property str = "Wrapper Oops";
 };
 
 
@@ -631,4 +638,18 @@ declare_exception(MUL_OPR_INVALID_ARGS)
 	bool_property critical = false;
 	owner_property owner = STD_OPERATORS;
 };
+declare_exception(MAP_FUNCTION_NOT_FOUND)
+{
+	str_property info = "Function to map over does not exist";
+	bool_property critical = false;
+	owner_property owner = WRAPPER;
+};
+	
+declare_exception(MAP_FUNCTION_NOT_NUMER_TYPE)
+{
+	str_property info = "Map function did not return number";
+	bool_property critical = false;
+	owner_property owner = WRAPPER;
+};
+	
 #endif //EXCEPTION_HELPER_INCLUDED
