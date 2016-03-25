@@ -363,8 +363,18 @@ template<EXCEPTION T> void interpreterOops()
 	}
 	function_obj::interpreted_func interpreter::createFunction()
 	{		
+		bool empty = rootEmpty;
+		rootNode old;
+		if(!empty){
+			old= std::move(this->root);
+		}
 		this->interpret();
 		interpreted_func tmp(&this->root,this->mem);
-		this->emptyRoot();
+		if(!empty)
+		{
+			this->root = std::move(old);
+			rootEmpty=false;
+		}
+		else this->emptyRoot();
 		return tmp;
 	}	

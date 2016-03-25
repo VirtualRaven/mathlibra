@@ -49,12 +49,16 @@ void plugin::plugin_manager::unloadPlugins()
  void plugin::plugin_init(function_plugin_base* func,math_func::function_interface * function_unit)
  {
 	 plugin::function* tmp_funcs = func->get_funcs();
-	 std::vector<math_func::m_function> __funcs;
+	 std::vector<math_func::m_function_const> __funcs;
 	 __funcs.reserve(func->function_size());
 	 unsigned int max = func->function_size();
 	 for (unsigned int i = 0; i < max; i++)
 	 {
-		 __funcs.push_back(math_func::m_function(tmp_funcs[i].name,tmp_funcs[i].tag,tmp_funcs[i].doc,tmp_funcs[i].disp_name,   tmp_funcs[i].ptr));
+		 __funcs.push_back(math_func::m_function_const(tmp_funcs[i].name,
+					 			tmp_funcs[i].tag,
+								tmp_funcs[i].doc,
+								tmp_funcs[i].disp_name,
+								tmp_funcs[i].ptr));
 	 }
 	 function_unit->load(__funcs);
  }

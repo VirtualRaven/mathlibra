@@ -284,6 +284,8 @@ namespace native
 		try{
 
 			function_obj::interpreted_func f(inter.createFunction());
+			//Ensure that no name collision occurs
+			this->undefineFunction(name);
 			if(visible)
 			{
 				functions.load(m_function(name,

@@ -26,7 +26,7 @@ RETURN_VAL runTest(vector<string> testExpression )
 {
     
 //This extra bracket is here to ensure that calc has gone out of
-//scope before calling mem_error_occured
+//scope before calling mem_error_occurred
     {
         ptr_protect<interface::calc_lib_interface*, false> calc(InitLib());
 	calc->set_arg("x^3");

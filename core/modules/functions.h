@@ -5,7 +5,7 @@
 #ifndef FUNCTION_H_INCLUDED
 #define FUNCTION_H_INCLUDED
 #include <cmath>
-#include <vector>
+#include <map>
 #include <iostream>
 #include "exception.h"
 #include "main.h"
@@ -59,11 +59,36 @@ namespace math_func
 			generalFuncPtr gptr;
 		        interpreted_func* uptr;
                 };
-		
-		m_function(std::string name,std::string tag,std::string doc,std::string disp_name, generalFuncPtr ptr);
-		m_function(std::string name,std::string tag,std::string doc,std::string disp_name, interpreted_func* ptr);
+		m_function(m_function&& func);	
+		m_function(std::string name,
+				std::string tag,
+				std::string doc,
+				std::string disp_name, 
+				generalFuncPtr ptr);
+
+		m_function(std::string name,
+				std::string tag,
+				std::string doc,
+				std::string disp_name, 
+				interpreted_func* ptr);
                 m_function();
 		~m_function();
+	};
+	/**
+	 * A constant implementation of m_function.
+	 * This class can not contain user functions thus it 
+	 * can be copied.
+	 */
+	struct m_function_const : public m_function
+	{
+
+		m_function_const(std::string name,
+				std::string tag,
+				std::string doc,
+				std::string disp_name, 
+				generalFuncPtr ptr);
+
+		m_function_const(const m_function_const&);
 	};
 
 
@@ -75,12 +100,14 @@ namespace math_func
 
 	class function_interface
 	{
-                std::vector<m_function> funcs;
-		m_function cache;
+		typedef std::map<std::string,m_function> map_type;
+                map_type funcs;
+		map_type::iterator cache;
 	public:
 
-		void load(std::vector< m_function>& obj); /**< @param obj An vector of functions to be loaded by the module. */
-		void load(m_function obj); /**< @param obj An single object to be loaded by the module. */
+		void load(const std::vector< m_function_const>& obj); /**< @param obj An vector of functions to be loaded by the module. */
+		void load(m_function&& obj); /**< @param obj An single object to be loaded by the module. */
+		void load(const m_function_const& obj);
 		void unload(std::string name); /**< Unloads the specified function */
                 load_test_return isloaded(std::string funcName); /**< Checks if function is loaded. @param funcName The name to be checked if it is loaded. @return True if function is loaded. */
 		func_type type(); /**< @return True if function last specified in isloaded() is of type generalFuncPtr. @note the last string to be sent to isloaded() is cached which this function works upon. */
@@ -94,13 +121,13 @@ namespace math_func
 	
 
 	/**Vector containing basic trigometric functions form dervired from math.h */
-	extern std::vector< math_func::m_function> std_math_trig_func;
+	extern std::vector< math_func::m_function_const> std_math_trig_func;
 	/**Vector containing the very basic functions like sqrt or log form dervired from math.h */
-	extern std::vector<math_func::m_function> std_math_func;
+	extern std::vector<math_func::m_function_const> std_math_func;
 	/**Vector containing basic numerical functions like ceil dervired from math.h */
-	extern std::vector<math_func::m_function> std_math_num_func;
+	extern std::vector<math_func::m_function_const> std_math_num_func;
 	/**Data connstructors for bracket matrice initilization */
-	extern std::vector<math_func::m_function> mathlibra_data_constructors; 
+	extern std::vector<math_func::m_function_const> mathlibra_data_constructors; 
 	
 }
 #endif

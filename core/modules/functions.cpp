@@ -9,6 +9,15 @@
 //Contains temporary implementation of function module
 namespace math_func
 {
+	template<bool ASSERT> struct compile_assert {};
+	
+	template<> struct compile_assert<true>
+	{
+		static constexpr bool eval() { return true; }
+	};
+	
+	
+	
 	template<EXCEPTION T> void functionOops()
 	{
 		__mathlibra__raise<T,FUNCTION>();
@@ -24,7 +33,25 @@ namespace math_func
 				disp_name(disp_name),
 				gptr(ptr) {}
 
-	math_func::m_function::~m_function(){}
+	math_func::m_function::~m_function()
+	{
+		if(func_type::USER == type)
+		{
+			delete uptr;
+		}
+	}
+	math_func::m_function::m_function(m_function&& func) :
+	       					type(func.type),
+						name(std::move(func.name)),
+						tag(std::move(func.tag)),
+						doc(std::move(func.doc)),
+						disp_name(std::move(func.disp_name)),
+						uptr(func.uptr)
+	{
+		//Ensure invariant	
+		compile_assert<(sizeof(m_function::generalFuncPtr)==sizeof(interpreted_func*))>::eval();
+		func.uptr=nullptr;
+	}
 
 	math_func::m_function::m_function() :type(func_type::GENERAL),
 					     name(), 
@@ -32,111 +59,121 @@ namespace math_func
 					     doc(),
 					     disp_name(),
 					     gptr(nullptr){}
-        math_func::m_function::m_function(std::string name, std::string tag,std::string doc,std::string disp_name,interpreted_func* ptr): type(func_type::USER),
-       				  name(name),
-				  tag(tag),
-			       	  doc(doc),
-			       	  disp_name(disp_name),
-				  uptr(ptr) {}
+        math_func::m_function::m_function(std::string name, 
+					std::string tag,
+					std::string doc,
+					std::string disp_name,
+					interpreted_func* ptr): 
+				type(func_type::USER),
+       				name(name),
+				tag(tag),
+			      	doc(doc),
+			     	disp_name(disp_name),
+				uptr(ptr) {}
 
-		void function_interface::load(std::vector< m_function>& obj)
+	math_func::m_function_const::m_function_const(std::string name,
+							std::string tag,
+							std::string doc,
+							std::string disp_name,
+							generalFuncPtr ptr): 
+						m_function(std::move(name),
+								std::move(tag),
+								std::move(doc),
+								std::move(disp_name),
+								ptr)
+		{}
+		math_func::m_function_const::m_function_const(const m_function_const& m) : 
+			m_function(m.name,m.tag,m.doc,m.disp_name,m.gptr) {}
+		
+		void function_interface::load(const std::vector< m_function_const>& obj)
 		{
-			funcs.insert(funcs.end(),obj.begin(),obj.end());
+			for(auto it = obj.begin(); it != obj.end(); it++ )
+			{
+				funcs.insert(map_type::value_type(it->name,m_function_const(*it)));
+			}
 		}
-		void function_interface::load(m_function obj)
+		void function_interface::load(const m_function_const& obj)
 		{
-			funcs.push_back(obj);
+			funcs.insert(map_type::value_type(obj.name,m_function_const(obj)));
+		}
+		void function_interface::load(m_function&& obj)
+		{
+			funcs.insert(std::pair<std::string,m_function>(obj.name,std::move(obj)));
 		}
 		load_test_return  function_interface::isloaded(std::string funcName)
 		{
-			for (unsigned int i = 0; i < funcs.size(); i++)
+			auto it = funcs.find(funcName);
+			if (it != funcs.end())
 			{
-				if (funcs[i].name == funcName)
-				{
-					cache = funcs[i];
-					return {true, cache.type == func_type::USER };
-				}
+					cache = it;
+					return {true, cache->second.type == func_type::USER };
 			}
-			return {false,false};
+			else return {false,false};
 		}
 		
 		func_type function_interface::type()
 		{
-			return this->cache.type;
+			return this->cache->second.type;
 		}
 		u_ptr function_interface::get(std::string funcName)
 		{
-			if (cache.name == funcName)
+			if (cache->second.name == funcName)
 			{
-				if(cache.type == func_type::USER)
+				if(cache->second.type == func_type::USER)
                                 {
 					functionOops<FUNC_NO_CONV_FUNCTOR_VOID_P>();
                                 }
-                                return reinterpret_cast<u_ptr>(cache.gptr);
+                                return reinterpret_cast<u_ptr>(cache->second.gptr);
 			}
 			else
 			{
-
-				for (unsigned int i = 0; i < funcs.size(); i++)
-				{
-					if (funcs[i].name == funcName)
+					auto it = funcs.find(funcName);
+					if (it != funcs.end())
 					{
-                                            if(funcs[i].type == func_type::USER)
+                                            if(it->second.type == func_type::USER)
                                             {
 						functionOops<FUNC_NO_CONV_FUNCTOR_VOID_P>();
                                             }
-					    else return reinterpret_cast<u_ptr>(funcs[i].gptr);
+					    else return reinterpret_cast<u_ptr>(it->second.gptr);
 					}
-				}
 				return nullptr;
 			}
 		}
                 
                 interpreted_func* function_interface::getFunctor(std::string funcName)
                 {
-                    if(cache.name ==funcName && cache.type == USER)
+                    if(cache->second.name ==funcName && cache->second.type == USER)
                     {
-                            return cache.uptr;
+                            return cache->second.uptr;
                     }
                     else
                     {
-                        for(unsigned int i =0; i < funcs.size(); i++)
-                        {
-                            if(funcs[i].name == funcName)
+			   auto it = funcs.find(funcName);
+                           if(it != funcs.end())
                             {
-                                return cache.uptr;
+                                return cache->second.uptr;
                             }
-                        }
                         return nullptr;
                     }   
                 }
                 void function_interface::display()
 		{
 			std::cout << "-[ function_interface {\n";
-			for (unsigned int i = 0; i < funcs.size(); i++)
+			for (auto it = funcs.cbegin(); it != funcs.cend(); it++)
 			{
-				std::cout << this->funcs[i].name.c_str() << "\t: " <<  this->funcs[i].tag   << "\n";
+				std::cout << it->second.name.c_str() << "\t: " <<  it->second.tag   << "\n";
 			}
 			std::cout << " }\nLoaded " << this->funcs.size() << " functions]\n";
 
 		}
-                function_interface::~function_interface()
-                {
-                        for(unsigned int i =0; i < funcs.size(); i++)
-                        {
-                            if(funcs[i].type == func_type::USER)
-                            {
-                                delete funcs[i].uptr;
-                            }
-                        }
-                }
+                function_interface::~function_interface(){}
 		std::vector<std::string> function_interface::getFunctionNames()
 		{
 			std::vector<std::string> vec;
 			vec.reserve(this->funcs.size());
-			for (unsigned int i = 0; i < funcs.size(); i++)
+			for (auto it = funcs.cbegin(); it != funcs.cend(); it++)
 			{
-				vec.push_back(this->funcs[i].name);
+				vec.push_back(it->second.name);
 			}
 			return vec;
 		}
@@ -145,13 +182,13 @@ namespace math_func
 		{
 			std::vector<func_obj_info> vec;
 			vec.reserve(this->funcs.size());
-			for (unsigned int i = 0; i < funcs.size(); i++)
+			for (auto it = funcs.cbegin(); it != funcs.cend(); it++)
 			{
 				vec.push_back( {
-						this->funcs[i].name,
-						this->funcs[i].tag,
-						this->funcs[i].doc,
-						this->funcs[i].disp_name
+						it->second.name,
+						it->second.tag,
+						it->second.doc,
+						it->second.disp_name
 						});
 			}
 			return vec;
@@ -160,9 +197,9 @@ namespace math_func
 		}
 		void function_interface::unload(std::string name)
 		{
-			for(auto it = funcs.begin(); it< funcs.end(); it++)
+			for(auto it = funcs.begin(); it != funcs.end(); it++)
 			{
-				if(it->name==name)
+				if(it->second.name==name)
 				{
 					funcs.erase(it);	
 					return;
@@ -321,33 +358,33 @@ namespace math_func
 			}
 			return nullptr;
 		}
-		 std::vector< math_func::m_function> std_math_trig_func = {
-			 math_func::m_function("sin","trig","sin(double), standard sinus functions","sin", __sin),
-			 math_func::m_function("cos","trig","cos(double), standard cosinus function","cos", __cos),
-			 math_func::m_function("tan","trig","tan(double), standard tan function","tan", __tan),
-			 math_func::m_function("asin","trig","asindouble), inverse sin function","asin", __asin),
-			 math_func::m_function("acos","trig","acos(double), inverse cosinus function","acos", __acos),
-			 math_func::m_function("atan","trig","stan(double), inverse tan function","atan", __atan)
+		 std::vector< math_func::m_function_const> std_math_trig_func = {
+			 math_func::m_function_const("sin","trig","sin(double), standard sinus functions","sin", __sin),
+			 math_func::m_function_const("cos","trig","cos(double), standard cosinus function","cos", __cos),
+			 math_func::m_function_const("tan","trig","tan(double), standard tan function","tan", __tan),
+			 math_func::m_function_const("asin","trig","asindouble), inverse sin function","asin", __asin),
+			 math_func::m_function_const("acos","trig","acos(double), inverse cosinus function","acos", __acos),
+			 math_func::m_function_const("atan","trig","stan(double), inverse tan function","atan", __atan)
 		};
 
-		std::vector<math_func::m_function> std_math_func = {
+		std::vector<math_func::m_function_const> std_math_func = {
 			//math_func::m_function("abs", static_cast<double(*)(double)>(abs)), //Only defined with double overload on certain platforms
-			math_func::m_function("sqrt","numeric","sqrt(double), square root function function","\u221A", __sqrt),
-			math_func::m_function("ln","numeric","ln(double), natural logarithm function","ln", __log),
-			math_func::m_function("log","numeric","log(double),  logarithm base ten","log", __log10)
+			math_func::m_function_const("sqrt","numeric","sqrt(double), square root function function","\u221A", __sqrt),
+			math_func::m_function_const("ln","numeric","ln(double), natural logarithm function","ln", __log),
+			math_func::m_function_const("log","numeric","log(double),  logarithm base ten","log", __log10)
 		};
 
-		std::vector<math_func::m_function> std_math_num_func = {
-			math_func::m_function("ceil","numeric","ceil(double)","ceil", __ceil),
-			math_func::m_function("floor","numeric","floor(double)","floor", __floor),
-			math_func::m_function("round","numeric","round(double)","round", __round),
-                        math_func::m_function("it","numeric","it(expr,variable,num_mat,double)","it", __iterate)
+		std::vector<math_func::m_function_const> std_math_num_func = {
+			math_func::m_function_const("ceil","numeric","ceil(double)","ceil", __ceil),
+			math_func::m_function_const("floor","numeric","floor(double)","floor", __floor),
+			math_func::m_function_const("round","numeric","round(double)","round", __round),
+                        math_func::m_function_const("it","numeric","it(expr,variable,num_mat,double)","it", __iterate)
 		};
 		
-		std::vector<math_func::m_function> mathlibra_data_constructors = {
-			math_func::m_function("mat","built_in","mat(mat_double...)","mat",&num_matrix_constructor<true>),
-			math_func::m_function("matc","built_in","matc(mat_double...)","matc",&num_matrix_constructor<false>),
-			math_func::m_function("size","built_in","size(mat)","size",__size)
+		std::vector<math_func::m_function_const> mathlibra_data_constructors = {
+			math_func::m_function_const("mat","built_in","mat(mat_double...)","mat",&num_matrix_constructor<true>),
+			math_func::m_function_const("matc","built_in","matc(mat_double...)","matc",&num_matrix_constructor<false>),
+			math_func::m_function_const("size","built_in","size(mat)","size",__size)
 		};	
 }
 

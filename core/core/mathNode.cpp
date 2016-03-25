@@ -154,7 +154,7 @@ namespace mathNode
                 if(!tmp.loaded)
                 {
                     math_func::m_function newFunc(this->name,"user","f(double)",this->name,ptr);
-                    this->func->load(newFunc);
+                    this->func->load(std::move(newFunc));
                 }
                 else nodeOops<NODE_NO_FUNC_REDEFINE>();
 	      }

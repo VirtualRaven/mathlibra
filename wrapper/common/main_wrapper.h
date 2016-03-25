@@ -58,6 +58,8 @@ namespace interface
 		virtual interface::type_ptr execute_arg() = 0; 
 		/** Interpretes the expression set by set_arg and exports the resulting expresion as an function.
 		 * @note A call to this function does not invalidate the expression set by interpret_arg() thus it is legal to call this function between a call to intrpret_arg and execute_arg.
+		 * @note This causes a call to undefineFunction(name) to be made thus to ensure that no name collsions occur. Thus calling this function involves the same dangers as undefineFunction.
+		 * @see undefineFunction  
 		 * @param name The name of the defined function.
 		 * @param visible Selects if the function should be visible and callable by the end user, Setting this to false only makes the function available to the api-user.
 		 */
@@ -65,6 +67,8 @@ namespace interface
 		
 		/**Unloads specifed function.
 		 * @param name The name of the function to unload
+		 * @warning Undefining a user defined function(a function created by defineFunction() or function definition operator ':' ) that
+		 * currently is in use will lead to undefined behavior. 
 		 */
 		virtual void undefineFunction(std::string name)=0;
                 /** Get information about the latest exception. 
