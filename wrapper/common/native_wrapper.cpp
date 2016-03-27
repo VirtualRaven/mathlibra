@@ -351,7 +351,7 @@ namespace native
 				auto ptr = buffer.ptr();
 				for(int i =0; i < buffsize; i+=2)
 				{
-					double val = Start+i*Offset;
+					double val = Start+(i/2)*Offset;
 					ptr[i]=val;
 					interface::type_ptr ret(f->exec(interface::type_ptr(make_type(val))));
 					if(ret->isNumber())
