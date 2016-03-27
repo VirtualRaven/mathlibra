@@ -311,7 +311,7 @@ template<typename T> class   base_type : public interface::t_type<T>
 	 *@param n the number of columns that the base_type should have.
 	 *@param m the number of rows that the base_type should have.
 	 **/
-	base_type(ptr_protect<T*,false>&& d,size_t n,size_t m): 
+	template<bool B> base_type(ptr_protect<T*,B>&& d,size_t n,size_t m): 
 		base_type(d.ptr(),n,m)
 	{
 		d.release();
