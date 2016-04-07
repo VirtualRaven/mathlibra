@@ -264,6 +264,11 @@ template<typename T> class   base_type : public interface::t_type<T>
                 return _mat[0];
         }
 
+	bool isFunction() const 
+	{
+		return false;
+	}
+
         double  toNumber() const
         {
             return __toNumber<T>(this->_mat);
@@ -334,6 +339,11 @@ template<typename T> class   base_type : public interface::t_type<T>
             delete[] _mat;
         }
 };  
+
+
+
+
+
 typedef base_type<char> char_mat;
 typedef base_type<type*> mat_mat;
 typedef base_type<double> num_mat;
