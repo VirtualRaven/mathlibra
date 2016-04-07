@@ -101,7 +101,7 @@ namespace function_helper
 		}
 		else
 		{
-			throw f_exception("Wrong argument type");
+			throw f_exception("Wrong argument type, expected");
 		}
 	}
         /**
@@ -124,7 +124,7 @@ namespace function_helper
            else
            {
                 n->free_type(tmp);
-                throw f_exception("Wrong argument type");
+                throw f_exception("Wrong argument type, expected");
            } 
         }
 
@@ -163,7 +163,7 @@ namespace function_helper
             else
             {   
                 n->free_type(tmp);
-                throw f_exception("Expected type convertaible to double");
+                throw f_exception("Invalid argument, expected");
             }
 	}
 	/**
@@ -198,6 +198,48 @@ template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> paramet
 
 	}
 
+	template<typename T> inline std::string signature()
+	{
+		return "UNKNOWN";
+	}
+	template<> inline std::string signature<double>()
+	{
+		return "number";
+	}
+	template<> inline std::string signature<num_mat>()
+	{
+		return "matrix";
+	}	
+	template<> inline std::string signature<char_mat>()
+	{
+		return "string";
+	}
+	template<> inline std::string signature<mat_mat>()
+	{
+		return "list";
+	}
+	template<> inline std::string signature<nodeDataInterface*>()
+	{
+		return "generic";
+	}
+	template<> inline std::string signature<mathNode::mathExpressionNode_variable_interface*>()
+	{
+		return "variable";
+	}
+	template<> inline std::string signature<interface::type_ptr>()
+	{
+		return "generic";
+	}
+
+	template<typename arg0> std::string create_signature_string()
+	{
+		return signature<arg0>();
+	}
+	template<typename arg0,typename arg1, typename... argN>  std::string create_signature_string()
+	{
+		return signature<arg0>()  + "," + create_signature_string<arg1,argN...>();	
+	}
+
 	/**
 	 * Forward function.
 	 * This function takes an node_base* which is what mathlibra passes to an function when it is evaluated, it then converts it
@@ -225,21 +267,26 @@ template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> paramet
 	 */
 	template< typename... argN> type* forward(typename func_type<argN...>::f_type  func, node_base * n)
 	{
-		auto args = n->getArgs();
-		if (args.size() != sizeof...(argN))
+		if(n==nullptr)
 		{
-			n->raiseException("Function called with wrong number of argumets");
+			std::string tmp = create_signature_string<argN...>();
+			return new char_mat(tmp.c_str(),1,tmp.size());
 		}
-
+		auto args = n->getArgs();
 		try
 		{
+			if (args.size() != sizeof...(argN))
+			{
+				throw f_exception("Function called with wrong number of argumets, expected");
+			}
+
 		        parameter_package::package<argN...> pack = fillPackage<argN...>(args);
 			auto tmp =parameter_package::package_forward<type*, typename func_type<argN...>::f_type>(func, pack);
                         return n->realloc(tmp);
 		}
 		catch (std::exception& e)
 		{
-			n->raiseException(e.what());
+			n->raiseException( (std::string(e.what()) + " (" + create_signature_string<argN...>()+ ")").c_str() );
 		}
 		catch (...)
 		{
@@ -248,8 +295,6 @@ template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> paramet
 		return 0;
 
 	}
-
-
 
 }
 

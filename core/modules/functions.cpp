@@ -5,6 +5,7 @@
 #include "modules/functions.h"
 #include "exception_helper.h"
 #include "core/internal_helper.h"
+#include "core/type_helper.h"
 #include <algorithm>
 //Contains temporary implementation of function module
 namespace math_func
@@ -161,7 +162,27 @@ namespace math_func
 			std::cout << "-[ function_interface {\n";
 			for (auto it = funcs.cbegin(); it != funcs.cend(); it++)
 			{
-				std::cout << it->second.name.c_str() << "\t: " <<  it->second.tag   << "\n";
+				std::string signature;
+				if(it->second.type == func_type::USER)
+				{
+					signature = "generic";
+				}
+				else
+				{
+					//If a universal function is passed a null pointer instead of a tree
+					//it shall return it's signature as a string.
+					interface::type_ptr ptr(it->second.gptr(nullptr));
+					std::string tmp = ptr->toString();
+					if(tmp.size() > 2)
+					{
+						signature = tmp.substr(1,tmp.size()-2);
+					}
+					else
+					{
+						signature = "\"\"";
+					}
+				}
+				std::cout << it->second.name.c_str() << "\t: " << signature << "\t: " <<  it->second.tag   << "\n";
 			}
 			std::cout << " }\nLoaded " << this->funcs.size() << " functions]\n";
 
@@ -303,6 +324,10 @@ namespace math_func
 		template<bool B>	
 		type* num_matrix_constructor(node_base *b)
 		{
+			if(b==nullptr)
+			{
+				return make_type("matrix...");
+			}
 			std::stack<tree::node_base*>  args= b->getArgs();
 			if(args.empty())
 			{

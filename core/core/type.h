@@ -69,7 +69,11 @@ template<typename T> std::string _t_toString(T*, size_t , size_t  ){ return ""; 
 
 template<>  inline std::string _t_toString<char>(char* d, size_t  n, size_t  m)
 {
-    return __toString<char>(d,n,m,[](char x){return x;});
+	if(n==1)
+	{
+		return "\"" + std::string(d,0,m) + "\""; 
+	}
+    	return __toString<char>(d,n,m,[](char x){return x;});
 }
 
 template<> inline std::string _t_toString<double>(double* d, size_t  n, size_t  m)
