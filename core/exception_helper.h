@@ -576,7 +576,7 @@ declare_exception(SYNTAX_EXPECTED_END_OF_STRING)
 
 declare_exception(EMPTY_MAT_INIT)
 {
-	str_property info = "Cannot create an empty matrice";
+	str_property info = "Cannot create an empty matrix";
 	bool_property critical = false;
 	owner_property owner = FUNCTION;
 
@@ -590,7 +590,7 @@ declare_exception(DIFFERENT_N_MAT_INIT)
 };
 declare_exception(DOUBLE_REQUIRED_MAT_INIT)
 {
-	str_property info = "All element in bracket initilization must be of double matrice or double type";
+	str_property info = "All element in bracket initilization must be of double matrix or double type";
 	bool_property critical = false;
 	owner_property owner = FUNCTION;
 
@@ -604,7 +604,7 @@ declare_exception(MATRICE_MUST_BE_DOUBLE_MAT_INIT)
 
 declare_exception(MATRICE_NEW_LINE_SYMBOL)
 {
-	str_property info = "Matrice new line operator '|' can only be used inside an bracket initilization";
+	str_property info = "Matrix new line operator '|' can only be used inside an bracket initilization";
 	bool_property critical = false;
 	owner_property owner = INTERPRETER;
 };
@@ -616,13 +616,13 @@ declare_exception(SQUARE_BRACKET_MISSMATCH)
 };
 declare_exception(MATRICE_NEW_LINE_UNALLOWED)
 {
-	str_property info = "Matrice new line operator '|' must be preceded by at least matrice element"; 
+	str_property info = "Matrix new line operator '|' must be preceded by at least matrix element"; 
 	bool_property critical = false;
 	owner_property owner = INTERPRETER;
 };
 declare_exception(MATRICE_NEW_LINE_NOT_LAST)
 {
-	str_property info = "Matrice new line operator '|' must have element after itself"; 
+	str_property info = "Matrix new line operator '|' must have element after itself"; 
 	bool_property critical = false;
 	owner_property owner = INTERPRETER;
 };
@@ -634,7 +634,7 @@ declare_exception(MATRICE_SYNTAX_DISABLED)
 };
 declare_exception(MUL_OPR_INVALID_ARGS)
 {
-	str_property info = "Invalid matrice sizes of multiplication operands";
+	str_property info = "Invalid matrix sizes of multiplication operands";
 	bool_property critical = false;
 	owner_property owner = STD_OPERATORS;
 };
