@@ -1,17 +1,25 @@
 
 
 #README#
-This is the repo for mathlibra, an calculator backend library that parsers and interprets mathematical expressions. It is designed to serve as an backend for developing calculator software.
+This is the repo for mathlibra, an calculator backend library that parsers and interprets mathematical expressions. It is designed to serve as an backend for developing calculator software, but due to it's modularity and extensibility it could just
+as well be used to parse settings files or provide a application scripting enviroment. 
+
+#### Main features ####
+*  Minimal dependencies - Only requires a C++11 compiler and runtime.
+*  Several language bindings - Supports both C, C++ and Java (and in some extent python).
+*  Extensible - Plugins can be created in no time using template generated wrappers.
+*  Several supported platforms - Mathlibra has been sucessfully tested on Windows, OSX,Android and several Linux distributions.
+  
+The rest of this readme will concern the practical details of how to setup, build, and contribute to mathlibra. To read more about mathlibra as a library please head to the [Wiki](https://github.com/VirtualRaven/mathlibra/wiki).
 
 ### How do I get set up? ###
 #### The quick way ####
  `cd /to/projet/root/`
 
-`./run.sh` which builds and runs mathlibra
+`./run.sh` which builds and runs mathlibra.
 #### The longer way ####
 Mathlibra have no dependency and as such should build on most platforms, though it requires compiler support for c++11.
-If core is built for any other platform than windows or linux plug ins will be disabled as currently. 
-The core has no loader for other files than windows DLL and linux shared libraries.
+If it is built for any other platform than windows, linux, mac osx or android, plugins will currently be disabled. This is due to the lack of plugin loaders for any other platforms.
 
 The project is built using gradle which requires that java is installed.
 To build the project run 
@@ -30,11 +38,14 @@ To build the project run
 For vim users all directories include config files for youcomplete me to enable autocompletion. To just install youcompleteme and when opening an file in the repo accept when it asks if you want to load the config files.
 
 ### Running Tests ###
-The project includes an random tester which generates test cases. The tester works by generating random expressions and passing them to mathlibra through the C api. The result is then compared to the calculated expected result, if they differ or a exception is thrown, the test fails. To run the tester write `./gradlew runPyTest` If the tester fails it will generate an report `py_test/test_report.txt` in the build folder. Be aware the this tester does only test an very limted part of mathlibra at the moment,for example the generator does not produce any assigment or matrix expression. So while it can detect some errors it does not guarentee that mathlibra works.
 
-The project contains a tester executable named core_tester which when run provides an interactive sessions for inputting expressions to be evaluated.
-Writing menu instead of an expression will bring up an menu which can run tests, provide help and lets you inspect the status of the interpreter at any time. If you use the the debug version of core_tester it will also preform memory tests on exit.
-To trigger these, start core_tester, run your expression and the selec menu and item 7 exit which will present memory statistics before exiting.
+Mathlibra has three main testing tools. The first tester is python expression generator. Secondly it uses predefined tests defined in `tests/main.txt` which is parsed using mathlibra by the mathlibra_CXX_client executable. Finaly a interactive
+console application is provided. To run all available automatic tests execute `./gradlew test`.
+
+The project includes an random test case generator. The tester works by generating random expressions and passing them to mathlibra through the python api. The result is then compared to the calculated expected result, if they differ or a exception is thrown, the test fails. To run the tester write `./gradlew runPyTest` If the tester fails it will generate an report `py_test/test_report.txt` in the build folder. Be aware the this tester does only test an very limted part of mathlibra at the moment,for example the generator does not produce any assigment or matrix expression. So while it can detect some errors it does not guarentee that mathlibra works.
+
+The interactive testing enviroment is provided by an executable named core_tester (run by executing `./run.sh`). Writing menu instead of an expression will bring up the menu.From which it is possible to run tests, get help and  inspect the status of the interpreter at any time. If you use the the debug version of core_tester it will also preform memory tests on exit.
+To trigger these, start core_tester, run your expression and after enter `menu 7`in the prompt which will present memory statistics before exiting the tester.
 
 ### Contribution guidelines ###
 
