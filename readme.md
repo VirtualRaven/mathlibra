@@ -1,14 +1,14 @@
 
 
 #README#
-This is the repo for mathlibra, an calculator backend library that parsers and interprets mathematical expressions. It is designed to serve as an backend for developing calculator software, but due to it's modularity and extensibility it could just
-as well be used to parse settings files or provide a application scripting enviroment. 
+This is the repo for mathlibra, an calculator backend library written in C++ that parsers and interprets mathematical expressions. It is designed to serve as an backend for developing calculator software, but due to it's modularity and extensibility it could just
+as well be used to parse settings files or provide an application with a scripting enviroment. 
 
 #### Main features ####
-*  Minimal dependencies - Only requires a C++11 compiler and runtime.
-*  Several language bindings - Supports both C, C++ and Java (and in some extent python).
-*  Extensible - Plugins can be created in no time using template generated wrappers.
-*  Several supported platforms - Mathlibra has been sucessfully tested on Windows, OSX,Android and several Linux distributions.
+*  Minimal dependencies - _Only requires a C++11 compiler and runtime._
+*  Several language bindings - _Supports both C, C++ and Java (and in some extent python)._
+*  Extensible - _Plugins can be created in no time using template generated wrappers._
+*  Several supported platforms - _Mathlibra has been sucessfully tested on Windows, OSX,Android and several Linux distributions._
   
 The rest of this readme will concern the practical details of how to setup, build, and contribute to mathlibra. To read more about mathlibra as a library please head to the [Wiki](https://github.com/VirtualRaven/mathlibra/wiki).
 
@@ -16,7 +16,9 @@ The rest of this readme will concern the practical details of how to setup, buil
 #### The quick way ####
  `cd /to/projet/root/`
 
-`./run.sh` which builds and runs mathlibra.
+`./run.sh` which builds and runs mathlibra. 
+
+Unfortunataly building mathlibra requires java, but don't worry, it is only needed by the build system. No java installation is required by mathlibra itself.
 #### The longer way ####
 Mathlibra have no dependency and as such should build on most platforms, though it requires compiler support for c++11.
 If it is built for any other platform than windows, linux, mac osx or android, plugins will currently be disabled. This is due to the lack of plugin loaders for any other platforms.
@@ -53,16 +55,15 @@ First and foremost: This is an educational project, we are here to learn and hav
 
 
 Style
-Try to follow the overall code style of the project.
+ I'm under no assumption that the codestyle described herein is somehow better than others, rather the style guide only aims to ensure consistency with previous contributions.  
 
-Brackets are expanded in all context. After an if statement or function definition a newline is to be used. Do not add ad an opening bracket on the same line.
+Brackets are expanded in all context. After an if statement or function definition a newline is to be used. Do not add a opening bracket on the same line.
 When using brackets indent the code using one tab. 
 
 Example
 
 * Correct
-```
-#!c++
+```c++
 if(true)
 {
    do_work();
@@ -71,8 +72,7 @@ if(true)
 ```
 
 * Incorrect
-```
-#!c++
+```c++
 if(true){
    do_work();
 }
