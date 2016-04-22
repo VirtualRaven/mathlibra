@@ -41,8 +41,7 @@ For vim users all directories include config files for youcomplete me to enable 
 
 ### Running Tests ###
 
-Mathlibra has three main testing tools. The first tester is python expression generator. Secondly it uses predefined tests defined in `tests/main.txt` which is parsed using mathlibra by the mathlibra_CXX_client executable. Finaly a interactive
-console application is provided. To run all available automatic tests execute `./gradlew test`.
+Mathlibra has three main testing tools. The first tester is a expression generator written in python. Secondly it uses predefined tests defined in `tests/main.txt` which is parsed using mathlibra by the mathlibra_CXX_client executable. Finaly a interactive console application is provided. To run all available automatic tests execute `./gradlew test`.
 
 The project includes an random test case generator. The tester works by generating random expressions and passing them to mathlibra through the python api. The result is then compared to the calculated expected result, if they differ or a exception is thrown, the test fails. To run the tester write `./gradlew runPyTest` If the tester fails it will generate an report `py_test/test_report.txt` in the build folder. Be aware the this tester does only test an very limted part of mathlibra at the moment,for example the generator does not produce any assigment or matrix expression. So while it can detect some errors it does not guarentee that mathlibra works.
 
@@ -54,7 +53,7 @@ To trigger these, start core_tester, run your expression and after enter `menu 7
 First and foremost: This is an educational project, we are here to learn and have fun. If it happens to turn out to something awesome that is a nice bonus.
 
 
-Style
+#### Style ####
  I'm under no assumption that the codestyle described herein is somehow better than others, rather the style guide only aims to ensure consistency with previous contributions.  
 
 Brackets are expanded in all context. After an if statement or function definition a newline is to be used. Do not add a opening bracket on the same line.
