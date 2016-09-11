@@ -227,6 +227,7 @@ namespace math_func
 				}
 			}
 		}
+                recursion::fixed_array<4,std::string> iterate_arg_names = { "next", "var","start","iterations" };
                 type* iterate(tree::nodeDataInterface* next, 
                                 mathNode::mathExpressionNode_variable_interface* var,
                                 num_mat start,
@@ -247,7 +248,7 @@ namespace math_func
                     return function_helper::forward<tree::nodeDataInterface*,
                                                     mathNode::mathExpressionNode_variable_interface*,
                                                     num_mat,
-                                                    double>(iterate,b);
+                                                    double>(iterate,b,&iterate_arg_names);
                 }
                 type* __sin(node_base* b)
                 {
@@ -383,6 +384,7 @@ namespace math_func
 			}
 			return nullptr;
 		}
+                 
 		 std::vector< math_func::m_function_const> std_math_trig_func = {
 			 math_func::m_function_const("sin","trig","sin(double), standard sinus functions","sin", __sin),
 			 math_func::m_function_const("cos","trig","cos(double), standard cosinus function","cos", __cos),
