@@ -9,6 +9,7 @@
 #define FUNCTION_HELPER_INCLUDED
 #include <stack>
 #include "core/mathNode_interface.h"
+#include "recursion_types.h"
 #include "core/type.h"
 #include <iostream>
 /**
@@ -239,6 +240,17 @@ template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> paramet
 	{
 		return signature<arg0>()  + "," + create_signature_string<arg1,argN...>();	
 	}
+        
+	template<typename arg0> std::string create_signature_string2(recursion::array_slice<1,std::string> n)
+	{
+		return signature<arg0>() + " " + n.head();
+	}
+	template<typename arg0,typename arg1, typename... argN>  std::string create_signature_string2(recursion::array_slice<2+sizeof...(argN),std::string> n)
+	{
+		return signature<arg0>() + " " + n.head()  + "," + create_signature_string2<arg1,argN...>(n.tail());	
+	}
+        
+        
 
 	/**
 	 * Forward function.
@@ -265,11 +277,16 @@ template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> paramet
 	 * @note The return value of the function to be forwarded is automatically transfered over library boundries and safely deleted when no longer needed. thus statements like return new type(); is
 	 * 	valid inside any function managed by the forward function.
 	 */
-	template< typename... argN> type* forward(typename func_type<argN...>::f_type  func, node_base * n)
+	template< typename... argN> type* forward(typename func_type<argN...>::f_type  func, node_base * n,recursion::fixed_array<sizeof...(argN),std::string>* names )
 	{
 		if(n==nullptr)
 		{
-			std::string tmp = create_signature_string<argN...>();
+                    std::string tmp;
+                    if(names)
+			tmp = create_signature_string2<argN...>(names->tail());
+                    else
+                        tmp = create_signature_string<argN...>();
+
 			return new char_mat(tmp.c_str(),1,tmp.size());
 		}
 		auto args = n->getArgs();
@@ -294,6 +311,10 @@ template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> paramet
 		}
 		return 0;
 
+	}
+	template< typename... argN> type* forward(typename func_type<argN...>::f_type  func, node_base * n)
+	{
+            return forward<argN...>(func,n,0);
 	}
 
 }
