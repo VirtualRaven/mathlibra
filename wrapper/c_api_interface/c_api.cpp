@@ -198,6 +198,7 @@ func_obj_array func_get(handle hwn)
 		ptr[i].doc =to_c_str(vec[i].doc);
 		ptr[i].tag =to_c_str(vec[i].tag);
 		ptr[i].disp_name =to_c_str(vec[i].disp_name);
+                ptr[i].signature =to_c_str(vec[i].signature);
 	}
 	return {ptr,size};
 }

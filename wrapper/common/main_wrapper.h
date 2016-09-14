@@ -31,6 +31,7 @@ namespace interface
 		std::string tag;
 		std::string doc;
 		std::string disp_name;
+                std::string signature;
 	};
         /**
          *  calc_lib_interface is the external interface class for mathlibra.

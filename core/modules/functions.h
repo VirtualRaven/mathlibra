@@ -39,6 +39,7 @@ namespace math_func
 		std::string tag;
 		std::string doc;
 		std::string disp_name;
+                std::string signature;
 	};
 
        
