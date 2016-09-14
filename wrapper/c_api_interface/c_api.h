@@ -71,6 +71,7 @@ extern "C"
 		const char* tag;
 		const char* doc;
 		const char* disp_name;
+                const char* signature;
 	} func_obj;
 
 	typedef struct

@@ -200,6 +200,7 @@ namespace native
 						std::move(in_vec[i].tag),
 						std::move(in_vec[i].doc),
 						std::move(in_vec[i].disp_name),
+                                                std::move(in_vec[i].signature)
 						});
 			}
 

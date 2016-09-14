@@ -205,11 +205,32 @@ namespace math_func
 			vec.reserve(this->funcs.size());
 			for (auto it = funcs.cbegin(); it != funcs.cend(); it++)
 			{
+                                std::string signature;
+                                if(it->second.type == func_type::USER)
+                                {
+                                    signature = "generic";
+                                }
+                                else
+                                {
+					//If a universal function is passed a null pointer instead of a tree
+					//it shall return it's signature as a string.
+					interface::type_ptr ptr(it->second.gptr(nullptr));
+					std::string tmp = ptr->toString();
+					if(tmp.size() > 2)
+					{
+						signature = tmp.substr(1,tmp.size()-2);
+					}
+					else
+					{
+						signature = "\"\"";
+					}
+                                }                   
 				vec.push_back( {
 						it->second.name,
 						it->second.tag,
 						it->second.doc,
-						it->second.disp_name
+						it->second.disp_name,
+                                                signature
 						});
 			}
 			return vec;
