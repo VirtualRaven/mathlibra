@@ -314,7 +314,7 @@ template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> paramet
 	}
 	template< typename... argN> type* forward(typename func_type<argN...>::f_type  func, node_base * n)
 	{
-            return forward<argN...>(func,n,0);
+            return forward<argN...>(func,n,static_cast<recursion::fixed_array<sizeof...(argN),std::string>*>(nullptr));
 	}
 
 }
