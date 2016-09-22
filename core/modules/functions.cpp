@@ -264,6 +264,52 @@ namespace math_func
                     }
                     return var->eval();
                 }
+
+                recursion::fixed_array<3,std::string> map_arg_names = { "expression","var","array" };
+                type * map(tree::nodeDataInterface* expr,
+                            mathNode::mathExpressionNode_variable_interface* var,
+                            num_mat arr)
+                {
+                    expr=expr->optimize();
+                    ptr_protect<num_mat*,false> mat(new num_mat(arr.sizeN(),arr.sizeM()));
+                    auto it2= mat->begin();
+                    for(auto it = arr.begin(); it < arr.end(); it++)
+                    {
+                        var->set(interface::type_ptr(make_type(*it)));
+                        interface::type_ptr tmp_ptr(expr->eval());
+                        if(tmp_ptr->isNumber())
+                        {
+                            *it2=tmp_ptr->toNumber();
+                            it2++;       
+                        }
+                        else
+                        {
+                            functionOops<FUNC_MAP_EXPR_NOT_NUMBER>();
+                        }
+                        
+                    }
+                    mat.release();
+                    return mat.ptr();
+                }
+                type* sum(num_mat arr)
+                {
+                    double sum=0;
+                    for(auto it=arr.begin(); it < arr.end(); it++)
+                        sum+=*it;
+                    return make_type(sum);
+                }
+                type* __sum(node_base* b)
+                {
+                    return function_helper::forward<num_mat>(sum,b);
+                }
+
+                type* __map(node_base* b)
+                {
+                    return function_helper::forward<tree::nodeDataInterface*,
+                                                    mathNode::mathExpressionNode_variable_interface*,
+                                                    num_mat>(map,b,&map_arg_names);
+                }
+
                 type* __iterate(node_base* b)
                 {
                     return function_helper::forward<tree::nodeDataInterface*,
@@ -405,6 +451,9 @@ namespace math_func
 			}
 			return nullptr;
 		}
+
+
+                
                  
 		 std::vector< math_func::m_function_const> std_math_trig_func = {
 			 math_func::m_function_const("sin","trig","sin(double), standard sinus functions","sin", __sin),
@@ -426,7 +475,9 @@ namespace math_func
 			math_func::m_function_const("ceil","numeric","ceil(double)","ceil", __ceil),
 			math_func::m_function_const("floor","numeric","floor(double)","floor", __floor),
 			math_func::m_function_const("round","numeric","round(double)","round", __round),
-                        math_func::m_function_const("it","numeric","it(expr,variable,num_mat,double)","it", __iterate)
+                        math_func::m_function_const("it","numeric","it(expr,variable,num_mat,double)","it", __iterate),
+                        math_func::m_function_const("map","numeric","","map",__map),
+                        math_func::m_function_const("sum","numeric","","sum",__sum)
 		};
 		
 		std::vector<math_func::m_function_const> mathlibra_data_constructors = {

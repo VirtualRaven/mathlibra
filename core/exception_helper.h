@@ -31,6 +31,7 @@ enum EXCEPTION {
 	FUNC_OPR_NO_REDEFINE,
 	FUNC_OPR_NO_REDEFINE_SYSTEM,
 	FUNC_OPR_NEED_FUNC_NAME,
+        FUNC_MAP_EXPR_NOT_NUMBER,
 	MEM_VAR_NOT_FOUND,
 	MEM_ALTER_CONST_VAR,
 	MEM_INDEX_OUT_OF_BOUNDS,
@@ -389,6 +390,14 @@ declare_exception(TREE_BARE_NODE_NO_CPY)
 	str_property info ="bare node can not be copied";
 	bool_property critical = true;
 	owner_property owner = TREE;
+
+};
+
+declare_exception(FUNC_MAP_EXPR_NOT_NUMBER)
+{
+	str_property info ="Map function expression must result in a number";
+	bool_property critical = false;
+	owner_property owner = FUNCTION;
 
 };
 
