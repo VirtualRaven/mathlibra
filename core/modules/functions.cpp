@@ -476,8 +476,8 @@ namespace math_func
 			math_func::m_function_const("floor","numeric","floor(double)","floor", __floor),
 			math_func::m_function_const("round","numeric","round(double)","round", __round),
                         math_func::m_function_const("it","numeric","it(expr,variable,num_mat,double)","it", __iterate),
-                        math_func::m_function_const("map","numeric","","map",__map),
-                        math_func::m_function_const("sum","numeric","","sum",__sum)
+                        math_func::m_function_const("map","numeric","map a function over each element in a matrix","map",__map),
+                        math_func::m_function_const("sum","numeric","sums all elements in a matrix","sum",__sum)
 		};
 		
 		std::vector<math_func::m_function_const> mathlibra_data_constructors = {
