@@ -7,6 +7,7 @@
 #include "core/internal_helper.h"
 #include "core/type_helper.h"
 #include <algorithm>
+#include <cmath>
 //Contains temporary implementation of function module
 namespace math_func
 {
@@ -298,6 +299,40 @@ namespace math_func
                         sum+=*it;
                     return make_type(sum);
                 }
+
+                type* range(num_mat range)
+                {
+                    if(range.sizeN()!=1 )
+                        functionOops<RANGE_FUNCTION_INVALID_MATRIX>();
+                    if(range.sizeM()<=3)
+                    {
+                        
+                        double c=range.get(0,0);
+                        double d=(range.sizeM()>1)?range.get(0,1):c;
+                        double step=std::abs(range.sizeM()==3?range.get(0,2):1);
+                        if(range.sizeM()==1)
+                            c=0;
+                        if(c==d)
+                            return make_type(c);
+                        else if(c>d)
+                            step*=-1;
+                        
+                        int num = std::ceil((std::abs(d-c)+1)/std::abs(step));
+                        ptr_protect<num_mat*,false> mat(new num_mat(1,num));
+                        auto it=mat->begin();
+                        for(int i=0; i <num ; i++)
+                                *(it++)=c+(double)i*step;
+                        mat.release();
+                        return mat.ptr();
+
+                    }
+                    functionOops<RANGE_FUNCTION_INVALID_MATRIX>();
+                        
+                }
+                type* __range(node_base* b)
+                {
+                    return function_helper::forward<num_mat>(range,b);
+                }
                 type* __sum(node_base* b)
                 {
                     return function_helper::forward<num_mat>(sum,b);
@@ -483,7 +518,8 @@ namespace math_func
 		std::vector<math_func::m_function_const> mathlibra_data_constructors = {
 			math_func::m_function_const("mat","built_in","mat(mat_double...)","mat",&num_matrix_constructor<true>),
 			math_func::m_function_const("matc","built_in","matc(mat_double...)","matc",&num_matrix_constructor<false>),
-			math_func::m_function_const("size","built_in","size(mat)","size",__size)
+			math_func::m_function_const("size","built_in","size(mat)","size",__size),
+                        math_func::m_function_const("range","built_int","range(3)=[0,1,2,3],range(1,3)=[1,2,3], range(0,4,2)=[0,2,4]","range",__range)
 		};	
 }
 

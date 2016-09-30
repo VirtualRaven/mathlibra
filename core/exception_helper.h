@@ -70,7 +70,8 @@ enum EXCEPTION {
 	MATRICE_SYNTAX_DISABLED,
 	MUL_OPR_INVALID_ARGS,
 	MAP_FUNCTION_NOT_FOUND,
-	MAP_FUNCTION_NOT_NUMER_TYPE
+	MAP_FUNCTION_NOT_NUMER_TYPE,
+        RANGE_FUNCTION_INVALID_MATRIX
 	};
 
 //* Lists all possible exception owners
@@ -659,6 +660,13 @@ declare_exception(MAP_FUNCTION_NOT_NUMER_TYPE)
 	str_property info = "Map function did not return number";
 	bool_property critical = false;
 	owner_property owner = WRAPPER;
+};
+
+declare_exception(RANGE_FUNCTION_INVALID_MATRIX)
+{
+    str_property info ="Range function only accepts 1x1,1x2 or 1x3 matrices";
+    bool_property critical = false;
+    owner_property owner = FUNCTION;
 };
 	
 #endif //EXCEPTION_HELPER_INCLUDED
