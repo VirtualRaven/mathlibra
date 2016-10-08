@@ -197,6 +197,7 @@ template<EXCEPTION T> void interpreterOops()
 
 		lexicalAnalys();
 #ifdef  LEXICAL_ANANALYSIS_DEBUG
+                using namespace token;
 		for(unsigned int i = 0; i < this->tokens.size(); i++)
 		{
 			std::cerr <<"-[Token> start: "<< this->tokens[i]->startPos<<" end: " << this->tokens[i]->endPos << " ]\n";
@@ -219,7 +220,7 @@ template<EXCEPTION T> void interpreterOops()
 				{
 					std::cerr << "value token]\n";
 					valueToken* tmp = static_cast<valueToken*>(this->tokens[i]);
-					std::cerr << "-[Value:" << tmp->value << "]\n\n";
+					std::cerr << "-[Value:" <<  tmp->value->toString()  << "]\n\n";
 					break;
 				}
 				case tree::VARIABLE:

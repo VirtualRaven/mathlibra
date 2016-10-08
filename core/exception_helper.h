@@ -71,7 +71,10 @@ enum EXCEPTION {
 	MUL_OPR_INVALID_ARGS,
 	MAP_FUNCTION_NOT_FOUND,
 	MAP_FUNCTION_NOT_NUMER_TYPE,
-        RANGE_FUNCTION_INVALID_MATRIX
+        RANGE_FUNCTION_INVALID_MATRIX,
+        SUBRANGE_OPERATOR_INDEX_OUT_OF_RANGE,
+        SUBRANGE_OPERATOR_INDEX_NOT_INTEGER,
+        SUBRANGE_OPERATOR_WRONG_RANGE
 	};
 
 //* Lists all possible exception owners
@@ -667,6 +670,28 @@ declare_exception(RANGE_FUNCTION_INVALID_MATRIX)
     str_property info ="Range function only accepts 1x1,1x2 or 1x3 matrices";
     bool_property critical = false;
     owner_property owner = FUNCTION;
+};
+
+
+declare_exception(SUBRANGE_OPERATOR_INDEX_OUT_OF_RANGE)
+{
+    str_property info ="Right hand argument of \'#\'  index out of range";
+    bool_property critical = false;
+    owner_property owner = STD_OPERATORS;
+};
+
+declare_exception(SUBRANGE_OPERATOR_INDEX_NOT_INTEGER)
+{
+    str_property info ="Right hand argument of \'#\' must be integer or 1x2 integer matrix";
+    bool_property critical = false;
+    owner_property owner = STD_OPERATORS;
+};
+declare_exception(SUBRANGE_OPERATOR_WRONG_RANGE)
+{
+    str_property info ="Right hand argument of \'#\' must be 1x1 or 1x2 integer matrix";
+    bool_property critical = false;
+    owner_property owner = STD_OPERATORS;
+
 };
 	
 #endif //EXCEPTION_HELPER_INCLUDED

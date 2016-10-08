@@ -178,6 +178,16 @@ template<typename T,bool C=false> class type_iterator : public std::iterator<std
          this->operator++();
          return tmp; 
     }
+    type_iterator& operator--()
+    {
+        return this->operator-=(1);   
+    }
+    type_iterator  operator--(int)
+    {
+        auto tmp = *this;
+        this->operator--();
+        return tmp;
+    }
     bool   operator==(const type_iterator& x)
     {
        return this->_m ==x._m && this->_n == x._n && this->_i == x._i && this->_mat == x._mat;

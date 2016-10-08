@@ -26,6 +26,60 @@ namespace operators
 	{
 		return internal_helper::forward_fast<double,double>(add, n);
 	}
+        
+        type* subrange_operator(num_mat x, num_mat range)
+        {
+            auto isInteger=[](double x)->bool{ return std::abs(x-ceil(x)) < 0.0001;};
+            if(range.sizeN() != 1)
+                stdOperatorOops<SUBRANGE_OPERATOR_WRONG_RANGE>();
+            else if(range.sizeM() == 1)
+            {
+                if( !isInteger(range.toNumber()))
+                    stdOperatorOops<SUBRANGE_OPERATOR_INDEX_NOT_INTEGER>();
+                else
+                {
+                    int index=ceil(range.toNumber());
+                    if(index < x.end() - x.begin() && index >= 0)
+                        return make_type(x.begin()[index]);
+                    else
+                        
+                        stdOperatorOops<SUBRANGE_OPERATOR_INDEX_OUT_OF_RANGE>();
+                }
+                      
+            }
+            else if(range.sizeM() ==2)
+            {
+               double x1=range.get(0,0), x2=range.get(0,1);
+               if( isInteger(x1) && isInteger(x2))
+               {
+                    int y1=x1,y2=x2;
+                    if(std::max(y1,y2) < x.sizeN()*x.sizeM() && std::min(y1,y2) >=0)
+                    {  
+                        ptr_protect<num_mat*,false> mat(new num_mat(1,std::abs(y2-y1)+1));
+                        for(auto it=x.begin()+y1,it2=mat->begin(); it2 < mat->end(); it2++)
+                        {
+                            *it2=*it;
+                            if(y1>y2)
+                                it--;
+                            else
+                                it++;
+                        }
+                        mat.release();
+                        return mat.ptr();
+                    }
+                    else
+                        stdOperatorOops<SUBRANGE_OPERATOR_INDEX_OUT_OF_RANGE>();
+               }
+               else
+                    stdOperatorOops<SUBRANGE_OPERATOR_INDEX_NOT_INTEGER>();
+            }
+            else
+                stdOperatorOops<SUBRANGE_OPERATOR_WRONG_RANGE>();
+        }
+        type* __subrange_operator(tree::nodeDataInterface* n)
+        {
+            return internal_helper::forward_fast<num_mat,num_mat>(subrange_operator,n);
+        }
 
         type* multi(num_mat x, num_mat y)
 	{
@@ -170,9 +224,10 @@ namespace operators
 		interpreter_operator(&__multi,'*' ,2),
 		interpreter_operator(&__divide,'/' ,2),
 		interpreter_operator(&__pow,'^' ,3),
-        interpreter_operator(&__assign,'=',0),
+                interpreter_operator(&__assign,'=',0),
 		interpreter_operator((generic_oper_ptr)nullptr, ',', 0 ),
-                interpreter_operator(&declare_func,':',0)
+                interpreter_operator(&declare_func,':',0),
+                interpreter_operator(&__subrange_operator,'#',3)
     };
 
 operators::interpreter_operator::interpreter_operator(generic_oper_ptr opr, char symbol, short wheight):
