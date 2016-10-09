@@ -248,7 +248,16 @@ model
 			{
 				cppCompiler.define "DEBUG"
 				cppCompiler.define "TYPE_MEM_TEST"
+                                if(project.hasProperty('LEXICAL_DEBUG'))
+                                {
+                                    cppCompiler.define "LEXICAL_ANANALYSIS_DEBUG"
+                                }
 			}
+                        if(project.hasProperty('NON_STRICT'))
+                        {
+                            cppCompiler.define "NON_STRICT_PARANTHESES"
+
+                        }
 			if(toolChain in Gcc)
 			{
 				if(buildType == buildTypes.release)
