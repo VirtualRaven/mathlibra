@@ -201,10 +201,10 @@ namespace operators
 
 	type* assign(mathNode::mathExpressionNode_variable_interface* var, interface::type_ptr val)
 	{
-		auto tmp = val->copy();
-		var->set(std::move(val));
-
-		return tmp;
+            interface::type_ptr tmp(val->copy());
+	    var->set(std::move(val));
+            tmp.release();
+	    return tmp.ptr();;
 	}
 
 	type* __assign(tree::nodeDataInterface* n)
