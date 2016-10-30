@@ -4,42 +4,52 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 apply plugin: "cpp"
-
-	 task createGitHeader<< {
+	task createGitHeader<< {
 		println "Updating git info..."
-		def tmp = "git describe --long --dirty=-D".execute()
+                def tmp = "git describe --long --dirty=-D".execute()
 		tmp.waitForOrKill(10000)
 		if(tmp.exitValue() != 0){
-			throw new GradleException("Could not get git info")
+		    throw new GradleException("Could not get git info")
 		}
-		else{
 			
-			def fileContent = { tag, number, sha -> 
-	"""
-	#define GIT_NAME \"${tag}\"
-	#define GIT_SHA  \"${sha}\"
-	#define GIT_NUM  \"${number}\"
-	"""
-			}
-	
-			def res = tmp.text.split("-",4)
-			project.buildDir.mkdirs()
-			if(res.size() >= 3 && res.size() <= 4){
-				new File(project.buildDir.getAbsolutePath()+ "/GIT_VERSION.h").withWriter { out ->
-					out.print fileContent(res[0].trim(),res[1].trim(),res[2].trim())
-					if(res.size() == 4){
-						out.println "#define GIT_DIRTY"
-					}
-				}
-			}
-			else{
-				throw new GradleException("Output from git describe not understood")
-			}		
-			println "Git update done"
+		def fileContent = { tag, number, sha -> 
+                """
+                #define GIT_NAME \"${tag}\"
+                #define GIT_SHA  \"${sha}\"
+                #define GIT_NUM  \"${number}\"
+                """
 		}
-	}
+                project.buildDir.mkdirs()  
+	        def res = tmp.text.split("-",4)
+	        if(res.size() >= 3 && res.size() <= 4){
+                        project.ext.set("version",res[0].trim())
+                        project.ext.set("DIRTY",res.size()==4)
+	        	new File(project.buildDir.getAbsolutePath()+ "/GIT_VERSION.h").withWriter { out ->
+	        		out.print fileContent(res[0].trim(),res[1].trim(),res[2].trim())
+	        		if(res.size() == 4){
+	        			out.println "#define GIT_DIRTY"
+	        		}
+	        	}
+	        }
+	        else{
+	        	throw new GradleException("Output from git describe not understood")
+	        }	
+                
+		println "Git update done"
 
-
+	    }
+         
+            task copyGitHeader(type: Copy){
+                from(project.projectDir){
+                    include("GIT_VERSION.h")
+                }
+                into(project.buildDir)
+            }
+        task git << {
+        }
+        git.dependsOn( file(project.projectDir.getAbsolutePath()+"/GIT_VERSION.h").exists() ? copyGitHeader : createGitHeader)
+    
+        
 model
 {
 	toolChains {
@@ -218,7 +228,7 @@ model
 		zip(Zip){
 			baseName "mathlibra"
 			dependsOn $.binaries.findAll { it.buildable }
-			dependsOn createGitHeader
+			dependsOn git
 			destinationDir project.buildDir
 			from project.buildDir.getAbsolutePath() + "/libs"
 			from mkCXXApi
@@ -346,7 +356,7 @@ model
 						srcDirs  project.buildDir.getAbsolutePath()
 						include "GIT_VERSION.h"
 					}
-					builtBy createGitHeader
+					builtBy git
 				}
 				
 				
