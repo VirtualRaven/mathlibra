@@ -275,8 +275,10 @@ model
 			{
                                 if(buildType == buildTypes.release)
                                 {
-                                    cppCompiler.args  project.properties['CXX'].split(' ')
-                                    linker.args  project.properties['LD'].split(' ')
+                                    if(project.hasProperty('CXX'))
+                                        cppCompiler.args  project.properties['CXX'].split(' ')
+                                    if(project.hasProprety('LD'))
+                                        linker.args  project.properties['LD'].split(' ')
                                 }
 				if(buildType == buildTypes.release)
 				{
