@@ -143,6 +143,9 @@ model
                     from "$buildDir/exe/mathlibra_CXX_client/current/debug"
                     into "$buildDir/user_test"
                 }
+                build_release(Task){
+                    dependsOn $.binaries.findAll( { it.buildType.name.contains("release") && it.buildable })
+                }
 
                 createTest1(Copy){
                     from "tests/"
