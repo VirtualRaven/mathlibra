@@ -273,6 +273,11 @@ model
                         }
 			if(toolChain in Gcc)
 			{
+                                if(buildType == buildTypes.release)
+                                {
+                                    cppCompiler.args  project.properties['CXX'].split(' ')
+                                    linker.args  project.properties['LD'].split(' ')
+                                }
 				if(buildType == buildTypes.release)
 				{
 					cppCompiler.args "-std=c++11", "-O2","-Wall","-pedantic","-fPIC"
