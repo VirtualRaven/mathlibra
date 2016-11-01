@@ -277,7 +277,7 @@ model
                                 {
                                     if(project.hasProperty('CXX'))
                                         cppCompiler.args  project.properties['CXX'].split(' ')
-                                    if(project.hasProprety('LD'))
+                                    if(project.hasProperty('LD'))
                                         linker.args  project.properties['LD'].split(' ')
                                 }
 				if(buildType == buildTypes.release)
