@@ -75,7 +75,9 @@ RETURN_VAL runTest(std::string name,vector<string> testExpression )
     }
     if(mem_error_occured() )
     {
+#ifdef TEAMCITY
         teamcity_error("Memmory error","Warning memory leak detected");
+#endif //TEAMCITY
         return RETURN_VAL::MEM_ERROR;
     }
     return RETURN_VAL::SUCCESS;
