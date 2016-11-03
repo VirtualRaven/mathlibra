@@ -46,7 +46,10 @@ bool run_test_cases(std::map<string,vector<string>> test)
         bool test_failed = false;
         for(auto it = test.begin(); it != test.end(); it++)
         {
-               auto test_res = runTest(it->second); 
+                #ifdef TEAMCITY 
+                    std::cout << "##teamcity[testStarted name='" << it->first << "']\n";
+                #endif
+               auto test_res = runTest(it->first,it->second); 
                if(test_res == RETURN_VAL::SUCCESS)
                {
                     std::cout << "[ TEST: " << it->first  << " (OK) ]" << std::endl; 
@@ -62,6 +65,9 @@ bool run_test_cases(std::map<string,vector<string>> test)
                    std::cout << "[ TEST: " << it->first<< " (failed) ]" << std::endl;
                    test_failed = true;
                }
+                #ifdef TEAMCITY 
+                    std::cout << "##teamcity[testFinished name='" << it->first << "']\n";
+                #endif
         }
         return !test_failed;
 }
@@ -186,7 +192,13 @@ int main(int argc, char* argv[]  )
     for(std::string item : tests)
     {
         std::cout << "[ Running " << item << " ]\n";
+        #ifdef TEAMCITY
+            std::cout << "##teamcity[testSuitStarted name='" << item << "]\n";
+        #endif 
         test_success &= read_test_file(item); 
+        #ifdef TEAMCITY
+            std::cout << "##teamcity[testSuitFinished name='" << item << "']\n";
+        #endif// TEAMCITY
     }
     if(!test_success){
         std::cerr.rdbuf(cerrbuf);

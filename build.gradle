@@ -271,6 +271,10 @@ model
                             cppCompiler.define "NON_STRICT_PARANTHESES"
 
                         }
+                        if(project.hasProperty('TEAMCITY'))
+                        {
+                            cppCompiler.define "TEAMCITY"
+                        }
 			if(toolChain in Gcc)
 			{
                                 if(buildType == buildTypes.release)
