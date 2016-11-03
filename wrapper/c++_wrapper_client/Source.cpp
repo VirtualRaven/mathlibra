@@ -193,7 +193,7 @@ int main(int argc, char* argv[]  )
     {
         std::cout << "[ Running " << item << " ]\n";
         #ifdef TEAMCITY
-            std::cout << "##teamcity[testSuitStarted name='" << item << "]\n";
+            std::cout << "##teamcity[testSuitStarted name='" << item << "']\n";
         #endif 
         test_success &= read_test_file(item); 
         #ifdef TEAMCITY
