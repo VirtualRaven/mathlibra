@@ -136,11 +136,12 @@ template<EXCEPTION T> void interpreterOops()
 		expression[expressionLength] = '\0';
 	}
 
-	void  interpreter::lexicalAnalys()
+        std::vector<token_list::item>  interpreter::lexicalAnalys()
 	{
 		auto res = lexical(this->expression, this->expressionLength,this->mem,this->current_functions,this->_operators);
 		this->startOperatorPos = res.startPos;
 		this->tokens=res.tokens;
+                return std::move(res.items);
 	}
 
 	void interpreter::buildSyntaxTree()
@@ -189,13 +190,18 @@ template<EXCEPTION T> void interpreterOops()
 	{
 	    this->_operators = operators;
 	}
-	void  interpreter::interpret()
+
+	void  interpreter::interpret(){
+            extendedInterpret();
+        }
+
+        std::vector<token_list::item> interpreter::extendedInterpret()
 	{
 		//Add syntax checking
 		//std::cerr << "-[Interptating: " << this->expression << "\n";
 
 
-		lexicalAnalys();
+		auto ret=lexicalAnalys();
 #ifdef  LEXICAL_ANANALYSIS_DEBUG
                 using namespace token;
 		for(unsigned int i = 0; i < this->tokens.size(); i++)
@@ -260,8 +266,7 @@ template<EXCEPTION T> void interpreterOops()
         #ifdef STRUCTUAL_INTEGRITY_TEST
             this->root.integrityTest();
         #endif
-
-
+            return ret;
 	}
 	void interpreter::optimize()
 	{	

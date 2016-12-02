@@ -26,8 +26,6 @@ namespace token
  */
  struct baseToken
 {
-	size_t startPos; /**< The starting position of an token in the string. @note This index is broken in the current revision*/ 
-	size_t endPos;  /**< The ending position of an token in the string*/
 	tokenType type; /**< The type of token @see tokenType. */
 
 	virtual tree::nodeDataInterface* node()=0; /**< Constructor for nodeDataInterface object. @return nodeDataInterface pointer to the data coresponding to the type. */
@@ -60,13 +58,11 @@ struct operatorToken : public baseToken, operators::interpreter_operator
 struct parenthesesToken : public baseToken
 {
 
-	size_t opposit; 
-
+        bool opening;
 	bool isOppening(); /**< @return True if the token represents '(' else false. */
 	bool  hasNode();
 	tree::nodeDataInterface * node();
-	parenthesesToken(size_t startPos, size_t endPos);
-	parenthesesToken();
+	parenthesesToken(bool open);
 
 };
 
@@ -81,7 +77,6 @@ struct valueToken : public baseToken
 
 	tree::nodeDataInterface* node();
 	bool  hasNode();
-	valueToken(size_t startPos, size_t endPos);
 	valueToken();
 };
 /**
@@ -96,7 +91,7 @@ struct variableToken : public baseToken
 	bool _stack; /**< Stackable. Signifies  if the variable should be put on the stack. Used for the corax virtual machine. */
 	tree::nodeDataInterface* node();
 	bool  hasNode();	
-	variableToken(size_t startPos, size_t endPos, memory::memory* mem, math_func::function_interface* func);
+	variableToken(memory::memory* mem, math_func::function_interface* func);
 	variableToken();
         variableToken(const variableToken&);
         variableToken operator=(const variableToken&); 
@@ -124,8 +119,8 @@ struct funcToken : public baseToken
 	unsigned short baseWheight; /**< Weight of the operator. Higher weight means higher execution priority.  */
 	tree::nodeDataInterface* node();
 	bool  hasNode();
-	funcToken(size_t startPos, size_t endPos, generalFuncPtr ptr);
-        funcToken(size_t startPos,size_t endPos, usr_ptr ptr);
+	funcToken(generalFuncPtr ptr);
+        funcToken(usr_ptr ptr);
 	funcToken();
 private:
             ptr_type_enum ptr_type;

@@ -41,12 +41,12 @@ std::vector<std::string> split(std::string str,char delim)
     }
     return strs;
 }
-
+bool parse_output=false;
 bool menu(memory::memory& mem,math_func::function_interface& func,std::string input)
 {
         if(input.size() == 0)
         {
-	    std::cout << "PRINT VARIABLES [1]\nEMPTY VARIABLE TABLE[2]\nPRINT FUNCS[3]\nPRINT BUILD INFO[4]\nPRINT HELP[5]\nRUN TESTS [6]\nEXIT [7]\nMenu> ";
+	    std::cout << "PRINT VARIABLES [1]\nEMPTY VARIABLE TABLE[2]\nPRINT FUNCS[3]\nPRINT BUILD INFO[4]\nPRINT HELP[5]\nRUN TESTS [6]\nTOGGLE PARSE OUTPUT[7]\nEXIT [8]\nMenu> ";
 	    std::getline(std::cin, input);
         }
 	if (input == "1")
@@ -90,7 +90,12 @@ bool menu(memory::memory& mem,math_func::function_interface& func,std::string in
 //		test::profileInterpreterVM(exr);
 		return false;
 	}
-	else if (input == "7")
+        else if(input == "7"){
+            std::cout << "Toggling parser output...\n";
+            parse_output=!parse_output;
+            return false;
+        }
+	else if (input == "8")
 	{
 		
 		return true;
@@ -179,7 +184,15 @@ int main(int argc, char* argv[])
 			try
 			{
 				inter.set(expression.c_str(), expression.size());
-				inter.interpret();
+                                if(parse_output)
+                                {
+                                    auto tmp = inter.extendedInterpret();
+                                    for(auto it : tmp)
+                                        std::cout << (std::string)it << std::endl;
+                                    std::cout << std::endl;
+                                }
+                                else
+				    inter.interpret();
 #if  defined(SYNTAX_TREE_EXEC)
 					
 					mem.set("ans",inter.exec());

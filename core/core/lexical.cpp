@@ -15,6 +15,26 @@ template<EXCEPTION T> void lexicalOops()
 	__mathlibra__raise<T,INTERPRETER>();
 }
 
+        void __pushItem(const token_list::type t,size_t w, __internal::i_state& i,bool prev,size_t offset )
+        {
+            size_t next=0;
+            if(prev)
+            {
+                if(t==token_list::type::PAR && !i.pstack.empty() ){
+                    next=i.pstack.top();
+                    i.pstack.pop();
+                }
+                else if(t==token_list::type::MAT && !i.mstack.empty()){
+                    next=i.mstack.top();
+                    i.pstack.pop();
+                }
+                if(prev)
+                    i.token_list.push_back(token_list::item(t,w,*i.i, *i.i+offset,next));
+            }
+            else
+                i.token_list.push_back(token_list::item(t,w,*i.i, *i.i+offset));
+        }
+
 //Checks that in an given context if the character '-' should be intepreted as
 //an binary subtraction operator or an unary negation operator. 
 bool isUnary(const char* str,  size_t i, tvec tokens)
@@ -60,7 +80,13 @@ state lexical(const char * expr,
 	size_t oper_w_lowset=99999999;
 	size_t i=0;
 	size_t start=0;
-	i_state s = { &oper_w_extra, &i,&oper_w_lowset, &expr_len,&start};
+	i_state s = { &oper_w_extra, 
+            &i,&oper_w_lowset, 
+            &expr_len,&start,
+            token_list::token_list(),
+            std::stack<size_t>(), 
+            std::stack<size_t>() 
+        };
 	
 	for (i=0; i< expr_len; i++)
 	{
@@ -71,13 +97,17 @@ state lexical(const char * expr,
 				pushMulti(tokens,opr,s);
 			}
 			parse_parantheses1(tokens,s,paran,opr);
+                        pushItem(token_list::type::PAR,*s.operWheight,s);
 		}		
 		else if(expr[i] == ')')
 		{
 			parse_parantheses2(tokens,s,paran);
+                        pushItem2(token_list::type::PAR,*s.operWheight,s);
 		}
                 else if(expr[i]=='[')
                 {
+                        pushItem(token_list::type::MAT,*s.operWheight,s);
+                        s.mstack.push(*s.i);
 			extraParan.push(true);
                         if(func->isloaded("matc").loaded)
                         {	
@@ -99,6 +129,7 @@ state lexical(const char * expr,
                 }
                 else if(expr[i]==']')
                 {
+                        pushItem2(token_list::type::MAT,*s.operWheight,s);
 			if(extraParan.size()>0)
 			{
 				extraParan.pop();	
@@ -172,7 +203,7 @@ state lexical(const char * expr,
 					}		
 				}
 			}
-			parse_opr(tokens,s,opr);
+			parse_opr(tokens,s,opr,true);
 		}
 		else if( isalpha(expr[i]))
 		{
@@ -182,25 +213,27 @@ state lexical(const char * expr,
 			}
 
 			auto str = extract_alpha(expr,i,expr_len);
-			i+=str.size()-1;	
 			if (func != nullptr && func->isloaded(str).loaded)
 			{
-				parse_func(str,tokens,s,func);
+				parse_func(str,tokens,s,func,true);
 			}
 			else if (mem != nullptr)
 			{
 				parse_var(str,tokens,s,func,mem);
+                                pushItem(token_list::type::VAR,*s.operWheight,s);
 			}
 			else
 			{
 				lexicalOops<VARIABLES_DISABLED_BUT_USED>();
 			}
+			i+=str.size()-1;	
 		}
 		else 
 		{
 			lexicalOops<UNKNOWN_CHAR_STR>();
 		}
 	}
+        
 #ifndef NON_STRICT_PARANTHESES
 	if(expr[expr_len-1]=='|')
 	{
@@ -221,7 +254,7 @@ state lexical(const char * expr,
 #else
 	tokens.shrink_to_fit();
 #endif //SRICT_PARATHESES
-	return  {*(s.start) ,tokens};	
+        return {*(s.start),tokens, s.token_list};
 }
 
 namespace __internal
@@ -236,8 +269,6 @@ void pushMulti(tvec& t,operators::operators_interface* opr, i_state& s)
 	if (opr->inArray('*'))
 	{
 		ptr_protect<token::operatorToken*,false> tmp(new token::operatorToken(opr->getCurrent()));
-		tmp->startPos=*s.i;
-		tmp->endPos=*s.i;
 		tmp->baseWheight +=*s.operWheight;
 		updateStartPoint(t,s,tmp->baseWheight);	
 		t.push_back(tmp.ptr());
@@ -248,7 +279,7 @@ void pushMulti(tvec& t,operators::operators_interface* opr, i_state& s)
 
 void pushValue(tvec& tokens ,i_state& s, double value)
 {
-	ptr_protect<token::valueToken*, false> tmp_val(new token::valueToken(*(s.i),*(s.i)));
+	ptr_protect<token::valueToken*, false> tmp_val(new token::valueToken());
 	tmp_val->value = interface::type_ptr(make_type(value));
 	tokens.push_back(tmp_val.ptr());
 	tmp_val.release();
@@ -279,9 +310,10 @@ void parse_parantheses1(tvec& tokens,
 		pushMulti(tokens,opr,s);
 		tmp_i++;
 	}
-	tokens.push_back(new token::parenthesesToken(tmp_i,tmp_i));
-	stack.push((token::parenthesesToken*) tokens.back());
+	tokens.push_back(new token::parenthesesToken(true));
+	stack.push((token::parenthesesToken*) tokens.back() );
 	(*s.operWheight)+=5;
+        s.pstack.push(*s.i);
 	return;
 	
 }
@@ -292,15 +324,11 @@ void parse_parantheses2(tvec& tokens ,i_state& s, pstack& p)
 	if(p.empty())
 	{
 		lexicalOops<SYNTAX_UNMATCHED_CLOSING_PARANTHESES>();
-		
 	}
 	else
 	{
-		token::parenthesesToken* tmp = p.top();
 		p.pop();
-		tmp->opposit=*(s.i);
-		token::parenthesesToken * tmp2 = new token::parenthesesToken(*(s.i), *(s.i));
-		tmp2->opposit = tmp->startPos;
+		token::parenthesesToken * tmp2 = new token::parenthesesToken(false);
 		tokens.push_back(tmp2);
 		*(s.operWheight)-=5;
 		return;
@@ -318,9 +346,7 @@ void parse_string(const char * expr, tvec& tokens, i_state& s)
 	{
 		if (expr[i] == '"')
 		{
-			ptr_protect<token::valueToken*, false> tmp(new token::valueToken(*(s.i), 0));
-			tmp->startPos = *s.i;
-			tmp->endPos = i;
+			ptr_protect<token::valueToken*, false> tmp(new token::valueToken());
 	
 			if (*s.i - i == 1)
 			{
@@ -333,6 +359,7 @@ void parse_string(const char * expr, tvec& tokens, i_state& s)
 			
 			tokens.push_back(tmp.ptr());
 			tmp.release(); //Release ownership of pointer
+                        pushItem3(token_list::type::STR,*s.operWheight,s,i-*(s.i));
 			*(s.i) = i;
 			return;
 		}
@@ -359,7 +386,7 @@ void parse_number(const char * expr, tvec& tokens, i_state& s,operators::operato
 			pushMulti(tokens,opr,s);
 		}
 	}
-	ptr_protect<token::valueToken*, false> tmp(new token::valueToken(*(s.i), 0));
+	ptr_protect<token::valueToken*, false> tmp(new token::valueToken());
 	short valueLength=0;
 	for(unsigned int i2 =*(s.i)+1; i2 < *(s.lenght) ; i2++)
 	{
@@ -393,8 +420,7 @@ void parse_number(const char * expr, tvec& tokens, i_state& s,operators::operato
 		}
 			valueLength++;
 	}
-	tmp->endPos = *(s.i)+valueLength;
-	size_t tmp_str_length = tmp->endPos+1 - tmp->startPos;
+	size_t tmp_str_length = valueLength+1;
 	//Create a temporary string from which we can convert the string to a double
 	char* tmp_str = nullptr;
         tmp_str = new char[tmp_str_length+1];
@@ -404,6 +430,7 @@ void parse_number(const char * expr, tvec& tokens, i_state& s,operators::operato
 	delete[] tmp_str;
 	tokens.push_back(tmp.ptr());
 	tmp.release(); //Release ownership of pointer
+        pushItem3(token_list::type::VAL,*s.operWheight,s,valueLength);
 	*(s.i)+=valueLength;
 	return;
 
@@ -413,12 +440,10 @@ void parse_number(const char * expr, tvec& tokens, i_state& s,operators::operato
 //*	Operator parser
 //*
 //**********************************************
-void parse_opr(tvec& tokens ,i_state& s,operators::operators_interface* opr)
+void parse_opr(tvec& tokens ,i_state& s,operators::operators_interface* opr, bool show)
 {
 
 	ptr_protect<token::operatorToken*, false> tmp(new token::operatorToken(opr->getCurrent()));
-	tmp->startPos=*(s.i);
-	tmp->endPos=*(s.i);
 	tmp->baseWheight +=*(s.operWheight);
 	updateStartPoint(tokens,s,tmp->baseWheight);
 	if (tmp->operChar == '=')
@@ -436,6 +461,8 @@ void parse_opr(tvec& tokens ,i_state& s,operators::operators_interface* opr)
 	}
 	tokens.push_back(tmp.ptr());
 	tmp.release();
+        if(show)
+            pushItem(token_list::type::OPER,tmp->baseWheight,s);
 	return;
 }
 
@@ -447,19 +474,17 @@ void parse_opr(tvec& tokens ,i_state& s,operators::operators_interface* opr)
 void parse_func(std::string str,
 		tvec& tokens,
 		i_state& s,
-		math_func::function_interface* func)
+		math_func::function_interface* func, bool show)
 {
 	token::funcToken * tmp_ptr;
 	math_func::func_type type = func->type();
-	auto startPos=*(s.i);
-	auto endPos = *(s.i)+str.size();
 	if (type == math_func::func_type::GENERAL )
 	{
-		tmp_ptr = new token::funcToken(startPos, endPos, (token::funcToken::generalFuncPtr)func->get(str));
+		tmp_ptr = new token::funcToken((token::funcToken::generalFuncPtr)func->get(str));
 	}
         else
         {
-            tmp_ptr = new token::funcToken(startPos,endPos,func->getFunctor(str));
+            tmp_ptr = new token::funcToken(func->getFunctor(str));
         }
 
 	ptr_protect<token::funcToken *, false> tmp(tmp_ptr);
@@ -467,6 +492,8 @@ void parse_func(std::string str,
 	tmp->baseWheight += *(s.operWheight);
 	updateStartPoint(tokens,s,tmp->baseWheight);	
 	tokens.push_back(tmp.ptr());
+        if(show)
+            pushItem3(token_list::type::FUNC,tmp->baseWheight,s,str.size()-1);
 	tmp.release();
 }
 
@@ -477,7 +504,7 @@ void parse_var(std::string str,
 		memory::memory* mem)
 {
 
-	token::variableToken * tmp = new token::variableToken(*(s.i),*(s.i)+str.size() , mem,func);
+	token::variableToken * tmp = new token::variableToken(mem,func);
 	tmp->variableName = str;
 	tokens.push_back(tmp);
 }

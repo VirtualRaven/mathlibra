@@ -9,13 +9,14 @@
 #include "modules/memory.h"
 #include "modules/functions.h"
 #include "modules/operators.h"
+#include "core/token_list.h"
 
 typedef std::vector<token::baseToken*> tvec;
-
 struct state
 {
 		size_t startPos;
 		tvec tokens;
+                token_list::token_list items;
 
 };
 

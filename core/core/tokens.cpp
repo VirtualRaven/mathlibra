@@ -17,7 +17,7 @@
 	}
 	 token::baseToken::~baseToken(){}
 
-	 token::baseToken::baseToken() : startPos(0), endPos(0), type(tokenType::UNKNOWN){}
+	 token::baseToken::baseToken() :  type(tokenType::UNKNOWN){}
 
 
 
@@ -53,16 +53,7 @@
 
 	 bool token::parenthesesToken::isOppening()
 	{
-		if (startPos < opposit)
-		{
-			return true;
-		}
-		else if (startPos == opposit)
-		{
-			std::cerr << "-[WARNING: Using isOppening() on uninitilized paratheses ]\n";
-			return false;
-		}
-		else return false;
+		return opening;
 	}
 	 bool token::parenthesesToken::hasNode()
 	{
@@ -72,22 +63,10 @@
 	{
 		return nullptr;
 	}
-	 token::parenthesesToken::parenthesesToken(size_t startPos, size_t endPos)
-	: baseToken(),
-    opposit(0)
+	 token::parenthesesToken::parenthesesToken(bool open)
+	: baseToken(),opening(open)
 	{
-		this->endPos = endPos;
-		this->startPos = startPos;
 		this->type = tree::PARENTHESES;
-	}
-	 token::parenthesesToken::parenthesesToken()
-    : baseToken(),
-    opposit(0)
-	{
-		this->endPos = 0;
-		this->startPos = 0;
-		this->type = tree::PARENTHESES;
-		this->opposit =0;
 	}
 
 
@@ -99,22 +78,14 @@
 	{
 		return true;
 	}
-	 token::valueToken::valueToken(size_t startPos, size_t endPos)
+	 token::valueToken::valueToken()
 	:baseToken(),
 	value(nullptr)
 	{
 
-		this->endPos = endPos;
-		this->startPos = startPos;
 		this->type = tree::VALUE;
 	}
 
-	 token::valueToken::valueToken()
-	:baseToken(),
-	value(0)
-	{
-		this->type = tree::VALUE;
-	}
 
 
 
@@ -133,15 +104,13 @@
 	{
 		return true;
 	}
-	 token::variableToken::variableToken(size_t startPos, size_t endPos, memory::memory* mem, math_func::function_interface* func)
+	 token::variableToken::variableToken(memory::memory* mem, math_func::function_interface* func)
 	:baseToken(),
         func(func),
 	variableName(""),
 	mem(mem),
 	_stack(true)
 	{
-		this->endPos = endPos;
-		this->startPos = startPos;
 		this->type = tree::VARIABLE;
 	}
 
@@ -159,15 +128,11 @@
     mem(val.mem),
 	_stack(val._stack)
     {
-        this->endPos = val.endPos;
-        this->startPos = val.startPos;
         this->type = val.type;
     }
 	 token::variableToken token::variableToken::operator=(const token::variableToken& val)
     {
-        this->endPos = val.endPos;
         this->mem = val.mem;
-        this->startPos = val.startPos;
         this->type = val.type;
         this->variableName = val.variableName;
         return *this;
@@ -197,22 +162,18 @@ using token::ptr_type_enum;
 	{
 		return true;
 	}
-	 	 token::funcToken::funcToken(size_t startPos, size_t endPos, generalFuncPtr ptr)
+	 	 token::funcToken::funcToken(generalFuncPtr ptr)
 	:gptr(ptr),
 	baseWheight(4),
 	ptr_type(ptr_type_enum::gen)
 	{
-		this->endPos = endPos;
-		this->startPos = startPos;
 		this->type = tree::FUNCTION;
 	}
-        token::funcToken::funcToken(size_t startPos, size_t endPos,usr_ptr ptr)
+        token::funcToken::funcToken(usr_ptr ptr)
         : uptr(ptr),
         baseWheight(4),
         ptr_type(ptr_type_enum::usr)
         {
-            this->endPos = endPos;
-            this->startPos = startPos;
             this->type=tree::FUNCTION;
         }
 
@@ -220,8 +181,6 @@ using token::ptr_type_enum;
 	:gptr(nullptr),
 	baseWheight(4)
 	{
-		this->endPos = 0;
-		this->startPos = 0;
 		this->type = tree::FUNCTION_TREE;
 	}
 
