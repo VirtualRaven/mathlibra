@@ -2,6 +2,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 import ctypes
 
 class mathlibra_exception(Exception):
@@ -46,47 +47,62 @@ class mathlibra:
         
         #Accuire an instance
         self.handle = self.__handle_create()
-        
-        
+
         #Error managment functions
         #Type is set to void pointer to ensure that ctypes to not convert it to an python string
         self.__get_excep=self.lib_instance.mathlibra_error_info
         self.__get_excep.restype =error_obj_c
-
+        
         
         #create internal functions for library exported functions
         self.__interpret_arg = self.lib_instance.interpret_arg
+        self.__interpret_arg.argtypes = [ctypes.c_void_p,ctypes.c_char_p]
         
         self.__free_func_obj_array_c =self.lib_instance.free_func_obj_array
-
+        self.__free_func_obj_array_c.argtypes = [func_obj_array_c]  
+        
         self.__execute_arg = self.lib_instance.execute_arg
         self.__execute_arg.restype = ctypes.c_void_p
+        self.__execute_arg.argtypes = [ctypes.c_void_p]
         
         self.__error = self.lib_instance.mathlibra_error
+        self.__error.argtypes=[ctypes.c_void_p]
         self.__error.restype = ctypes.c_bool
         
         self.__func_get=self.lib_instance.func_get
         self.__func_get.restype=func_obj_array_c
+        self.__func_get.argtypes=[ctypes.c_void_p]
         
         self.__free = self.lib_instance.free_handle
+        self.__free.argtypes=[ctypes.c_void_p]
+
         self.__enable_plugins = self.lib_instance.enable_plugins
         
         self.__mem_size = self.lib_instance.mem_size
+        self.__mem_size.argtypes= [ctypes.c_void_p]
         self.__mem_size.restype =ctypes.c_uint
 
         self.__mem_get_index=self.lib_instance.mem_get_index
         self.__mem_get_index.restype = mem_obj_c
+        self.__mem_get_index.argtypes =[ctypes.c_void_p,ctypes.c_int]
         
         self.__mem_get = self.lib_instance.mem_get
         self.__mem_get.restype=mem_obj_c
+        self.__mem_get.argtypes = [ctypes.c_void_p,ctypes.c_char_p]
 
         self.__mem_set= self.lib_instance.mem_set
+        self.__mem_set.argtypes= [ctypes.c_void_p,mem_obj_c]
 
         self.__free_mem_obj=self.lib_instance.free_mem_obj
+        self.__free_mem_obj.argtypes=[mem_obj_c]
+
         self.__is_number = self.lib_instance.isNumber
         self.__is_number.restype=ctypes.c_bool
+        self.__is_number.argtypes=[ctypes.c_void_p]
+        
         self.__to_number = self.lib_instance.toNumber
         self.__to_number.restype=ctypes.c_double 
+        self.__to_number.argtypes=[ctypes.c_void_p]
 
 
     #Function to convert c struct to python data types
