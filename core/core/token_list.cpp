@@ -1,5 +1,7 @@
 #include "core/token_list.h"
+#include <sstream>
 namespace token_list{
+    
     inline std::string to_string(const type t){
         switch(t)
         {
@@ -14,6 +16,8 @@ namespace token_list{
         }
 
     }
+
+
     item::item(const type t,const size_t w,const size_t i,const size_t j) : 
         t(t),start(i),end(j),prev(0),is_closing(false),weight(w) {}
 
@@ -21,9 +25,11 @@ namespace token_list{
         t(t),start(i),end(j),prev(prev),is_closing(true),weight(w) {}
     
     item::operator std::string() const {
+        std::stringstream s;
         if(!prev)
-            return "{t: "+to_string(t) +",["+ std::to_string(start) +","+ std::to_string(end) +"],"+std::to_string(weight)+"}";
+            s << "{t: "<<to_string(t) <<",["<< start <<","<< end <<"],"<<weight<<"}";
         else
-            return "{t: "+to_string(t) +",["+ std::to_string(start) +","+ std::to_string(end) +"],"+std::to_string(weight)+",p="+ std::to_string(prev) +"}";
+            s << "{t: "<<to_string(t) <<",["<< start <<","<< end <<"],"<<weight<<",p="<< prev << "}";
+        return s.str();
     }
 }
