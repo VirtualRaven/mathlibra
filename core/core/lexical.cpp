@@ -220,7 +220,6 @@ state lexical(const char * expr,
 			else if (mem != nullptr)
 			{
 				parse_var(str,tokens,s,func,mem);
-                                pushItem(token_list::type::VAR,*s.operWheight,s);
 			}
 			else
 			{
@@ -507,6 +506,7 @@ void parse_var(std::string str,
 	token::variableToken * tmp = new token::variableToken(mem,func);
 	tmp->variableName = str;
 	tokens.push_back(tmp);
+        pushItem3(token_list::type::VAR,*s.operWheight,s,str.size());
 }
 
 }
