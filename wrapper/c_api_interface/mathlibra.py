@@ -51,6 +51,7 @@ class mathlibra:
         #Error managment functions
         #Type is set to void pointer to ensure that ctypes to not convert it to an python string
         self.__get_excep=self.lib_instance.mathlibra_error_info
+        self.__get_excep.argtypes=[ctypes.c_void_p]
         self.__get_excep.restype =error_obj_c
         
         
