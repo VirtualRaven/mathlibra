@@ -92,30 +92,6 @@ template<EXCEPTION T> void interpreterOops()
 
 	}
 
-	void interpreter::stripSlashes()
-	{
-		ptr_protect<char*,true> tmp_buffer = safe_alloc<char>(expressionLength);
-		short tmp_buffer_index =0;
-		bool inside_string = false;
-		for(unsigned int i = 0; i < expressionLength; i++)
-		{
-			if(expression[i]== '"')
-			{
-				inside_string=!inside_string;	
-			}
-			if(  expression[i] != ' ' || inside_string )
-			{
-				tmp_buffer.ptr()[tmp_buffer_index] = expression[i];
-				tmp_buffer_index++;
-			}
-
-		}
-
-
-        allocExpression(tmp_buffer_index);
-		memcpy(expression,tmp_buffer.ptr(),tmp_buffer_index*sizeof(char));
-
-	}
 	void interpreter::freeExpression()
 	{
 		if(expression)
@@ -301,7 +277,6 @@ template<EXCEPTION T> void interpreterOops()
 
 			allocExpression(lenght);
 			memcpy(this->expression, expression_, lenght*sizeof(char));
-			this->stripSlashes();
 		}
 		else interpreterOops<EMPTY_EXPR>();
 	}

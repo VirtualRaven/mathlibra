@@ -11,19 +11,20 @@ namespace __internal
 
 	struct i_state
 	{
-		size_t* operWheight;
-		size_t* i;
-		size_t* lowestWheight;
-		size_t* const lenght;
-		size_t* start;
+		size_t operWheight;
+		size_t i;
+		size_t lowestWheight;
+		size_t const lenght;
+		size_t start;
                 token_list::token_list token_list;
+                std::stack<size_t> fstack;
                 std::stack<size_t> pstack;
                 std::stack<size_t> mstack;
 	};
 	
 	//Util
 	void pushMulti(tvec&,operators::operators_interface*,i_state&);
-	void pushValue(tvec&,i_state&,double val);
+	void pushValue(tvec&,double val);
 	void updateStartPoint(tvec&,i_state&,size_t w);
         //Parsers
 	void parse_string(const char * expr, tvec& tokens, i_state& s);

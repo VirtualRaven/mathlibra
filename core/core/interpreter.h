@@ -83,7 +83,6 @@ class interpreter : public interface::interpreter_interface
 	void emptyRoot();
 	void destroyTokens();
 	void stripParanthese();
-    	void stripSlashes();
 	void freeExpression();
 	void allocExpression(size_t lenght);
         std::vector<token_list::item> lexicalAnalys();
