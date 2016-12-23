@@ -412,6 +412,20 @@ model
 			targetPlatform "osx_x86"
 			targetPlatform "osx_x64"
 			targetPlatform "current"
+                        binaries.all{
+                            if(toolChain in Gcc){
+                              if(project.hasProperty('CPP-CXX')){
+                                  cppCompiler.args  project.properties['CPP-CXX'].split(' ')
+                                  print "Using extra compiler args for mathlibra_CXX\n"
+                                  println project.properties['CPP-CXX']
+                                }
+                              if(project.hasProperty('CPP-LD')){
+                                  linker.args  project.properties['CPP-LD'].split(' ')
+                                  print "Using extra linker args for mathlibra_CXX\n"
+                                  println project.properties['CPP-LD']
+                                }
+                            }
+                        }
 			sources{
 				cpp{
 					lib library: "core_lib", linkage: "static"
@@ -439,6 +453,20 @@ model
 			targetPlatform "osx_x86"
 			targetPlatform "osx_x64"
 			targetPlatform "current"
+                        binaries.all{
+                            if(toolChain in Gcc){
+                              if(project.hasProperty('C-CXX')){
+                                  cppCompiler.args  project.properties['C-CXX'].split(' ')
+                                  print "Using extra compiler args for mathlibra_C\n"
+                                  println project.properties['C-CXX']
+                                }
+                              if(project.hasProperty('C-LD')){
+                                  linker.args  project.properties['C-LD'].split(' ')
+                                  print "Using extra linker args for mathlibra_C\n"
+                                  println project.properties['C-LD']
+                                }
+                            }
+                        }
 			sources{
 				cpp{
 					lib library: "core_lib", linkage: "static"
@@ -456,11 +484,6 @@ model
 		}
 		mathlibra_CXX_client(NativeExecutableSpec)
 		{	
-                        binaries.all{
-                            if(toolChain in Gcc){
-                                linker.args  "-Wl,-rpath,./"
-                            }
-                        }
 			targetPlatform "armeabiv7a"
 			targetPlatform "linux_x86"
 			targetPlatform "linux_x64"
