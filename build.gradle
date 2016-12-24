@@ -483,7 +483,13 @@ model
 				
 		}
 		mathlibra_CXX_client(NativeExecutableSpec)
-		{	
+		{       
+
+                        binaries.all{
+                            if(toolChain in Gcc){
+                                linker.args  "-Wl,-rpath,./"
+                            }
+                        }	
 			targetPlatform "armeabiv7a"
 			targetPlatform "linux_x86"
 			targetPlatform "linux_x64"
