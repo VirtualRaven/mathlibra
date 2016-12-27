@@ -43,40 +43,20 @@ For vim users all directories include config files for youcomplete me to enable 
 
 Mathlibra has three main testing tools. The first tester is a expression generator written in python. Secondly it uses predefined tests defined in `tests/main.txt` which is parsed using mathlibra by the mathlibra_CXX_client executable. Finaly a interactive console application is provided. To run all available automatic tests execute `./gradlew test`.
 
-The project includes an random test case generator. The tester works by generating random expressions and passing them to mathlibra through the python api. The result is then compared to the calculated expected result, if they differ or a exception is thrown, the test fails. To run the tester write `./gradlew runPyTest` If the tester fails it will generate an report `py_test/test_report.txt` in the build folder. Be aware the this tester does only test an very limted part of mathlibra at the moment,for example the generator does not produce any assigment or matrix expression. So while it can detect some errors it does not guarentee that mathlibra works.
+The project includes an random test case generator. The tester works by generating random expressions and passing them to mathlibra through the python api. The result is then compared to the calculated expected result, if they differ or a exception is thrown, the test fails. To run the tester write `./gradlew runPyTest` If the tester fails it will generate an report `buld/py_test/test_report.txt` in the build folder. Be aware the this tester does only test an very limted part of mathlibra at the moment,for example the generator does not produce any assigment or matrix expression. So while it can detect some errors it does not guarentee that mathlibra works.
 
 The interactive testing enviroment is provided by an executable named core_tester (run by executing `./run.sh`). Writing menu instead of an expression will bring up the menu.From which it is possible to run tests, get help and  inspect the status of the interpreter at any time. If you use the the debug version of core_tester it will also preform memory tests on exit.
-To trigger these, start core_tester, run your expression and after enter `menu 7`in the prompt which will present memory statistics before exiting the tester.
+To trigger these, start core_tester, run your expression and thereafter enter `menu 8`in the prompt, which will present memory statistics before exiting the tester.
 
 ### Contribution guidelines ###
 
-First and foremost: This is an educational project, we are here to learn and have fun. If it happens to turn out to something awesome that is a nice bonus.
+I gladly accept contributions, open a pull request and I will review it and hopefully accept it, else I will try to provide feedback on what needs to be changed. 
+
+First and foremost: This is an educational project, we are here to learn and have fun. If it happens to turn out to something awesome that is a nice bonus. 
 
 
 #### Style ####
- I'm under no assumption that the codestyle described herein is somehow better than others, rather the style guide only aims to ensure consistency with previous contributions.  
 
-Brackets are expanded in all context. After an if statement or function definition a newline is to be used. Do not add a opening bracket on the same line.
-When using brackets indent the code using one tab. 
-
-Example
-
-* Correct
-```c++
-if(true)
-{
-   do_work();
-}
-
-```
-
-* Incorrect
-```c++
-if(true){
-   do_work();
-}
-```
-All headers should only contain declarations and no implementations (but template are ok :) ). Headers providing abstract classes to be used an base classes and interfaces should be named classname_interface.h to clearly state it's content.
 
 Comment in headers should be doxygen compatible using the java syntax. For more help see the doxygen homepage
 
@@ -92,13 +72,11 @@ Comment in headers should be doxygen compatible using the java syntax. For more 
 
 
 An important trait of mathlibra is that it has no external dependencies and that it is platform independent. Any code breaking these traits will not be accepted. For example, do not write code that requires the c++ boost library. Any functions needed for mathlibra not provided by the standard c library or the standard template library should be implemented inside of the project.
-The reason behind this is that as stated above this is a educational project, there are no time limits or deadlines to adhere to. So we have time to implement our own functions and learn something more that way. Implementing stuff by yourself may not always be the best option, but it is an great opportunity to learn, so for your own sake please follows these recommendations.  
+The reason behind this is that as stated above this is a educational project, there are no time limits or deadlines to adhere to. So we have time to implement our own functions and learn something more that way. Implementing stuff by yourself may not always be the best option, but it is an great opportunity to learn.
+
 An exception has been made to platform independent rule regarding the plug-in system which calls platform specific function for loading shared libraries, but it does so by hiding this functions from the rest of the library and implements an generic interface for loading external code. In this way the plug-in loader supports both unix and windows.
 
 Code separation is also important. For example the code dealing with the external api implementation should be separated into the wrapper folder. Mathematical runtime functions should not be implemented inside mathlibra, instead they should be provided as plug-ins.
-
-Early optimization is never good as it makes it harder to develop. But that does not mean that you can completely ignore the issue. If you have implemented something but knows ways to improve it's performance, raise an issue to notify everyone. 
-That way, everyone will know what parts of the code should be optimized when time is given. 
 
 Remember 
 Have fun and learn.
