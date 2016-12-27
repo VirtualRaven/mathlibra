@@ -26,7 +26,7 @@ template<EXCEPTION T> void lexicalOops()
                 }
                 else if(t==token_list::type::MAT && !i.mstack.empty()){
                     next=i.mstack.top();
-                    i.pstack.pop();
+                    i.mstack.pop();
                 }
                 if(prev)
                     i.token_list.push_back(token_list::item(t,w,i.i, i.i+offset,next));
@@ -204,7 +204,7 @@ state lexical(const char * expr,
 				else
 					test_type = tree::UNKNOWN;
 		
-				if (  (s.i - 1 > 0 && (test_type == tree::OPERATOR || isLastTokenOpeningParantheses(tokens))) //if last token is a operator or opening par
+				if (  (s.i > 0 && (test_type == tree::OPERATOR || isLastTokenOpeningParantheses(tokens))) //if last token is a operator or opening par
                                         || s.i == 0)  //or if this is the first token
 				{
 					if (opr->inArray('*'))
@@ -413,7 +413,7 @@ void parse_number(const char * expr, tvec& tokens, i_state& s,operators::operato
 	if(tokens.size() > 0) 
 	{
 		auto tmp=tokens.back();
-		if(tmp->type == tree::VARIABLE)
+		if(tmp->type == tree::VARIABLE || tmp->type == tree::VALUE)
 		{
 			pushMulti(tokens,opr,s);
 		}
