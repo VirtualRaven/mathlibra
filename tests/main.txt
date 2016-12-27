@@ -15,6 +15,11 @@
 [1,2,3|4,5,6|7,8,9]
 #endtest
 
+#test-matrix-mul
+[1,2,3][1|2|3] 
+[1|2|3][1,2,3]
+#endtest
+
 #test-variables
 x=2
 x+1
@@ -27,11 +32,34 @@ y=x
 (1+2)2
 x=2
 2x
+2 x
 x2
+x 2
 2[1,2,3]
+2 [1,2,3]
 [1,2,3]2
+[1,2,3] 2
 #endtest
 
 #test-api-function
 cube(2)
+#endtest
+
+#test-unary-minus
+(-2)^2
+2^-1
+#endtest
+
+#test-optional-parantheses
+x=2
+sqrt sin 2x
+sqrt sin2x
+sqrt(sin 2x)
+sqrt(sin2x)
+sqrt 4 + sqrt 4
+sqrt 2 sqrt 2
+#endtest
+
+#test-misc
+[1|2|3]range(10)
 #endtest
