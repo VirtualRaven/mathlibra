@@ -150,8 +150,7 @@ int main(int argc, char* argv[])
 	catch (exception& e)
 	{
 
-		std::cout << "[\n Exception: " << e.what() << "\n";
-		std::cout << " Description: " << e.desc() << "\n]\n";
+		std::cout << "[" << e.what() <<" ("<< e.id() << ") " <<  "] "<< e.desc() << std::endl;
 	}
 	}
 #if defined(CORAX_VM_EXEC)
@@ -210,14 +209,8 @@ int main(int argc, char* argv[])
 
 			catch (exception& e)
 			{
-
-				std::cout << "[\n Exception: " << e.what() << "\n";
-				std::cout << " Description: " << e.desc() << "\n]\n";
+		            std::cout << "[" << e.what() <<" ("<< e.id() << ") " <<  "] "<< e.desc() << std::endl;
 			}
-			/*catch (...)
-			{
-			std::cout << "Catched unknown exception\n";
-			}*/
 		}
 	} while (!exit);
 		}

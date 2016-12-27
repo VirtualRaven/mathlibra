@@ -460,7 +460,7 @@ declare_exception(PLUGIN_DYNAMIC_ERROR)
 };
 declare_exception(BUILD_UNKNOWN_ERROR)
 {
-	str_property info = "Unknown error occured in intepretetion of expression, sorry :/ ";
+	str_property info = "Expression could not be understood";
 	bool_property critical = true;
 	owner_property owner = BUILD;
 };
