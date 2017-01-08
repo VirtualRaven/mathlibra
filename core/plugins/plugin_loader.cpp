@@ -138,7 +138,9 @@ void windows_plugin_manager::load_dll(windows_plugin_manager::plugin_name_contai
  void  windows_plugin_manager::unload_all_dlls()
  {
 	 this->unloadPlugins();
-	 for each (DLL current_dll in this->dlls)
+
+	 
+	 for(DLL current_dll : this->dlls)
 	 {
 		 FreeLibrary(current_dll);
 	 }
@@ -147,7 +149,7 @@ void windows_plugin_manager::load_dll(windows_plugin_manager::plugin_name_contai
  void  windows_plugin_manager::nativeLoadPlugin()
  {
 	 get_plugin_names();
-	 for each (windows_plugin_manager::plugin_name_container  current_name in this->plugin_names )
+	 for (windows_plugin_manager::plugin_name_container  current_name : this->plugin_names )
 	 {
 		 this->load_dll(current_name);
 	 }
