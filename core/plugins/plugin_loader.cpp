@@ -48,6 +48,9 @@ void plugin::plugin_manager::unloadPlugins()
 
  void plugin::plugin_init(function_plugin_base* func,math_func::function_interface * function_unit)
  {
+        //Initialize plugin
+        func->plugin_init_event();
+
 	 plugin::function* tmp_funcs = func->get_funcs();
 	 std::vector<math_func::m_function_const> __funcs;
 	 __funcs.reserve(func->function_size());
