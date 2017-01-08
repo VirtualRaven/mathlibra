@@ -78,11 +78,13 @@ model
 				path project.properties['ndktoolchain']
 			target("armeabiv7a")	
 		}
+		cygwin(Gcc){
+			target("windows_x86")
+			target("windows_x64")
+		}
 		clang(Clang){
 			target("osx_x86")
 			target("osx_x64")
-			target("windows_x86")
-			target("windows_x64")
 		}
 		
 	}
