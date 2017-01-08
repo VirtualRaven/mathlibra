@@ -170,16 +170,17 @@ namespace function_helper
 	/**
 	 *Template struct defining function signatures.
 	 * The struct contains f_type which is an typedef of 
-	 * a function returning a double an having parameter arg0, arg1 ... argN.
+	 * a function returning RTYPE and having parameter arg0, arg1 ... argN.
 	 */
-        template <typename... argN> struct func_type_double
-        {
-            typedef double(*f_type)(argN...);
+        template <typename RTYPE, typename... argN> struct func_type_general{
+            typedef RTYPE(*f_type)(argN...);
         };
-	template <typename... argN> struct func_type
-	{
-		 typedef interface::type*(*f_type)(argN...);
-	};
+
+        template<typename... argN>
+        using func_type_double=func_type_general<double,argN...>;
+        
+        template<typename... argN>
+        using func_type = func_type_general<type*,argN...>;
 /**
  * Fills the and parameter package with data. It uses the getData() function to exctract data from the nodes an fills the parameter_package wiith it.
  * @param s An stack of node_base* to use to fill the parameter_package.
@@ -250,8 +251,33 @@ template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> paramet
 		return signature<arg0>() + " " + n.head()  + "," + create_signature_string2<arg1,argN...>(n.tail());	
 	}
         
-        
 
+        inline type* convert_return_value(type* r){
+            return r;
+        }
+
+        inline type* convert_return_value(double r){
+            return new num_mat(&r,1,1); 
+        }
+        
+        inline type* convert_return_value(num_mat& r){
+            return &r;
+        }
+        
+        inline type* convert_return_value(char_mat& r){
+            return &r;
+        }
+
+        inline type* convert_return_value(mat_mat& r){
+            return &r;
+        }
+        template<typename T> void delete_return_value(type* p){
+            delete p;
+            p=nullptr;
+        }
+        template<> inline void delete_return_value<num_mat>(type* p){}
+        template<> inline void delete_return_value<char_mat>(type* p){}
+        template<> inline void delete_return_value<mat_mat>(type* p){}
 	/**
 	 * Forward function.
 	 * This function takes an node_base* which is what mathlibra passes to an function when it is evaluated, it then converts it
@@ -277,7 +303,9 @@ template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> paramet
 	 * @note The return value of the function to be forwarded is automatically transfered over library boundries and safely deleted when no longer needed. thus statements like return new type(); is
 	 * 	valid inside any function managed by the forward function.
 	 */
-	template< typename... argN> type* forward(typename func_type<argN...>::f_type  func, node_base * n,recursion::fixed_array<sizeof...(argN),std::string>* names )
+        template<typename RTYPE,typename... argN> type* forward_general(typename func_type_general<RTYPE,argN...>::f_type func, 
+                                                    node_base * n,
+                                                    recursion::fixed_array<sizeof...(argN),std::string>* names )
 	{
 		if(n==nullptr)
 		{
@@ -286,8 +314,7 @@ template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> paramet
 			tmp = create_signature_string2<argN...>(names->tail());
                     else
                         tmp = create_signature_string<argN...>();
-
-			return new char_mat(tmp.c_str(),1,tmp.size());
+		    return new char_mat(tmp.c_str(),1,tmp.size());
 		}
 		auto args = n->getArgs();
 		try
@@ -298,8 +325,11 @@ template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> paramet
 			}
 
 		        parameter_package::package<argN...> pack = fillPackage<argN...>(args);
-			auto tmp =parameter_package::package_forward<type*, typename func_type<argN...>::f_type>(func, pack);
-                        return n->realloc(tmp);
+			RTYPE tmp =parameter_package::package_forward<RTYPE, typename func_type_general<RTYPE,argN...>::f_type>(func, pack);
+                        type* tmp2=convert_return_value(tmp); 
+                        auto tmp3= n->realloc(tmp2);
+                        delete_return_value<RTYPE>(tmp2);
+                        return tmp3;
 		}
 		catch (std::exception& e)
 		{
@@ -312,9 +342,20 @@ template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> paramet
 		return 0;
 
 	}
+
+
+        template<typename RTYPE,typename... argN> type* forward_general(typename func_type_general<RTYPE,argN...>::f_type func, 
+                                                    node_base * n){
+            return forward_general<RTYPE,argN...>(func,n,static_cast<recursion::fixed_array<sizeof...(argN),std::string>*>(nullptr));
+        }
+        template<typename... argN> type* forward(typename func_type<argN...>::f_type func, 
+                                                    node_base * n,
+                                                    recursion::fixed_array<sizeof...(argN),std::string>* names ){
+            return forward_general<type*,argN...>(func,n,names);
+        }
 	template< typename... argN> type* forward(typename func_type<argN...>::f_type  func, node_base * n)
 	{
-            return forward<argN...>(func,n,static_cast<recursion::fixed_array<sizeof...(argN),std::string>*>(nullptr));
+            return forward_general<type*,argN...>(func,n,static_cast<recursion::fixed_array<sizeof...(argN),std::string>*>(nullptr));
 	}
 
 }

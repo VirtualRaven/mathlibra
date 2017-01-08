@@ -72,25 +72,21 @@ namespace tree
                     {
                         auto tmp = static_cast<base_type<char>*>(t);
                         auto tmp2= new base_type<char>(*tmp);
-                        delete t;
                         return tmp2;         
                     }          
                 case T_TYPE:
                     {
                         auto tmp = static_cast<base_type<type*>*>(t);
                         auto tmp2= new base_type<type*>(*tmp);         
-                        delete t;
                         return tmp2;
                     }          
                 case T_DOUBLE:
                     {
                         auto tmp = static_cast<base_type<double>*>(t);
                         auto tmp2= new base_type<double>(*tmp);         
-                        delete t;
                         return tmp2;
                     }          
                 default:
-                    delete t;
                     treeOops<REALLOC_NO_RULE>();
                     return nullptr;
             }
