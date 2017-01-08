@@ -153,6 +153,7 @@ model
                     into "$buildDir/user_test"
                 }
                 runTest(Exec){
+                 description "Test using the mathlibra C++ API, runs predefined tests from tests/main.txt"
                  2.times{ i -> dependsOn "createTest$i" }
                   workingDir "$buildDir/user_test"
                   commandLine './mathlibra_CXX_client', "-f" , "main.txt"   
@@ -169,6 +170,7 @@ model
 		into "$buildDir/py_test"}
 		
 		runPyTest(Exec){
+                        description "Test using python, generates long randomized expression and passes these to mathlibra using the C API"
 			2.times{ i-> 
 				dependsOn "createPyTest$i"
 			}
@@ -176,6 +178,7 @@ model
 			commandLine 'python', "run_tests.py"
 		}
                 test(Task){
+                    description "Run both predefinded tests and the python test"
                     dependsOn runPyTest
                     dependsOn runTest
                 }
