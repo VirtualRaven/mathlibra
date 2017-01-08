@@ -9,7 +9,7 @@
 #ifdef TYPE_MEM_TEST
 #include "object_counter.h"
 #endif
-#include "core/type_interface.h"
+#include "type_interface.h"
 /**
  *@namespace tree Contains the tree classes. Provides the data types to orgenize data in a tree structure.
  */

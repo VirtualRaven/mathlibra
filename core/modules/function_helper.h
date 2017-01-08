@@ -8,9 +8,9 @@
 #ifndef FUNCTION_HELPER_INCLUDED
 #define FUNCTION_HELPER_INCLUDED
 #include <stack>
-#include "core/mathNode_interface.h"
+#include "mathNode_interface.h"
 #include "recursion_types.h"
-#include "core/type.h"
+#include "type.h"
 #include <iostream>
 /**
 * @namespace parameter_package Functions for creating packages of function arguments of different types

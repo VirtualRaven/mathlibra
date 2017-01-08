@@ -225,6 +225,7 @@ model
                         from "core/core/type.h"
                         from "core/core/type_interface.h"
                         from "core/core/type_enum.h"
+                        from "core/modules/recursion_types.h"
                         baseName "plugin_api"
                         destinationDir project.buildDir 
                 }
