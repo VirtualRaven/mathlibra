@@ -85,6 +85,13 @@ template<> inline std::string _t_toString<interface::type*>(interface::type** d,
     return __toString<interface::type*>(d,n,m,[](interface::type* t){return t->toString();});
 }
 
+template<typename T> struct c_type
+{
+    T* const data_ptr;
+    const size_t n;
+    const size_t m;
+};
+
 
 /**
  *Iterator for base type.
@@ -325,14 +332,20 @@ template<typename T> class   base_type : public interface::t_type<T>
 	 *@param n the number of columns that the base_type should have.
 	 *@param m the number of rows that the base_type should have.
 	 **/
-	template<bool B> base_type(ptr_protect<T*,B>&& d,size_t n,size_t m): 
-		base_type(d.ptr(),n,m)
+	template<bool B> base_type(ptr_protect<T*,B>&& d,size_t n,size_t m):
+           _m(m),
+           _n(n),
+          _mat(d.ptr()),
+          _str()
 	{
 		d.release();
 	}
         base_type(const base_type& b) : base_type(b._mat,b._n,b._m) {};   
         base_type(base_type&& b):
-            base_type(b._mat,b.sizeN(),b.sizeM())
+           _m(b._m),
+           _n(b._n),
+          _mat(b._mat),
+          _str(b._str)
         {
             b._mat=nullptr;
             b._n=0;
@@ -347,10 +360,33 @@ template<typename T> class   base_type : public interface::t_type<T>
         {   
             delete[] _mat;
         }
+        c_type<T> to_c_struct(){
+            return {_mat,_n,_m};
+        }
+        
+        c_type<T> move_to_c_struct(){
+            auto tmp = to_c_struct();
+            _mat=nullptr;
+            _n=0;
+            _m=0;
+            return tmp;
+        }
+
+
+
+
+        base_type(const c_type<T>& c) : base_type(c.data_ptr,c.n,c.m) {}
+        base_type(c_type<T>&& c) : 
+            _m(c.m),
+            _n(c.n),
+            _mat(c.data_ptr) {}
+
 };  
 typedef base_type<char> char_mat;
 typedef base_type<type*> mat_mat;
 typedef base_type<double> num_mat;
+typedef c_type<char> c_char_mat;
+typedef c_type<double> c_num_mat;
 /**
  * Template functions to get an base_type's coresponding  storage_types
  */

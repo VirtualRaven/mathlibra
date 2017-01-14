@@ -12,6 +12,10 @@
 #include "recursion_types.h"
 #include "type.h"
 #include <iostream>
+#ifdef FORWARD_C_TYPES_SUPPORT
+#pragma GCC warning "Forward function C support enabled, function arguments are allocated on the heap and needs to be freed"
+#pragma message("Forward function C support enabled, function arguments are allocated on the heap and needs to be freed")
+#endif
 /**
 * @namespace parameter_package Functions for creating packages of function arguments of different types
 */ 
@@ -118,7 +122,12 @@ namespace function_helper
             auto tmp = n->data->eval();
            if(tmp->stores() == get_enum<T>::t() )
            {
+
+#ifdef NO_COPY_MAT
+               auto tmp2=T(std::move(*static_cast<T*>(tmp)));
+#else
                 auto tmp2 = T(*static_cast<T*>(tmp)); 
+#endif
                 n->free_type(tmp);
                 return tmp2;
            }
@@ -146,11 +155,28 @@ namespace function_helper
         {
             return convertData<num_mat>(n);
         }
-		template<> inline interface::type_ptr getData<interface::type_ptr>(node_base* n)
-		{
-			return interface::type_ptr(n->data->eval(), n->get_free_func());
-		}
-	
+	template<> inline interface::type_ptr getData<interface::type_ptr>(node_base* n)
+	{
+		return interface::type_ptr(n->data->eval(), n->get_free_func());
+	}
+#ifdef FORWARD_C_TYPES_SUPPORT
+        template<> inline c_num_mat getData<c_num_mat>(node_base *n){
+            return getData<num_mat>(n).move_to_c_struct();
+        }        
+        template<> inline c_char_mat getData<c_char_mat>(node_base *n){
+            return getData<char_mat>(n).move_to_c_struct();
+        }
+        template<> inline c_num_mat* getData<c_num_mat*>(node_base *n){
+            auto  s=   getData<c_num_mat>(n);
+            return new c_num_mat {s.data_ptr,s.n,s.m};
+        }
+        
+        template<> inline c_char_mat* getData<c_char_mat*>(node_base *n){
+            auto  s=   getData<c_char_mat>(n);
+            return new c_char_mat {s.data_ptr,s.n,s.m};
+        }
+        
+#endif
 	template<> inline double getData<double>(node_base * n)
 	{
 	    auto tmp = n->data->eval();
@@ -232,7 +258,20 @@ template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> paramet
 	{
 		return "generic";
 	}
-
+#ifdef FORWARD_C_TYPES_SUPPORT
+        template<> inline std::string signature<c_char_mat>(){
+            return signature<char_mat>();
+        }
+        template<> inline std::string signature<c_num_mat>(){
+            return signature<num_mat>();
+        }
+        template<> inline std::string signature<c_char_mat*>(){
+            return signature<char_mat>();
+        }
+        template<> inline std::string signature<c_num_mat*>(){
+            return signature<num_mat>();
+        }
+#endif
 	template<typename arg0> std::string create_signature_string()
 	{
 		return signature<arg0>();
@@ -271,6 +310,24 @@ template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> paramet
         inline type* convert_return_value(mat_mat& r){
             return &r;
         }
+#ifdef FORWARD_C_TYPES_SUPPORT
+        inline type* convert_return_value(c_num_mat&& m){
+            return new num_mat(std::move(m));
+        }
+        inline type* convert_return_value(c_char_mat&& m){
+            return new char_mat(std::move(m));
+        }
+        inline type* convert_return_value(c_char_mat* p){
+            auto tmp = convert_return_value(std::move(*p));
+            delete p;
+            return tmp;
+        }
+        inline type* convert_return_value(c_num_mat* p){
+            auto tmp = convert_return_value(std::move(*p));
+            delete p;
+            return tmp;
+        }
+#endif
         template<typename T> void delete_return_value(type* p){
             delete p;
             p=nullptr;
@@ -325,11 +382,10 @@ template< typename arg0> auto  fillPackage(std::stack<node_base*>& s) -> paramet
 			}
 
 		        parameter_package::package<argN...> pack = fillPackage<argN...>(args);
-			RTYPE tmp =parameter_package::package_forward<RTYPE, typename func_type_general<RTYPE,argN...>::f_type>(func, pack);
-                        type* tmp2=convert_return_value(tmp); 
-                        auto tmp3= n->realloc(tmp2);
-                        delete_return_value<RTYPE>(tmp2);
-                        return tmp3;
+                        type* tmp=convert_return_value(parameter_package::package_forward<RTYPE, typename func_type_general<RTYPE,argN...>::f_type>(func, pack)); 
+                        auto tmp2= n->realloc(tmp);
+                        delete_return_value<RTYPE>(tmp);
+                        return tmp2;
 		}
 		catch (std::exception& e)
 		{
